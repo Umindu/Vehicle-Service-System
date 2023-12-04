@@ -188,7 +188,7 @@ public class Login extends javax.swing.JFrame {
                 errorMessage.setText("Username or Password  is empty");
             }else{
                 Statement statement = DBconnect.connectToDB().createStatement();
-                statement.execute("Select ID, Name From Employees Where Username = '"+ username +"' And Password = '"+ password +"'");
+                statement.execute("Select ID, Name, JobRole, ImgUrl From Employees Where Username = '"+ username +"' And Password = '"+ password +"'");
                 ResultSet resultSet = statement.getResultSet(); 
 
                 if(resultSet.next()){
@@ -197,7 +197,7 @@ public class Login extends javax.swing.JFrame {
                     dashboard.setLocationRelativeTo(null);
                     dashboard.setVisible(true);
                     
-                    dashboard.SetUserName(resultSet.getString("Name"));
+                    dashboard.SetUserDetails(resultSet.getString("JobRole"), resultSet.getString("Name"), resultSet.getString("ImgUrl"));
                     this.dispose();
                 }else{
                     errorMessage.setText("The user name or password is incorrect, try again!");

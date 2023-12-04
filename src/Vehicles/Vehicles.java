@@ -7,14 +7,19 @@ package Vehicles;
 import DBConnect.DBconnect;
 import Manage.Manage;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
 import javax.swing.border.MatteBorder;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import net.miginfocom.swing.MigLayout;
@@ -62,6 +67,9 @@ public class Vehicles extends javax.swing.JInternalFrame {
         
         productListPanel.setLayout(new MigLayout("inset 0, fillx, wrap", "[fill]"));
         
+        showDate();
+        showTime();
+        
     }
 
     /**
@@ -80,7 +88,7 @@ public class Vehicles extends javax.swing.JInternalFrame {
         searchMenu = new javax.swing.JPopupMenu();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        dateLable = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -135,8 +143,8 @@ public class Vehicles extends javax.swing.JInternalFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("Invoice No : ");
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel2.setText("Date : 2023-04-03  ");
+        dateLable.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        dateLable.setText("Date : 2023-04-03  ");
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel3.setText("Vehicle Registration No :");
@@ -224,7 +232,7 @@ public class Vehicles extends javax.swing.JInternalFrame {
                         .addComponent(jLabel8)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(searchProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 67, Short.MAX_VALUE))
+                        .addGap(0, 48, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, sidePanelLayout.createSequentialGroup()
                         .addComponent(jLabel12)
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -317,19 +325,19 @@ public class Vehicles extends javax.swing.JInternalFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(invoiceSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 101, Short.MAX_VALUE)
-                                .addComponent(jLabel2)
-                                .addGap(18, 18, 18)
-                                .addComponent(timeLabel))
+                                .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(selectServiceUnitCombobox, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(dateLable)
+                                .addGap(27, 27, 27)
+                                .addComponent(timeLabel))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(14, 14, 14)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -344,23 +352,25 @@ public class Vehicles extends javax.swing.JInternalFrame {
                                 .addComponent(ownerPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(VehicleType, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(VehicleRegNo, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addGap(10, 10, 10)
-                .addComponent(sidePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 441, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 268, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(sidePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(17, 17, 17)
-                .addComponent(selectServiceUnitCombobox, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(selectServiceUnitCombobox, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(dateLable)
+                        .addComponent(timeLabel)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(invoiceSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
-                    .addComponent(timeLabel))
+                    .addComponent(invoiceSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -407,6 +417,23 @@ public class Vehicles extends javax.swing.JInternalFrame {
 
     public void setObject(Vehicles vehicles){
         this.vehicles = vehicles;
+    }
+    
+    public void showDate(){
+        SimpleDateFormat fdate = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        dateLable.setText("Date - "+fdate.format(date));
+    }
+    
+    public void showTime(){
+        new Timer(0, new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                SimpleDateFormat ftime = new SimpleDateFormat("hh:mm:ss a");
+                Date time = new Date();
+                timeLabel.setText(ftime.format(time));
+            }
+        }).start();
     }
     
     public void RefrashProductListPanel(){
@@ -531,7 +558,21 @@ public class Vehicles extends javax.swing.JInternalFrame {
                         product.add(resultSet.getString("Price"));
                         product.add("1");
                         product.add(resultSet.getString("Price"));
-                        cartProductList.add(product);
+                        
+                        if(cartProductList.isEmpty()){
+                            cartProductList.add(product);
+                        }else{
+                            for(int i=0; i<=cartProductList.size(); i++){
+                                if(cartProductList.get(i).get(0).equals(resultSet.getString("ID"))){
+                                    cartProductList.get(i).set(3, String.valueOf(Float.parseFloat(cartProductList.get(i).get(3)) + 1));
+                                    break;
+                                }
+                                if(cartProductList.size()-1 == i){
+                                    cartProductList.add(product);
+                                    break;
+                                }
+                            } 
+                        }
                         RefrashProductListPanel();
                     }
                 } catch (SQLException ex) {
@@ -566,14 +607,19 @@ public class Vehicles extends javax.swing.JInternalFrame {
 
     private void progressButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_progressButton1ActionPerformed
         // TODO add your handling code here:
+        
+        try {
+            Statement statement = DBconnect.connectToDB().createStatement();
+            statement.execute("INSERT INTO ServiceCharges (InvoiceID, ServiceUnit , ServiceCharge) "
+            + "VALUES('"+ invoiceSearch.getText() +"', '"+ selectServiceUnitCombobox.getSelectedItem() +"', '"+ serviceChargeTextField.getText() +"')");
+        } catch (SQLException ex) {
+            Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
+        }
         for(int i=0; i < cartProductList.size(); i++){
             try {
                 Statement statement = DBconnect.connectToDB().createStatement();
                 statement.execute("INSERT INTO SoldProducts (InvoiceID, ProductID, Name, Price, Qnt, Total, ServiceUnit) "
                     + "VALUES('" + invoiceSearch.getText() + "', '" + cartProductList.get(i).get(0) + "','" + cartProductList.get(i).get(1) + "','" + cartProductList.get(i).get(2) + "','" + cartProductList.get(i).get(3) + "','" + cartProductList.get(i).get(4) + "','" + selectServiceUnitCombobox.getSelectedItem() + "')");
-                statement.execute("INSERT INTO ServiceCharges (InvoiceID, ServiceUnit , ServiceCharge) "
-                    + "VALUES('"+ invoiceSearch.getText() +"', '"+ selectServiceUnitCombobox.getSelectedItem() +"', '"+ serviceChargeTextField.getText() +"')");
-
             } catch (SQLException ex) {
                 Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -587,11 +633,11 @@ public class Vehicles extends javax.swing.JInternalFrame {
     private fosalgo.FTextField VehicleRegNo;
     private fosalgo.FTextField VehicleType;
     private button.MyButton cancelButton;
+    private javax.swing.JLabel dateLable;
     private CustomComponents.MyTextArea description;
     private fosalgo.FTextField invoiceSearch;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;

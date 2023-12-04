@@ -9,9 +9,11 @@ import Login.Login;
 import Manage.Manage;
 import Vehicles.Vehicles;
 import java.awt.Color;
+import java.awt.Image;
 import java.beans.PropertyVetoException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 /**
@@ -39,8 +41,18 @@ public class Dashboard extends javax.swing.JFrame {
         }
     }
     
-    public void SetUserName(String name){
+    public void SetUserDetails(String jobRole, String name, String imgUrl){
+        jobroleLable.setText(jobRole);
         usernameLable.setText(name);
+         System.out.println(imgUrl);
+        
+        
+        ImageIcon icon = new ImageIcon(imgUrl);
+        Image in = icon.getImage();
+        Image modified = in.getScaledInstance(46, 46, java.awt.Image.SCALE_SMOOTH);
+        icon = new ImageIcon(modified);
+        myButton1.setIcon(icon);
+        
     }
 
     /**
@@ -71,6 +83,8 @@ public class Dashboard extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         usernameLable = new javax.swing.JLabel();
+        jobroleLable = new javax.swing.JLabel();
+        myButton1 = new button.MyButton();
         jPanel4 = new javax.swing.JPanel();
         homeButton = new button.MyButton();
         VehicleButton = new button.MyButton();
@@ -93,6 +107,27 @@ public class Dashboard extends javax.swing.JFrame {
 
         usernameLable.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         usernameLable.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        usernameLable.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        usernameLable.setVerifyInputWhenFocusTarget(false);
+        usernameLable.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+
+        jobroleLable.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jobroleLable.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jobroleLable.setToolTipText("");
+        jobroleLable.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        jobroleLable.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+
+        myButton1.setBackground(new java.awt.Color(13, 180, 185));
+        myButton1.setBorderColor(new java.awt.Color(13, 180, 185));
+        myButton1.setColor(new java.awt.Color(13, 180, 185));
+        myButton1.setColorClick(new java.awt.Color(13, 180, 185));
+        myButton1.setColorOver(new java.awt.Color(13, 180, 185));
+        myButton1.setFocusable(false);
+        myButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                myButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -101,17 +136,28 @@ public class Dashboard extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 418, Short.MAX_VALUE)
-                .addComponent(usernameLable, javax.swing.GroupLayout.PREFERRED_SIZE, 427, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 354, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jobroleLable, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 427, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(usernameLable, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 427, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(myButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(jobroleLable, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(usernameLable, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
-                    .addComponent(usernameLable, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(3, 3, 3))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(myButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -248,13 +294,13 @@ public class Dashboard extends javax.swing.JFrame {
                 .addComponent(homeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5)
                 .addComponent(VehicleButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(5, 5, 5)
                 .addComponent(manageButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5)
                 .addComponent(reportButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5)
                 .addComponent(settingButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 292, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 287, Short.MAX_VALUE)
                 .addComponent(logoutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -277,8 +323,9 @@ public class Dashboard extends javax.swing.JFrame {
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(1, 1, 1)
-                .addComponent(mainWindowPanel))
+                .addGap(0, 0, 0)
+                .addComponent(mainWindowPanel)
+                .addGap(0, 0, 0))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -380,6 +427,10 @@ public class Dashboard extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_manageButtonActionPerformed
 
+    private void myButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_myButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_myButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -423,9 +474,11 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JLabel jobroleLable;
     private button.MyButton logoutButton;
     private javax.swing.JDesktopPane mainWindowPanel;
     private button.MyButton manageButton;
+    private button.MyButton myButton1;
     private button.MyButton reportButton;
     private button.MyButton settingButton;
     private javax.swing.JLabel usernameLable;

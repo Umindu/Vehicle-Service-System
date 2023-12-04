@@ -268,6 +268,7 @@ public class Manage extends javax.swing.JInternalFrame {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(242, 242, 242), 10));
 
+        serButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 20, 1, 1));
         serButton.setText("Services");
         serButton.setBorderColor(new java.awt.Color(255, 255, 255));
         serButton.setBorderPainted(false);
@@ -284,6 +285,7 @@ public class Manage extends javax.swing.JInternalFrame {
             }
         });
 
+        serUnitButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 20, 1, 1));
         serUnitButton.setText("Service Units");
         serUnitButton.setBorderColor(new java.awt.Color(255, 255, 255));
         serUnitButton.setBorderPainted(false);
@@ -310,11 +312,13 @@ public class Manage extends javax.swing.JInternalFrame {
         serviceButtonPaneLayout.setVerticalGroup(
             serviceButtonPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, serviceButtonPaneLayout.createSequentialGroup()
-                .addComponent(serUnitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(1, 1, 1)
-                .addComponent(serButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, 0)
+                .addComponent(serUnitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(serButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
+        addEmployeeButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 20, 1, 1));
         addEmployeeButton.setText("Add Employee");
         addEmployeeButton.setBorderColor(new java.awt.Color(255, 255, 255));
         addEmployeeButton.setBorderPainted(false);
@@ -331,6 +335,7 @@ public class Manage extends javax.swing.JInternalFrame {
             }
         });
 
+        allEmployeeButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 20, 1, 1));
         allEmployeeButton.setText("All Employees");
         allEmployeeButton.setBorderColor(new java.awt.Color(255, 255, 255));
         allEmployeeButton.setBorderPainted(false);
@@ -358,12 +363,13 @@ public class Manage extends javax.swing.JInternalFrame {
             employeeButtonPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, employeeButtonPaneLayout.createSequentialGroup()
                 .addGap(1, 1, 1)
-                .addComponent(allEmployeeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(1, 1, 1)
-                .addComponent(addEmployeeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(1, 1, 1))
+                .addComponent(allEmployeeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(addEmployeeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0))
         );
 
+        showSerPaneButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 20, 1, 1));
         showSerPaneButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/angle-small-down.png"))); // NOI18N
         showSerPaneButton.setText("Service");
         showSerPaneButton.setBorderColor(new java.awt.Color(255, 255, 255));
@@ -382,6 +388,7 @@ public class Manage extends javax.swing.JInternalFrame {
             }
         });
 
+        showEmpPaneButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 20, 1, 1));
         showEmpPaneButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/angle-small-down.png"))); // NOI18N
         showEmpPaneButton.setText("Employee");
         showEmpPaneButton.setBorderColor(new java.awt.Color(255, 255, 255));
@@ -400,6 +407,7 @@ public class Manage extends javax.swing.JInternalFrame {
             }
         });
 
+        VehicleTypesButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 20, 1, 1));
         VehicleTypesButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/angle-small-down.png"))); // NOI18N
         VehicleTypesButton.setText("Vehicle Types");
         VehicleTypesButton.setBorderColor(new java.awt.Color(255, 255, 255));
@@ -418,6 +426,7 @@ public class Manage extends javax.swing.JInternalFrame {
             }
         });
 
+        productButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 20, 1, 1));
         productButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/angle-small-down.png"))); // NOI18N
         productButton.setText("Products");
         productButton.setBorderColor(new java.awt.Color(255, 255, 255));
@@ -450,17 +459,17 @@ public class Manage extends javax.swing.JInternalFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(showSerPaneButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(1, 1, 1)
+                .addComponent(showSerPaneButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
                 .addComponent(serviceButtonPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(1, 1, 1)
-                .addComponent(showEmpPaneButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(1, 1, 1)
+                .addGap(0, 0, 0)
+                .addComponent(showEmpPaneButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
                 .addComponent(employeeButtonPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(1, 1, 1)
-                .addComponent(VehicleTypesButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(1, 1, 1)
-                .addComponent(productButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(VehicleTypesButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(productButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -503,11 +512,13 @@ public class Manage extends javax.swing.JInternalFrame {
 
         serUnitID.setText("Auto Genarate");
         serUnitID.setEnabled(false);
+        serUnitID.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         serUnitID.setRadius(20);
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel4.setText("Unit Name :");
 
+        serUnitName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         serUnitName.setRadius(20);
 
         addServiceUnitButton.setForeground(new java.awt.Color(255, 255, 255));
@@ -640,6 +651,7 @@ public class Manage extends javax.swing.JInternalFrame {
             }
         });
 
+        serName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         serName.setRadius(20);
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
@@ -647,6 +659,7 @@ public class Manage extends javax.swing.JInternalFrame {
 
         serID.setText("Auto Genarate");
         serID.setEnabled(false);
+        serID.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         serID.setRadius(20);
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
@@ -682,9 +695,12 @@ public class Manage extends javax.swing.JInternalFrame {
         jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel9.setText("Service Unit :");
 
+        serUnitComboBox.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
         jLabel10.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel10.setText("Service Charge :");
 
+        serCharge.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         serCharge.setRadius(20);
 
         jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
@@ -694,12 +710,14 @@ public class Manage extends javax.swing.JInternalFrame {
 
         serDescription.setColumns(20);
         serDescription.setRows(5);
+        serDescription.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         serDescription.setRadius(20);
         jScrollPane3.setViewportView(serDescription);
 
         jLabel21.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel21.setText("Vehicle Type :");
 
+        vehicalTypeComboBox.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         vehicalTypeComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 vehicalTypeComboBoxActionPerformed(evt);
@@ -805,7 +823,7 @@ public class Manage extends javax.swing.JInternalFrame {
                         .addComponent(jLabel11)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
                         .addComponent(servicesClearButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -818,6 +836,7 @@ public class Manage extends javax.swing.JInternalFrame {
         panelCards.add(serviesCard, "serviesCard");
 
         allEmployeeCard.setBackground(new java.awt.Color(255, 255, 255));
+        allEmployeeCard.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel12.setText("Employees List");
@@ -880,16 +899,19 @@ public class Manage extends javax.swing.JInternalFrame {
 
         empID.setText("Auto Genarate");
         empID.setEnabled(false);
+        empID.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         empID.setRadius(20);
 
         jLabel15.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel15.setText("Name :");
 
+        empName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         empName.setRadius(20);
 
         jLabel17.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel17.setText("Phone :");
 
+        empPhone.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         empPhone.setRadius(20);
 
         jLabel18.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
@@ -899,6 +921,7 @@ public class Manage extends javax.swing.JInternalFrame {
 
         empDescription.setColumns(20);
         empDescription.setRows(5);
+        empDescription.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         empDescription.setRadius(20);
         jScrollPane5.setViewportView(empDescription);
 
@@ -924,8 +947,10 @@ public class Manage extends javax.swing.JInternalFrame {
         jLabel19.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel19.setText("Email :");
 
+        empEmail.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         empEmail.setRadius(20);
 
+        empAddress.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         empAddress.setRadius(20);
 
         jLabel16.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
@@ -934,6 +959,7 @@ public class Manage extends javax.swing.JInternalFrame {
         jLabel20.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel20.setText("NIC :");
 
+        empNIC.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         empNIC.setRadius(20);
 
         empImgLable.setBackground(new java.awt.Color(0, 0, 0));
@@ -977,6 +1003,7 @@ public class Manage extends javax.swing.JInternalFrame {
         jLabel22.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel22.setText("Job Role :");
 
+        jobRoleComboBox.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jobRoleComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jobRoleComboBoxActionPerformed(evt);
@@ -989,8 +1016,10 @@ public class Manage extends javax.swing.JInternalFrame {
         jLabel24.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel24.setText("Password :");
 
+        empPassword.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         empPassword.setRadius(20);
 
+        empUserName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         empUserName.setRadius(20);
 
         employeeDeleteButton.setBackground(new java.awt.Color(184, 248, 250));
@@ -1122,7 +1151,7 @@ public class Manage extends javax.swing.JInternalFrame {
                 .addGroup(addEmployeeCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(addEmployeeCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(employeeDeleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1165,11 +1194,13 @@ public class Manage extends javax.swing.JInternalFrame {
 
         VehicleTypeID.setText("Auto Genarate");
         VehicleTypeID.setEnabled(false);
+        VehicleTypeID.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         VehicleTypeID.setRadius(20);
 
         jLabel28.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel28.setText("Vehicle Type Name :");
 
+        VehicleTypeName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         VehicleTypeName.setRadius(20);
 
         addVehicleTypeButton.setForeground(new java.awt.Color(255, 255, 255));
@@ -1314,11 +1345,13 @@ public class Manage extends javax.swing.JInternalFrame {
 
         productID.setText("Auto Genarate");
         productID.setEnabled(false);
+        productID.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         productID.setRadius(20);
 
         jLabel31.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel31.setText("Product Name :");
 
+        productName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         productName.setRadius(20);
 
         productClearButton.setText("Clear");
@@ -1377,16 +1410,19 @@ public class Manage extends javax.swing.JInternalFrame {
         jLabel32.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel32.setText("Price :");
 
+        productPrice.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         productPrice.setRadius(20);
 
         jLabel33.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel33.setText("Qnt :");
 
+        productQnt.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         productQnt.setRadius(20);
 
         jLabel34.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel34.setText("Service Unit :");
 
+        selectServiceUnitCombobox.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         selectServiceUnitCombobox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 selectServiceUnitComboboxActionPerformed(evt);
