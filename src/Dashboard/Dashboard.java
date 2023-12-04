@@ -8,12 +8,23 @@ import Home.Home;
 import Login.Login;
 import Manage.Manage;
 import Vehicles.Vehicles;
+import com.github.sarxos.webcam.Webcam;
+import com.github.sarxos.webcam.WebcamPanel;
+import com.google.zxing.BinaryBitmap;
+import com.google.zxing.LuminanceSource;
+import com.google.zxing.MultiFormatReader;
+import com.google.zxing.Result;
+import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
+import com.google.zxing.common.HybridBinarizer;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyVetoException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -53,6 +64,17 @@ public class Dashboard extends javax.swing.JFrame {
         icon = new ImageIcon(modified);
         myButton1.setIcon(icon);
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     }
 
     /**
@@ -62,20 +84,7 @@ public class Dashboard extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     
-    private void resetButonStyles(){
-        homeButton.setBorderColor(Color.WHITE);
-        homeButton.setColor(Color.WHITE);
-        VehicleButton.setBorderColor(Color.WHITE);
-        VehicleButton.setColor(Color.WHITE);
-        manageButton.setBorderColor(Color.WHITE);
-        manageButton.setColor(Color.WHITE);
-        reportButton.setBorderColor(Color.WHITE);
-        reportButton.setColor(Color.WHITE);
-        settingButton.setBorderColor(Color.WHITE);
-        settingButton.setColor(Color.WHITE);
-        logoutButton.setBorderColor(Color.WHITE);
-        logoutButton.setColor(Color.WHITE);
-    }
+    
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -352,6 +361,53 @@ public class Dashboard extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void resetButonStyles(){
+        homeButton.setBorderColor(Color.WHITE);
+        homeButton.setColor(Color.WHITE);
+        VehicleButton.setBorderColor(Color.WHITE);
+        VehicleButton.setColor(Color.WHITE);
+        manageButton.setBorderColor(Color.WHITE);
+        manageButton.setColor(Color.WHITE);
+        reportButton.setBorderColor(Color.WHITE);
+        reportButton.setColor(Color.WHITE);
+        settingButton.setBorderColor(Color.WHITE);
+        settingButton.setColor(Color.WHITE);
+        logoutButton.setBorderColor(Color.WHITE);
+        logoutButton.setColor(Color.WHITE);
+    }
+    
+//    private void OpenWebCame(){
+//        Webcam webcam = Webcam.getDefault();   //Generate Webcam Object
+//        webcam.setViewSize(new Dimension(320,240));
+//        WebcamPanel webcamPanel = new WebcamPanel(webcam);
+//        webcamPanel.setMirrored(false);
+//        JFrame jFrame = new JFrame();
+//        jFrame.add(webcamPanel);
+//        jFrame.pack();
+//        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        jFrame.setLocationRelativeTo(null);
+//        jFrame.setVisible(true);
+//        
+//        do{
+//            try {
+//                BufferedImage image = webcam.getImage();
+//                LuminanceSource source = new BufferedImageLuminanceSource(image);
+//                BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
+//                Result result = new MultiFormatReader().decode(bitmap);
+//                if(result.getText() != null){
+//                    JOptionPane.showMessageDialog(null, result.getText(), "INFORMATION", JOptionPane.INFORMATION_MESSAGE);
+//                    jFrame.setVisible(false);
+//                    jFrame.dispose();
+//                    webcam.close();
+//                    break;
+//                }
+//                
+//            } catch (Exception e) {
+//            }
+//        }while(true);
+//    }
+    
+    
     private void homeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeButtonActionPerformed
         // TODO add your handling code here:
         resetButonStyles();

@@ -7,18 +7,30 @@ package Home;
 import DBConnect.DBconnect;
 import Manage.Manage;
 import Vehicles.Vehicles;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
@@ -39,6 +51,9 @@ public class Home extends javax.swing.JInternalFrame {
     private DefaultListModel ListModel;
     
     private Home home;
+    
+    private ImageIcon qrImg; 
+
     
     ArrayList<ArrayList<String> > allServicesList =  new ArrayList<ArrayList<String> >(); 
     ArrayList<ArrayList<String> > allProductList =  new ArrayList<ArrayList<String> >();
@@ -122,6 +137,7 @@ public class Home extends javax.swing.JInternalFrame {
         VehicleTypeComboBox = new CustomComponents.Combobox();
         timeLabel = new javax.swing.JLabel();
         cancelButton = new button.MyButton();
+        qrCode = new javax.swing.JLabel();
 
         searchPanelList.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         searchPanelList.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -372,6 +388,7 @@ public class Home extends javax.swing.JInternalFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(VehicleTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(jLabel3)
                                 .addComponent(jLabel4)
@@ -381,9 +398,9 @@ public class Home extends javax.swing.JInternalFrame {
                                 .addComponent(ownerName, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE)
                                 .addComponent(ownerPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(VehicleRegNo, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(VehicleTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                                .addComponent(VehicleRegNo, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(18, 18, Short.MAX_VALUE)
+                        .addComponent(qrCode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -416,15 +433,18 @@ public class Home extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ownerName, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ownerPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(VehicleTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(ownerName, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ownerPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(VehicleTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(qrCode, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -474,6 +494,39 @@ public class Home extends javax.swing.JInternalFrame {
             }
         }).start();
     }
+    
+    public void generateQRCode(){
+        OldQRimageDelete();
+        
+        try {
+            String qrText = invoiceNo.getText() + "," + VehicleRegNo.getText();
+            String imgPath = System.getProperty("user.dir")+"/QR/";
+            String charset = "UTF-8";
+            Map<EncodeHintType, ErrorCorrectionLevel> hashMap = new HashMap<EncodeHintType, ErrorCorrectionLevel>();
+            hashMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
+            generateQRcode(qrText, imgPath+qrText+".png", charset, hashMap, 250, 250);
+            qrImg = new ImageIcon("QR/"+qrText+".png");
+            qrCode.setIcon(qrImg);
+        } catch (WriterException ex) {
+            Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void OldQRimageDelete(){
+        File file =  new File(System.getProperty("user.dir")+"/QR/");
+        String[] S= file.list();
+        for(String ss : S){
+            File f1 = new File(file, ss);
+            f1.delete();
+        }
+    }
+    
+    public void generateQRcode(String data, String path, String charset, Map map, int h, int w) throws WriterException, IOException {
+        BitMatrix matrix = new MultiFormatWriter().encode(new String(data.getBytes(charset), charset), BarcodeFormat.QR_CODE, w, h);
+        MatrixToImageWriter.writeToFile(matrix, path.substring(path.lastIndexOf('.') + 1), new File(path));
+    } 
     
     public void RefrashSerAndProPanel(){
         serAndProPanel.removeAll();
@@ -559,6 +612,8 @@ public class Home extends javax.swing.JInternalFrame {
 
     private void VehicleRegNoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_VehicleRegNoKeyReleased
         // TODO add your handling code here:
+        generateQRCode();
+        
         String text = VehicleRegNo.getText();
         char lastLetter = text.charAt(text.length() - 1);
         if(lastLetter >= '0' && lastLetter <= '9'){
@@ -676,6 +731,7 @@ public class Home extends javax.swing.JInternalFrame {
     private fosalgo.FTextField ownerPhone;
     private button.MyButton progressButton;
     private button.MyButton progressButton1;
+    private javax.swing.JLabel qrCode;
     private javax.swing.JPopupMenu searchMenu;
     private javax.swing.JPanel searchPanel;
     private javax.swing.JList<String> searchPanelList;
