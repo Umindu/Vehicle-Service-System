@@ -182,6 +182,7 @@ public class Home extends javax.swing.JInternalFrame {
         sidePanel.setBackground(new java.awt.Color(255, 255, 255));
 
         invoiceSearch.setToolTipText("");
+        invoiceSearch.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         invoiceSearch.setRadius(20);
         invoiceSearch.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -240,7 +241,7 @@ public class Home extends javax.swing.JInternalFrame {
         jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel12.setText("Discount :");
 
-        fTextField1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        fTextField1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         fTextField1.setRadius(15);
         fTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -296,21 +297,26 @@ public class Home extends javax.swing.JInternalFrame {
         jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel7.setText("Phone No: ");
 
+        ownerPhone.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         ownerPhone.setRadius(20);
 
         invoiceNo.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
         invoiceNo.setFocusable(false);
+        invoiceNo.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         invoiceNo.setRadius(20);
 
+        ownerName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         ownerName.setRadius(20);
 
         jScrollPane1.setBorder(null);
 
         description.setColumns(20);
         description.setRows(5);
+        description.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         description.setRadius(20);
         jScrollPane1.setViewportView(description);
 
+        VehicleRegNo.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         VehicleRegNo.setRadius(20);
         VehicleRegNo.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -318,6 +324,7 @@ public class Home extends javax.swing.JInternalFrame {
             }
         });
 
+        VehicleTypeComboBox.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         VehicleTypeComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 VehicleTypeComboBoxActionPerformed(evt);
