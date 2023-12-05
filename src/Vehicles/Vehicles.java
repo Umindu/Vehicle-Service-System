@@ -6,36 +6,55 @@ package Vehicles;
 
 import DBConnect.DBconnect;
 import Manage.Manage;
+import com.github.sarxos.webcam.Webcam;
+import com.github.sarxos.webcam.WebcamPanel;
+import com.github.sarxos.webcam.WebcamResolution;
+import com.google.zxing.BinaryBitmap;
+import com.google.zxing.LuminanceSource;
+import com.google.zxing.MultiFormatReader;
+import com.google.zxing.NotFoundException;
+import com.google.zxing.Result;
+import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
+import com.google.zxing.common.HybridBinarizer;
+import static com.sun.java.accessibility.util.AWTEventMonitor.addWindowListener;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import javax.swing.border.MatteBorder;
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import net.miginfocom.swing.MigLayout;
 
-/**
- *
- * @author Umindu
- */
-public class Vehicles extends javax.swing.JInternalFrame {
 
-    /**
-     * Creates new form Vehicals
-     * 
-     */
+
+public class Vehicles extends javax.swing.JInternalFrame implements Runnable, ThreadFactory{
+
     private DefaultListModel ListModel;
     private Vehicles vehicles;
+    
+    private WebcamPanel campanel = null;
+    private Webcam webcam = null;
+    private Executor executor = Executors.newSingleThreadExecutor(this);
     
     ArrayList<ArrayList<String> > cartProductList =  new ArrayList<ArrayList<String> >(); 
     
@@ -70,6 +89,14 @@ public class Vehicles extends javax.swing.JInternalFrame {
         showDate();
         showTime();
         
+        initWebcam();
+      
+        this.addInternalFrameListener(
+        new InternalFrameAdapter() {
+            public void internalFrameDeactivated(InternalFrameEvent e) {
+                webcam.close();
+            }
+        });
     }
 
     /**
@@ -113,6 +140,7 @@ public class Vehicles extends javax.swing.JInternalFrame {
         timeLabel = new javax.swing.JLabel();
         cancelButton = new button.MyButton();
         VehicleType = new fosalgo.FTextField();
+        webCamOpenWindow = new javax.swing.JPanel();
 
         searchPanelList.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         searchPanelList.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -314,6 +342,8 @@ public class Vehicles extends javax.swing.JInternalFrame {
         VehicleType.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         VehicleType.setRadius(20);
 
+        webCamOpenWindow.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -334,13 +364,14 @@ public class Vehicles extends javax.swing.JInternalFrame {
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(selectServiceUnitCombobox, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
                                 .addComponent(dateLable)
                                 .addGap(27, 27, 27)
                                 .addComponent(timeLabel))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(14, 14, 14)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(VehicleRegNo, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(jLabel3)
                                 .addComponent(jLabel4)
@@ -350,9 +381,9 @@ public class Vehicles extends javax.swing.JInternalFrame {
                                 .addComponent(ownerName, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 413, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(ownerPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(VehicleType, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(VehicleRegNo, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 268, Short.MAX_VALUE)))
+                                .addComponent(VehicleType, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(webCamOpenWindow, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(sidePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -378,21 +409,26 @@ public class Vehicles extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ownerName, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ownerPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(VehicleType, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(ownerName, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ownerPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(VehicleType, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(webCamOpenWindow, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addComponent(sidePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -418,6 +454,83 @@ public class Vehicles extends javax.swing.JInternalFrame {
     public void setObject(Vehicles vehicles){
         this.vehicles = vehicles;
     }
+    
+    //Read QR ................
+    private void initWebcam(){
+        Dimension size = WebcamResolution.QVGA.getSize();
+        webcam = Webcam.getWebcams().get(0);
+        webcam.setViewSize(size);
+        
+        campanel = new WebcamPanel(webcam);
+        campanel.setPreferredSize(size);
+        campanel.setFPSDisplayed(true);
+        campanel.setMirrored(true);
+        
+        webCamOpenWindow.add(campanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0,0,300,230));
+        
+        executor.execute(this);  
+    }
+    
+    @Override
+    public void run() {
+        do {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            Result result = null;
+            BufferedImage image = null;
+
+            if (webcam.isOpen()) {
+                if ((image = webcam.getImage()) == null) {
+                    continue;
+                }
+            }
+
+            LuminanceSource source = new BufferedImageLuminanceSource(image);
+            BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
+
+            try {
+                result = new MultiFormatReader().decode(bitmap);
+            } catch (NotFoundException e) {
+                //No result...
+            }
+
+            if (result != null) {
+                String[] invoiceno = result.getText().split(",");
+                try {
+                    Statement statement = DBconnect.connectToDB().createStatement();
+                    statement.execute("SELECT * FROM VehicleDetails WHERE InvoiceNo = '"+ invoiceno[0] +"'");
+                    ResultSet resultSet = statement.getResultSet();
+                    if(resultSet.next()){
+                        invoiceSearch.setText(invoiceno[0]);
+                        VehicleRegNo.setText(resultSet.getString("VehicleNo"));
+                        ownerName.setText(resultSet.getString("OwnerName"));
+                        ownerPhone.setText(resultSet.getString("Phone"));
+                        VehicleType.setText(resultSet.getString("VehicleType"));
+                        description.setText(resultSet.getString("Description"));
+                        
+                        Toolkit.getDefaultToolkit().beep();
+                        
+//                        webcam.close();
+//                        webCamOpenWindow.setVisible(false);
+                }
+                } catch (SQLException ex) {
+                    Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        } while (true);
+    }
+   @Override
+    public Thread newThread(Runnable r) {
+        Thread t = new Thread(r, "My Thread");
+        t.setDaemon(true);
+        return t;
+    }
+    
+    //Read QR ................
     
     public void showDate(){
         SimpleDateFormat fdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -587,7 +700,7 @@ public class Vehicles extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_searchPanelListMouseClicked
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        // TODO add your handling code here:
+        // TODO add your handling code here:                
         invoiceSearch.setText("");
         VehicleRegNo.setText("");
         ownerName.setText("");
@@ -661,5 +774,6 @@ public class Vehicles extends javax.swing.JInternalFrame {
     private fosalgo.FTextField serviceChargeTextField;
     private javax.swing.JPanel sidePanel;
     private javax.swing.JLabel timeLabel;
+    private javax.swing.JPanel webCamOpenWindow;
     // End of variables declaration//GEN-END:variables
 }

@@ -533,15 +533,15 @@ public class Home extends javax.swing.JInternalFrame {
         for (int i = 0; i < allServicesList.size(); i++) {
             String name = allServicesList.get(i).get(0);
             String charge = allServicesList.get(i).get(1);
-            serAndProPanel.add(new ServiceChargeItem(home, name, charge));  
+            serAndProPanel.add(new ServiceChargeItem(home, name, charge)); 
             
             for (int j = 0; j < allProductList.size(); j++) {
                 if(allProductList.get(j).get(5).equals(name)){
-                    String id = allProductList.get(i).get(0);
-                    String proname = allProductList.get(i).get(1);
-                    float price = Float.parseFloat(allProductList.get(i).get(2));
-                    float qnt = Float.parseFloat(allProductList.get(i).get(3));
-                    float total = Float.parseFloat(allProductList.get(i).get(4));
+                    String id = allProductList.get(j).get(0);
+                    String proname = allProductList.get(j).get(1);
+                    float price = Float.parseFloat(allProductList.get(j).get(2));
+                    float qnt = Float.parseFloat(allProductList.get(j).get(3));
+                    float total = Float.parseFloat(allProductList.get(j).get(4));
                     serAndProPanel.add(new ProductItem(home, id, proname, price, qnt, total));  
                 }
             } 
@@ -665,8 +665,6 @@ public class Home extends javax.swing.JInternalFrame {
                 }
             }
             RefrashSerAndProPanel();
-            System.out.println(allServicesList);
-            System.out.println(allProductList);
         } catch (SQLException ex) {
             Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
         }
