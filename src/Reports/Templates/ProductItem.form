@@ -31,9 +31,9 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="qntIncreaseButton" min="-2" pref="23" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                      <Component id="proPrice" pref="45" max="32767" attributes="0"/>
-                      <EmptySpace pref="15" max="32767" attributes="0"/>
-                      <Component id="proTotal" pref="29" max="32767" attributes="0"/>
+                      <Component id="proPrice" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="proTotal" max="32767" attributes="0"/>
                       <EmptySpace pref="23" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">

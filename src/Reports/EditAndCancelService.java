@@ -12,7 +12,9 @@ import Vehicles.Vehicles;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -34,7 +36,7 @@ public class EditAndCancelService extends javax.swing.JFrame {
     ArrayList<String> removeProductList =  new ArrayList<String>();
     ArrayList<String> removeServiceList =  new ArrayList<String>();
     
-    String ActionType = null;
+    String ActionType;
     
     private EditAndCancelService editAndCancelService;
     
@@ -42,13 +44,16 @@ public class EditAndCancelService extends javax.swing.JFrame {
         initComponents();
         
         this.ActionType = ActionType;
+        if(ActionType == "Cancel"){
+            ActionButton.setText("Service Cancel");
+        }
         
         //close window
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
         try {
             Statement statement = DBconnect.connectToDB().createStatement();
-            statement.execute("SELECT * FROM VehicleDetails WHERE InvoiceNo = '1'");
+            statement.execute("SELECT * FROM VehicleDetails WHERE InvoiceNo = '"+invoiceID+"'");
             ResultSet resultSet = statement.getResultSet();
             
             if(resultSet.next()){
@@ -58,6 +63,12 @@ public class EditAndCancelService extends javax.swing.JFrame {
                 ownerPhone.setText(resultSet.getString("Phone"));
                 vehicleType.setText(resultSet.getString("VehicleType"));
                 description.setText(resultSet.getString("Description"));
+                
+                Date date = resultSet.getDate("Date");
+                dateLable.setText("Date : "+date);
+                
+                Date time = resultSet.getTime("Date");
+                timeLabel.setText("Time : "+time);
             }
             
         } catch (SQLException ex) {
@@ -93,7 +104,7 @@ public class EditAndCancelService extends javax.swing.JFrame {
         invoiceNo = new fosalgo.FTextField();
         jLabel6 = new javax.swing.JLabel();
         ownerPhone = new fosalgo.FTextField();
-        DepSerCancelButton = new button.MyButton();
+        ActionButton = new button.MyButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         description = new CustomComponents.MyTextArea();
         jScrollPane6 = new javax.swing.JScrollPane();
@@ -149,17 +160,17 @@ public class EditAndCancelService extends javax.swing.JFrame {
         ownerPhone.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         ownerPhone.setRadius(20);
 
-        DepSerCancelButton.setText("Done");
-        DepSerCancelButton.setBorderColor(new java.awt.Color(13, 180, 185));
-        DepSerCancelButton.setBorderPainted(false);
-        DepSerCancelButton.setColor(new java.awt.Color(184, 248, 250));
-        DepSerCancelButton.setColorClick(new java.awt.Color(126, 240, 244));
-        DepSerCancelButton.setColorOver(new java.awt.Color(126, 240, 244));
-        DepSerCancelButton.setFocusPainted(false);
-        DepSerCancelButton.setFocusable(false);
-        DepSerCancelButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        DepSerCancelButton.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
-        DepSerCancelButton.setRadius(20);
+        ActionButton.setText("Update Service");
+        ActionButton.setBorderColor(new java.awt.Color(13, 180, 185));
+        ActionButton.setBorderPainted(false);
+        ActionButton.setColor(new java.awt.Color(184, 248, 250));
+        ActionButton.setColorClick(new java.awt.Color(126, 240, 244));
+        ActionButton.setColorOver(new java.awt.Color(126, 240, 244));
+        ActionButton.setFocusPainted(false);
+        ActionButton.setFocusable(false);
+        ActionButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        ActionButton.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        ActionButton.setRadius(20);
 
         jScrollPane1.setBorder(null);
 
@@ -222,7 +233,7 @@ public class EditAndCancelService extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(DepSerCancelButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(DepSerCancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(ActionButton, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4)
@@ -278,7 +289,7 @@ public class EditAndCancelService extends javax.swing.JFrame {
                     .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 471, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(DepSerCancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ActionButton, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(DepSerCancelButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
@@ -465,7 +476,7 @@ public class EditAndCancelService extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private button.MyButton DepSerCancelButton;
+    private button.MyButton ActionButton;
     private button.MyButton DepSerCancelButton1;
     private fosalgo.FTextField VehicleRegNo;
     private javax.swing.JLabel dateLable;
