@@ -232,6 +232,11 @@ public class Home extends javax.swing.JInternalFrame {
         progressButton1.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
         progressButton1.setIconTextGap(30);
         progressButton1.setRadius(20);
+        progressButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                progressButton1ActionPerformed(evt);
+            }
+        });
 
         jScrollPane2.setBackground(new java.awt.Color(255, 255, 255));
         jScrollPane2.setBorder(null);
@@ -699,6 +704,17 @@ public class Home extends javax.swing.JInternalFrame {
             searchMenu.setVisible(false);
         }
     }//GEN-LAST:event_invoiceSearchKeyReleased
+
+    private void progressButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_progressButton1ActionPerformed
+        // TODO add your handling code here:
+        try {
+            Statement statement = DBconnect.connectToDB().createStatement();
+            statement.execute("UPDATE VehicleDetails SET States = 'Done' WHERE InvoiceNo = '"+ searchPanelList.getSelectedValue() +"'");
+        } catch (SQLException ex) {
+            Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }//GEN-LAST:event_progressButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

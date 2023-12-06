@@ -7,6 +7,7 @@ package Reports;
 import DBConnect.DBconnect;
 import Manage.Manage;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Font;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -36,7 +37,13 @@ public class Reports extends javax.swing.JInternalFrame {
         
         cardLayout = (CardLayout) panelCards.getLayout();
         
-        LoadEnterdVehiclesTable();
+        LoadEnterdVehiclesTable("All");
+        
+        DepSerEditButton.setVisible(false);
+        DepSerCancelButton.setVisible(false);
+        
+        EntSerEditButton.setVisible(false);
+        EntSerCancelButton.setVisible(false);
     }
 
     /**
@@ -59,12 +66,16 @@ public class Reports extends javax.swing.JInternalFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         enterdVehiclesTable = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
+        EntSerEditButton = new button.MyButton();
+        EntSerCancelButton = new button.MyButton();
+        searchEntVehicle = new fosalgo.FTextField();
         departedVehiclesCard = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         departedVehiclesTable = new javax.swing.JTable();
         DepSerCancelButton = new button.MyButton();
         DepSerEditButton = new button.MyButton();
+        searchDepVehicle = new fosalgo.FTextField();
 
         setBorder(null);
 
@@ -162,6 +173,7 @@ public class Reports extends javax.swing.JInternalFrame {
         panelCards.setLayout(new java.awt.CardLayout());
 
         enterdVehiclesCard.setBackground(new java.awt.Color(255, 255, 255));
+        enterdVehiclesCard.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         enterdVehiclesTable.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         enterdVehiclesTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -179,37 +191,97 @@ public class Reports extends javax.swing.JInternalFrame {
         enterdVehiclesTable.setGridColor(new java.awt.Color(204, 204, 204));
         enterdVehiclesTable.setName(""); // NOI18N
         enterdVehiclesTable.setRowHeight(25);
+        enterdVehiclesTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                enterdVehiclesTableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(enterdVehiclesTable);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel2.setText("Enterd Vehicles List");
+
+        EntSerEditButton.setText("Service Edit");
+        EntSerEditButton.setBorderColor(new java.awt.Color(13, 180, 185));
+        EntSerEditButton.setBorderPainted(false);
+        EntSerEditButton.setColorClick(new java.awt.Color(184, 248, 250));
+        EntSerEditButton.setColorOver(new java.awt.Color(184, 248, 250));
+        EntSerEditButton.setFocusPainted(false);
+        EntSerEditButton.setFocusable(false);
+        EntSerEditButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        EntSerEditButton.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        EntSerEditButton.setRadius(20);
+        EntSerEditButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EntSerEditButtonActionPerformed(evt);
+            }
+        });
+
+        EntSerCancelButton.setText("Service Cancel");
+        EntSerCancelButton.setBorderColor(new java.awt.Color(13, 180, 185));
+        EntSerCancelButton.setBorderPainted(false);
+        EntSerCancelButton.setColorClick(new java.awt.Color(184, 248, 250));
+        EntSerCancelButton.setColorOver(new java.awt.Color(184, 248, 250));
+        EntSerCancelButton.setFocusPainted(false);
+        EntSerCancelButton.setFocusable(false);
+        EntSerCancelButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        EntSerCancelButton.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        EntSerCancelButton.setRadius(20);
+        EntSerCancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EntSerCancelButtonActionPerformed(evt);
+            }
+        });
+
+        searchEntVehicle.setForeground(new java.awt.Color(153, 153, 153));
+        searchEntVehicle.setText("Search by invoice no or vehicle no");
+        searchEntVehicle.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        searchEntVehicle.setRadius(20);
+        searchEntVehicle.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                searchEntVehicleFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                searchEntVehicleFocusLost(evt);
+            }
+        });
+        searchEntVehicle.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                searchEntVehicleKeyReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout enterdVehiclesCardLayout = new javax.swing.GroupLayout(enterdVehiclesCard);
         enterdVehiclesCard.setLayout(enterdVehiclesCardLayout);
         enterdVehiclesCardLayout.setHorizontalGroup(
             enterdVehiclesCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(enterdVehiclesCardLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(enterdVehiclesCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1020, Short.MAX_VALUE)
-                    .addGroup(enterdVehiclesCardLayout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 356, Short.MAX_VALUE)
+                .addComponent(searchEntVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(EntSerEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(EntSerCancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(jScrollPane1)
         );
         enterdVehiclesCardLayout.setVerticalGroup(
             enterdVehiclesCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(enterdVehiclesCardLayout.createSequentialGroup()
-                .addGap(13, 13, 13)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 622, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(0, 0, 0)
+                .addGroup(enterdVehiclesCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(EntSerCancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(EntSerEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchEntVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 611, Short.MAX_VALUE))
         );
 
         panelCards.add(enterdVehiclesCard, "enterdVehiclesCard");
 
         departedVehiclesCard.setBackground(new java.awt.Color(255, 255, 255));
+        departedVehiclesCard.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel8.setText("Departed Vehicles List");
@@ -267,34 +339,54 @@ public class Reports extends javax.swing.JInternalFrame {
             }
         });
 
+        searchDepVehicle.setForeground(new java.awt.Color(153, 153, 153));
+        searchDepVehicle.setText("Search by invoice no or vehicle no");
+        searchDepVehicle.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        searchDepVehicle.setRadius(20);
+        searchDepVehicle.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                searchDepVehicleFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                searchDepVehicleFocusLost(evt);
+            }
+        });
+        searchDepVehicle.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                searchDepVehicleKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout departedVehiclesCardLayout = new javax.swing.GroupLayout(departedVehiclesCard);
         departedVehiclesCard.setLayout(departedVehiclesCardLayout);
         departedVehiclesCardLayout.setHorizontalGroup(
             departedVehiclesCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(departedVehiclesCardLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(0, 0, 0)
                 .addGroup(departedVehiclesCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1020, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2)
                     .addGroup(departedVehiclesCardLayout.createSequentialGroup()
                         .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 332, Short.MAX_VALUE)
+                        .addComponent(searchDepVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(DepSerEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(DepSerCancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                .addGap(0, 0, 0))
         );
         departedVehiclesCardLayout.setVerticalGroup(
             departedVehiclesCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(departedVehiclesCardLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(departedVehiclesCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGap(0, 0, 0)
+                .addGroup(departedVehiclesCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(DepSerCancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(DepSerEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8)
-                    .addGroup(departedVehiclesCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(DepSerCancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(DepSerEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)
-                .addContainerGap())
+                    .addComponent(searchDepVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(5, 5, 5)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 612, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
         );
 
         panelCards.add(departedVehiclesCard, "departedVehiclesCard");
@@ -332,14 +424,14 @@ public class Reports extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         cardLayout.show(panelCards, "enterdVehiclesCard");
         
-        LoadEnterdVehiclesTable();
+        LoadEnterdVehiclesTable("All");
     }//GEN-LAST:event_showEnterdVehiclePaneButtonActionPerformed
 
     private void showDepartedVehiclePaneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showDepartedVehiclePaneButtonActionPerformed
         // TODO add your handling code here:
         cardLayout.show(panelCards, "departedVehiclesCard");
         
-        LoadDepartedVehiclesTable();
+        LoadDepartedVehiclesTable("All");
     }//GEN-LAST:event_showDepartedVehiclePaneButtonActionPerformed
 
     private void DepSerCancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DepSerCancelButtonActionPerformed
@@ -352,15 +444,78 @@ public class Reports extends javax.swing.JInternalFrame {
 
     private void departedVehiclesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_departedVehiclesTableMouseClicked
         // TODO add your handling code here:
+        DepSerEditButton.setVisible(true);
+        DepSerCancelButton.setVisible(true);
     }//GEN-LAST:event_departedVehiclesTableMouseClicked
 
-    private void LoadEnterdVehiclesTable(){
+    private void EntSerEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EntSerEditButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_EntSerEditButtonActionPerformed
+
+    private void EntSerCancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EntSerCancelButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_EntSerCancelButtonActionPerformed
+
+    private void enterdVehiclesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_enterdVehiclesTableMouseClicked
+        // TODO add your handling code here:
+        EntSerEditButton.setVisible(true);
+        EntSerCancelButton.setVisible(true);
+    }//GEN-LAST:event_enterdVehiclesTableMouseClicked
+
+    private void searchDepVehicleFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_searchDepVehicleFocusLost
+        // TODO add your handling code here:
+        if(searchDepVehicle.getText().equals("")){
+            searchDepVehicle.setText("Search by invoice no or vehicle no");
+            searchDepVehicle.setForeground(new Color(153,153,153));
+        }
+    }//GEN-LAST:event_searchDepVehicleFocusLost
+
+    private void searchDepVehicleFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_searchDepVehicleFocusGained
+        // TODO add your handling code here:
+        if(searchDepVehicle.getText().equals("Search by invoice no or vehicle no")){
+            searchDepVehicle.setText("");
+            searchDepVehicle.setForeground(Color.BLACK);
+        }
+    }//GEN-LAST:event_searchDepVehicleFocusGained
+
+    private void searchEntVehicleFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_searchEntVehicleFocusGained
+        // TODO add your handling code here:
+        if(searchEntVehicle.getText().equals("Search by invoice no or vehicle no")){
+            searchEntVehicle.setText("");
+            searchEntVehicle.setForeground(Color.BLACK);
+        }
+    }//GEN-LAST:event_searchEntVehicleFocusGained
+
+    private void searchEntVehicleFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_searchEntVehicleFocusLost
+        // TODO add your handling code here:
+        if(searchEntVehicle.getText().equals("")){
+            searchEntVehicle.setText("Search by invoice no or vehicle no");
+            searchEntVehicle.setForeground(new Color(153,153,153));
+        }
+    }//GEN-LAST:event_searchEntVehicleFocusLost
+
+    private void searchEntVehicleKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchEntVehicleKeyReleased
+        // TODO add your handling code here:
+        LoadEnterdVehiclesTable(searchEntVehicle.getText());
+    }//GEN-LAST:event_searchEntVehicleKeyReleased
+
+    private void searchDepVehicleKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchDepVehicleKeyReleased
+        // TODO add your handling code here:
+        LoadDepartedVehiclesTable(searchDepVehicle.getText());
+    }//GEN-LAST:event_searchDepVehicleKeyReleased
+
+    private void LoadEnterdVehiclesTable(String search){
         //serviceUnitTable data load
         JTableHeader header = enterdVehiclesTable.getTableHeader();
         header.setFont(new Font("Segoe UI", Font.BOLD , 14));
         try {
             Statement statement = DBconnect.connectToDB().createStatement();
-            statement.execute("Select InvoiceNo, Date, VehicleNo, OwnerName, Phone, VehicleType, Description From VehicleDetails Where States = 'Processing'");
+            if(search.equals("All")){
+                statement.execute("Select InvoiceNo, Date, VehicleNo, OwnerName, Phone, VehicleType, Description From VehicleDetails Where States = 'Processing'");
+            }else{
+                statement.execute("Select InvoiceNo, Date, VehicleNo, OwnerName, Phone, VehicleType, Description From VehicleDetails Where (InvoiceNo like '%"+ search +"%' OR VehicleNo like '%"+ search +"%') AND States = 'Processing'");
+            }
+            
             ResultSet resultSet = statement.getResultSet(); 
             
             enterdVehiclesTable.setModel(DbUtils.resultSetToTableModel(resultSet));
@@ -370,13 +525,17 @@ public class Reports extends javax.swing.JInternalFrame {
         }
     }
     
-    private void LoadDepartedVehiclesTable(){
+    private void LoadDepartedVehiclesTable(String search){
         //serviceUnitTable data load
         JTableHeader header = departedVehiclesTable.getTableHeader();
         header.setFont(new Font("Segoe UI", Font.BOLD , 14));
         try {
             Statement statement = DBconnect.connectToDB().createStatement();
-            statement.execute("Select InvoiceNo, Date, VehicleNo, OwnerName, Phone, VehicleType, Description From VehicleDetails Where States = 'Done'");
+            if(search.equals("All")){
+                statement.execute("Select InvoiceNo, Date, VehicleNo, OwnerName, Phone, VehicleType, Description From VehicleDetails Where States = 'Done'");
+            }else{
+                statement.execute("Select InvoiceNo, Date, VehicleNo, OwnerName, Phone, VehicleType, Description From VehicleDetails Where (InvoiceNo like '%"+ search +"%' OR VehicleNo like '%"+ search +"%') AND States = 'Done'");
+            }
             ResultSet resultSet = statement.getResultSet(); 
             
             departedVehiclesTable.setModel(DbUtils.resultSetToTableModel(resultSet));
@@ -389,6 +548,8 @@ public class Reports extends javax.swing.JInternalFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private button.MyButton DepSerCancelButton;
     private button.MyButton DepSerEditButton;
+    private button.MyButton EntSerCancelButton;
+    private button.MyButton EntSerEditButton;
     private button.MyButton VehicleTypesButton;
     private javax.swing.JPanel departedVehiclesCard;
     private javax.swing.JTable departedVehiclesTable;
@@ -402,6 +563,8 @@ public class Reports extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPanel panelCards;
     private button.MyButton productButton;
+    private fosalgo.FTextField searchDepVehicle;
+    private fosalgo.FTextField searchEntVehicle;
     private button.MyButton showDepartedVehiclePaneButton;
     private button.MyButton showEnterdVehiclePaneButton;
     // End of variables declaration//GEN-END:variables
