@@ -408,7 +408,6 @@ public class Dashboard extends javax.swing.JFrame {
 //        }while(true);
 //    }
     
-    
     private void homeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeButtonActionPerformed
         // TODO add your handling code here:
         resetButonStyles();

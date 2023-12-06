@@ -615,20 +615,6 @@ public class Home extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_progressButtonActionPerformed
 
-    private void VehicleRegNoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_VehicleRegNoKeyReleased
-        // TODO add your handling code here:
-        generateQRCode();
-        
-        String text = VehicleRegNo.getText();
-        char lastLetter = text.charAt(text.length() - 1);
-        if(lastLetter >= '0' && lastLetter <= '9'){
-            if(!VehicleRegNo.getText().contains("-")){
-                VehicleRegNo.setText(VehicleRegNo.getText().substring(0, VehicleRegNo.getText().length()-1) + '-' + lastLetter);
-            }
-        }
-        
-    }//GEN-LAST:event_VehicleRegNoKeyReleased
-
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         // TODO add your handling code here:
         VehicleRegNo.setText("");
@@ -715,6 +701,20 @@ public class Home extends javax.swing.JInternalFrame {
         }
         
     }//GEN-LAST:event_progressButton1ActionPerformed
+
+    private void VehicleRegNoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_VehicleRegNoKeyReleased
+        // TODO add your handling code here:
+        generateQRCode();
+
+        String text = VehicleRegNo.getText();
+        char lastLetter = text.charAt(text.length() - 1);
+        if(lastLetter >= '0' && lastLetter <= '9'){
+            if(!VehicleRegNo.getText().contains("-")){
+                VehicleRegNo.setText(VehicleRegNo.getText().substring(0, VehicleRegNo.getText().length()-1) + '-' + lastLetter);
+            }
+        }
+
+    }//GEN-LAST:event_VehicleRegNoKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

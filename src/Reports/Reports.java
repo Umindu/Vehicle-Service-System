@@ -435,11 +435,15 @@ public class Reports extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_showDepartedVehiclePaneButtonActionPerformed
 
     private void DepSerCancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DepSerCancelButtonActionPerformed
-       
+        // TODO add your handling code here:
+        int invoiceID = (int) departedVehiclesTable.getModel().getValueAt(departedVehiclesTable.getSelectedRow(),0);
+        CancelService(invoiceID, "Cancel");
     }//GEN-LAST:event_DepSerCancelButtonActionPerformed
 
     private void DepSerEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DepSerEditButtonActionPerformed
         // TODO add your handling code here:
+        int invoiceID = (int) departedVehiclesTable.getModel().getValueAt(departedVehiclesTable.getSelectedRow(),0);
+        CancelService(invoiceID, null);
     }//GEN-LAST:event_DepSerEditButtonActionPerformed
 
     private void departedVehiclesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_departedVehiclesTableMouseClicked
@@ -450,10 +454,14 @@ public class Reports extends javax.swing.JInternalFrame {
 
     private void EntSerEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EntSerEditButtonActionPerformed
         // TODO add your handling code here:
+        int invoiceID = (int) enterdVehiclesTable.getModel().getValueAt(enterdVehiclesTable.getSelectedRow(),0);
+        CancelService(invoiceID, null);
     }//GEN-LAST:event_EntSerEditButtonActionPerformed
 
     private void EntSerCancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EntSerCancelButtonActionPerformed
         // TODO add your handling code here:
+        int invoiceID = (int) enterdVehiclesTable.getModel().getValueAt(enterdVehiclesTable.getSelectedRow(),0);
+        CancelService(invoiceID, "Cancel");
     }//GEN-LAST:event_EntSerCancelButtonActionPerformed
 
     private void enterdVehiclesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_enterdVehiclesTableMouseClicked
@@ -543,6 +551,14 @@ public class Reports extends javax.swing.JInternalFrame {
         } catch (SQLException ex) {
             Logger.getLogger(Manage.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public void CancelService(int invoiceID, String ActionType){
+        EditAndCancelService editAndCancelService = new EditAndCancelService(invoiceID, ActionType);
+        editAndCancelService.setObject(editAndCancelService, invoiceID);
+        
+        editAndCancelService.setVisible(true);
+        editAndCancelService.setLocationRelativeTo(null); 
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

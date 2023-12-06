@@ -693,7 +693,7 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
                     Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }else{
-                JOptionPane.showMessageDialog(null, "No invoice number selected !", "Empty", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "No invoice number selected !", "Empty", JOptionPane.WARNING_MESSAGE);
             }
         }
         searchMenu.setVisible(false);
