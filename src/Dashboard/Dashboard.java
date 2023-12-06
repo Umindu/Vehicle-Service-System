@@ -7,6 +7,7 @@ package Dashboard;
 import Home.Home;
 import Login.Login;
 import Manage.Manage;
+import Reports.Reports;
 import Vehicles.Vehicles;
 import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamPanel;
@@ -458,6 +459,15 @@ public class Dashboard extends javax.swing.JFrame {
         resetButonStyles();
         reportButton.setBorderColor(new Color(13,180,185));
         reportButton.setColor(new Color(184,248,250));
+        
+        Reports reports = new Reports();
+        mainWindowPanel.removeAll();
+        mainWindowPanel.add(reports).setVisible(true);
+        try {
+            reports.setMaximum(true);
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(Dashboard.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_reportButtonActionPerformed
 
     private void settingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_settingButtonActionPerformed

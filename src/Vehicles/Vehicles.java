@@ -514,6 +514,7 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
                         
                         Toolkit.getDefaultToolkit().beep();
                         
+                        
 //                        webcam.close();
 //                        webCamOpenWindow.setVisible(false);
                 }

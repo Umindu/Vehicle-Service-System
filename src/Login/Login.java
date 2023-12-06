@@ -6,14 +6,11 @@ package Login;
 
 import DBConnect.DBconnect;
 import Dashboard.Dashboard;
-import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.event.InternalFrameAdapter;
-import javax.swing.event.InternalFrameEvent;
 
 /**
  *

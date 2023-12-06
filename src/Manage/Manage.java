@@ -585,11 +585,9 @@ public class Manage extends javax.swing.JInternalFrame {
                         .addComponent(jLabel2)
                         .addGap(0, 575, Short.MAX_VALUE))
                     .addGroup(serviesUnitCardLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGap(0, 556, Short.MAX_VALUE)
                         .addComponent(servicesUnitDeleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(serviesUnitCardLayout.createSequentialGroup()
-                        .addComponent(jScrollPane1)
-                        .addGap(106, 106, 106)))
+                    .addComponent(jScrollPane1))
                 .addGap(18, 18, 18)
                 .addGroup(serviesUnitCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel3)
@@ -1328,6 +1326,7 @@ public class Manage extends javax.swing.JInternalFrame {
                 "Title 1", "Title 2"
             }
         ));
+        productTable.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         productTable.setGridColor(new java.awt.Color(204, 204, 204));
         productTable.setRowHeight(25);
         productTable.addMouseListener(new java.awt.event.MouseAdapter() {
