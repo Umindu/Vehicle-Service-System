@@ -24,10 +24,14 @@ import net.proteanit.sql.DbUtils;
  */
 public class Reports extends javax.swing.JInternalFrame {
 
+    
+
     /**
      * Creates new form Reports
      */
     CardLayout cardLayout;
+    
+    Reports reports;
     
     public Reports() {
         initComponents();
@@ -420,6 +424,10 @@ public class Reports extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    public void setObject(Reports reports) {
+        this.reports = reports;
+    }
+    
     private void showEnterdVehiclePaneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showEnterdVehiclePaneButtonActionPerformed
         // TODO add your handling code here:
         cardLayout.show(panelCards, "enterdVehiclesCard");
@@ -512,7 +520,7 @@ public class Reports extends javax.swing.JInternalFrame {
         LoadDepartedVehiclesTable(searchDepVehicle.getText());
     }//GEN-LAST:event_searchDepVehicleKeyReleased
 
-    private void LoadEnterdVehiclesTable(String search){
+    public void LoadEnterdVehiclesTable(String search){
         //serviceUnitTable data load
         JTableHeader header = enterdVehiclesTable.getTableHeader();
         header.setFont(new Font("Segoe UI", Font.BOLD , 14));
@@ -555,7 +563,7 @@ public class Reports extends javax.swing.JInternalFrame {
     
     public void CancelService(int invoiceID, String ActionType){
         EditAndCancelService editAndCancelService = new EditAndCancelService(invoiceID, ActionType);
-        editAndCancelService.setObject(editAndCancelService, invoiceID);
+        editAndCancelService.setObject(editAndCancelService, reports, invoiceID);
         
         editAndCancelService.setVisible(true);
         editAndCancelService.setLocationRelativeTo(null); 

@@ -462,6 +462,7 @@ public class Dashboard extends javax.swing.JFrame {
         Reports reports = new Reports();
         mainWindowPanel.removeAll();
         mainWindowPanel.add(reports).setVisible(true);
+        reports.setObject(reports);
         try {
             reports.setMaximum(true);
         } catch (PropertyVetoException ex) {
