@@ -6,6 +6,7 @@ package Home;
 
 import DBConnect.DBconnect;
 import Manage.Manage;
+import Payments.Payments;
 import Vehicles.Vehicles;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
@@ -31,6 +32,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
@@ -53,6 +55,12 @@ public class Home extends javax.swing.JInternalFrame {
     private Home home;
     
     private ImageIcon qrImg; 
+    
+    private boolean discountPercentage = true;
+    
+    private float subTotalCal = 0;
+    
+    private float payableAmountCal = 0;
 
     
     ArrayList<ArrayList<String> > allServicesList =  new ArrayList<ArrayList<String> >(); 
@@ -122,10 +130,13 @@ public class Home extends javax.swing.JInternalFrame {
         progressButton1 = new button.MyButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         serAndProPanel = new javax.swing.JPanel();
-        jLabel10 = new javax.swing.JLabel();
+        payableAmount = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
-        fTextField1 = new fosalgo.FTextField();
+        discount = new fosalgo.FTextField();
+        discountToggle = new javax.swing.JToggleButton();
+        jLabel14 = new javax.swing.JLabel();
+        subTotal = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel7 = new javax.swing.JLabel();
         ownerPhone = new fosalgo.FTextField();
@@ -258,9 +269,9 @@ public class Home extends javax.swing.JInternalFrame {
 
         jScrollPane2.setViewportView(serAndProPanel);
 
-        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel10.setText("Rs. 0.00");
+        payableAmount.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        payableAmount.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        payableAmount.setText("Rs. 0.00");
 
         jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel11.setText("Payabel Amount :");
@@ -268,13 +279,38 @@ public class Home extends javax.swing.JInternalFrame {
         jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel12.setText("Discount :");
 
-        fTextField1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        fTextField1.setRadius(15);
-        fTextField1.addActionListener(new java.awt.event.ActionListener() {
+        discount.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        discount.setRadius(15);
+        discount.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fTextField1ActionPerformed(evt);
+                discountActionPerformed(evt);
             }
         });
+        discount.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                discountKeyReleased(evt);
+            }
+        });
+
+        discountToggle.setBackground(new java.awt.Color(184, 248, 250));
+        discountToggle.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        discountToggle.setText("%");
+        discountToggle.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        discountToggle.setBorderPainted(false);
+        discountToggle.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        discountToggle.setFocusPainted(false);
+        discountToggle.setFocusable(false);
+        discountToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                discountToggleActionPerformed(evt);
+            }
+        });
+
+        jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel14.setText("Sub Total :");
+
+        subTotal.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        subTotal.setText("Rs. 0.00");
 
         javax.swing.GroupLayout sidePanelLayout = new javax.swing.GroupLayout(sidePanel);
         sidePanel.setLayout(sidePanelLayout);
@@ -287,16 +323,23 @@ public class Home extends javax.swing.JInternalFrame {
                     .addComponent(progressButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sidePanelLayout.createSequentialGroup()
                         .addComponent(invoiceSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 98, Short.MAX_VALUE)
                         .addComponent(invoiceNoLable, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sidePanelLayout.createSequentialGroup()
                         .addGroup(sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel12)
                             .addComponent(jLabel11))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 90, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(fTextField1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sidePanelLayout.createSequentialGroup()
+                                .addComponent(discountToggle, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(discount, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(payableAmount, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(sidePanelLayout.createSequentialGroup()
+                        .addComponent(jLabel14)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(subTotal)))
                 .addContainerGap())
         );
         sidePanelLayout.setVerticalGroup(
@@ -307,14 +350,19 @@ public class Home extends javax.swing.JInternalFrame {
                     .addComponent(invoiceSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(invoiceNoLable))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 456, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(subTotal)
+                    .addComponent(jLabel14))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
-                    .addComponent(fTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(discount, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(discountToggle))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(payableAmount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel11))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(progressButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -386,7 +434,7 @@ public class Home extends javax.swing.JInternalFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 283, Short.MAX_VALUE)
+                        .addGap(0, 276, Short.MAX_VALUE)
                         .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(progressButton, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -454,7 +502,7 @@ public class Home extends javax.swing.JInternalFrame {
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(progressButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -556,6 +604,21 @@ public class Home extends javax.swing.JInternalFrame {
         serAndProPanel.invalidate();
         serAndProPanel.validate();
         serAndProPanel.repaint();
+        
+//        payableAmountCal discount discountPercentage
+        subTotal.setText("Rs. "+String.valueOf(subTotalCal));
+        if(!discount.getText().isEmpty()){
+            if(discountPercentage == true){
+                payableAmountCal = subTotalCal - ((subTotalCal * (Float.parseFloat(discount.getText()) / 100)));
+                payableAmount.setText("Rs. "+String.valueOf(payableAmountCal));
+            }else{
+                payableAmountCal = subTotalCal - Float.parseFloat(discount.getText());
+                payableAmount.setText("Rs. "+String.valueOf(payableAmountCal));
+            }
+        }else{
+            payableAmountCal = subTotalCal;
+            payableAmount.setText("Rs. "+String.valueOf(subTotalCal));
+        }
     }
     
 
@@ -578,9 +641,9 @@ public class Home extends javax.swing.JInternalFrame {
         }
     }
     
-    private void fTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fTextField1ActionPerformed
+    private void discountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discountActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_fTextField1ActionPerformed
+    }//GEN-LAST:event_discountActionPerformed
 
     private void VehicleTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VehicleTypeComboBoxActionPerformed
         // TODO add your handling code here:
@@ -628,6 +691,8 @@ public class Home extends javax.swing.JInternalFrame {
 
     private void searchPanelListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchPanelListMouseClicked
         // TODO add your handling code here:
+        ClearSidePane();
+        
         invoiceNoLable.setText("#"+searchPanelList.getSelectedValue());
         try {
             Statement statement = DBconnect.connectToDB().createStatement();
@@ -638,6 +703,7 @@ public class Home extends javax.swing.JInternalFrame {
                 serviceList.add(resultSet.getString("ServiceUnit"));
                 serviceList.add(resultSet.getString("ServiceCharge"));
                 allServicesList.add(serviceList);
+                subTotalCal = subTotalCal + Float.parseFloat(resultSet.getString("ServiceCharge"));
             }
             for(int i=0; i < allServicesList.size(); i++){
                 String serUnit = allServicesList.get(i).get(0);
@@ -653,6 +719,7 @@ public class Home extends javax.swing.JInternalFrame {
                     productList.add(resultSetProducts.getString("Total"));
                     productList.add(resultSetProducts.getString("ServiceUnit"));
                     allProductList.add(productList);
+                    subTotalCal = subTotalCal + Float.parseFloat(resultSetProducts.getString("Total"));
                 }
             }
             RefrashSerAndProPanel();
@@ -666,9 +733,6 @@ public class Home extends javax.swing.JInternalFrame {
 
     private void invoiceSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_invoiceSearchKeyReleased
         // TODO add your handling code here:
-        allServicesList.clear();
-        allProductList.clear();
-        serAndProPanel.removeAll();
         String search = invoiceSearch.getText().trim();
         if(!search.equals("")){
             ListModel.removeAllElements();
@@ -691,15 +755,29 @@ public class Home extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_invoiceSearchKeyReleased
 
+    public void ClearSidePane(){
+        allServicesList.clear();
+        allProductList.clear();
+        serAndProPanel.removeAll();
+        subTotalCal = 0;
+        payableAmountCal = 0;
+        discount.setText("");
+        invoiceNoLable.setText("Invoice No");
+        
+        RefrashSerAndProPanel();
+    }
+    
     private void progressButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_progressButton1ActionPerformed
         // TODO add your handling code here:
-        try {
-            Statement statement = DBconnect.connectToDB().createStatement();
-            statement.execute("UPDATE VehicleDetails SET States = 'Done' WHERE InvoiceNo = '"+ searchPanelList.getSelectedValue() +"'");
-        } catch (SQLException ex) {
-            Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+        if(!invoiceNoLable.getText().equals("Invoice No")){
+            Payments payments = new Payments(invoiceNoLable.getText().substring(1) , subTotalCal, discountPercentage, discount.getText().isEmpty() ? "0" : discount.getText(), payableAmountCal);
+            payments.setLocationRelativeTo(null); 
+            payments.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            payments.setBackground(new Color(0,0,0,150));
+            payments.setVisible(true);
+            
+            payments.setObject(home);
         }
-        
     }//GEN-LAST:event_progressButton1ActionPerformed
 
     private void VehicleRegNoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_VehicleRegNoKeyReleased
@@ -716,6 +794,46 @@ public class Home extends javax.swing.JInternalFrame {
 
     }//GEN-LAST:event_VehicleRegNoKeyReleased
 
+    private void discountToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discountToggleActionPerformed
+        // TODO add your handling code here:
+        if(discountToggle.isSelected()){
+            discountToggle.setText("Rs.");
+            discountPercentage = false;
+        }else{
+            discountToggle.setText("%");
+            discountPercentage = true;
+        }
+        
+        if(!discount.getText().isEmpty()){
+            if(discountPercentage == true){
+                payableAmountCal = subTotalCal - ((subTotalCal * (Float.parseFloat(discount.getText()) / 100)));
+                payableAmount.setText("Rs. "+String.valueOf(payableAmountCal));
+            }else{
+                payableAmountCal = subTotalCal - Float.parseFloat(discount.getText());
+                payableAmount.setText("Rs. "+String.valueOf(payableAmountCal));
+            }
+        }else{
+            payableAmountCal = subTotalCal;
+            payableAmount.setText("Rs. "+String.valueOf(subTotalCal));
+        }
+    }//GEN-LAST:event_discountToggleActionPerformed
+
+    private void discountKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_discountKeyReleased
+        // TODO add your handling code here:
+        if(!discount.getText().isEmpty()){
+            if(discountPercentage == true){
+                payableAmountCal = subTotalCal - ((subTotalCal * (Float.parseFloat(discount.getText()) / 100)));
+                payableAmount.setText("Rs. "+String.valueOf(payableAmountCal));
+            }else{
+                payableAmountCal = subTotalCal - Float.parseFloat(discount.getText());
+                payableAmount.setText("Rs. "+String.valueOf(payableAmountCal));
+            }
+        }else{
+            payableAmountCal = subTotalCal;
+            payableAmount.setText("Rs. "+String.valueOf(subTotalCal));
+        }
+    }//GEN-LAST:event_discountKeyReleased
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private fosalgo.FTextField VehicleRegNo;
@@ -723,14 +841,15 @@ public class Home extends javax.swing.JInternalFrame {
     private button.MyButton cancelButton;
     private javax.swing.JLabel dateLable;
     private CustomComponents.MyTextArea description;
-    private fosalgo.FTextField fTextField1;
+    private fosalgo.FTextField discount;
+    private javax.swing.JToggleButton discountToggle;
     private fosalgo.FTextField invoiceNo;
     private javax.swing.JLabel invoiceNoLable;
     private fosalgo.FTextField invoiceSearch;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -743,6 +862,7 @@ public class Home extends javax.swing.JInternalFrame {
     private javax.swing.JSeparator jSeparator1;
     private fosalgo.FTextField ownerName;
     private fosalgo.FTextField ownerPhone;
+    private javax.swing.JLabel payableAmount;
     private button.MyButton progressButton;
     private button.MyButton progressButton1;
     private javax.swing.JLabel qrCode;
@@ -751,6 +871,7 @@ public class Home extends javax.swing.JInternalFrame {
     private javax.swing.JList<String> searchPanelList;
     private javax.swing.JPanel serAndProPanel;
     private javax.swing.JPanel sidePanel;
+    private javax.swing.JLabel subTotal;
     private javax.swing.JLabel timeLabel;
     // End of variables declaration//GEN-END:variables
 }

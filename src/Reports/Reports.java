@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.JTableHeader;
 import net.proteanit.sql.DbUtils;
@@ -564,9 +565,11 @@ public class Reports extends javax.swing.JInternalFrame {
     public void CancelService(int invoiceID, String ActionType){
         EditAndCancelService editAndCancelService = new EditAndCancelService(invoiceID, ActionType);
         editAndCancelService.setObject(editAndCancelService, reports, invoiceID);
-        
-        editAndCancelService.setVisible(true);
         editAndCancelService.setLocationRelativeTo(null); 
+        
+        editAndCancelService.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        editAndCancelService.getContentPane().setBackground(new Color(0,0,0,150));
+        editAndCancelService.setVisible(true);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

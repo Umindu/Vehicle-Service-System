@@ -46,6 +46,7 @@ public class Dashboard extends javax.swing.JFrame {
         Home home = new Home();
         mainWindowPanel.removeAll();
         mainWindowPanel.add(home).setVisible(true);
+        home.setObject(home);
         try {
             home.setMaximum(true);
         } catch (PropertyVetoException ex) {

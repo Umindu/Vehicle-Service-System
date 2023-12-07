@@ -9,6 +9,7 @@ import Login.Login;
 import Reports.Templates.ProductItem;
 import Reports.Templates.ServiceChargeItem;
 import Vehicles.Vehicles;
+import java.awt.Color;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -42,7 +43,9 @@ public class EditAndCancelService extends javax.swing.JFrame {
     
     Reports reports;
     
-    public EditAndCancelService(int invoiceID, String ActionType) {
+    public EditAndCancelService(int invoiceID, String ActionType) { 
+//        setUndecorated(true);
+        
         initComponents();
         
         this.ActionType = ActionType;
@@ -116,6 +119,7 @@ public class EditAndCancelService extends javax.swing.JFrame {
         vehicleType = new fosalgo.FTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(102, 204, 255));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -149,6 +153,11 @@ public class EditAndCancelService extends javax.swing.JFrame {
         DepSerCancelButton1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         DepSerCancelButton1.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         DepSerCancelButton1.setRadius(20);
+        DepSerCancelButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DepSerCancelButton1ActionPerformed(evt);
+            }
+        });
 
         invoiceNo.setFocusable(false);
         invoiceNo.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -305,16 +314,16 @@ public class EditAndCancelService extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(9, 9, 9)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -375,6 +384,11 @@ public class EditAndCancelService extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_ActionButtonActionPerformed
+
+    private void DepSerCancelButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DepSerCancelButton1ActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_DepSerCancelButton1ActionPerformed
 
     public void setObject(EditAndCancelService editAndCancelService1, Reports reports, int invoiceID){
         this.editAndCancelService = editAndCancelService1;
@@ -547,17 +561,9 @@ public class EditAndCancelService extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private fosalgo.FTextField ownerName;
     private fosalgo.FTextField ownerPhone;
-    private javax.swing.JPanel serAndProPanel;
-    private javax.swing.JPanel serAndProPanel1;
-    private javax.swing.JPanel serAndProPanel2;
-    private javax.swing.JPanel serAndProPanel3;
     private javax.swing.JPanel serAndProPanel4;
     private javax.swing.JLabel timeLabel;
     private fosalgo.FTextField vehicleType;
