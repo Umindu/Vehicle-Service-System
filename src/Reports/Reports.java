@@ -565,10 +565,10 @@ public class Reports extends javax.swing.JInternalFrame {
     public void CancelService(int invoiceID, String ActionType){
         EditAndCancelService editAndCancelService = new EditAndCancelService(invoiceID, ActionType);
         editAndCancelService.setObject(editAndCancelService, reports, invoiceID);
-        editAndCancelService.setLocationRelativeTo(null); 
         
+        editAndCancelService.setLocationRelativeTo(null); 
         editAndCancelService.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        editAndCancelService.getContentPane().setBackground(new Color(0,0,0,150));
+        editAndCancelService.setBackground(new Color(0,0,0,150));
         editAndCancelService.setVisible(true);
     }
 

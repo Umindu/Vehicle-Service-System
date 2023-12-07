@@ -44,7 +44,7 @@ public class EditAndCancelService extends javax.swing.JFrame {
     Reports reports;
     
     public EditAndCancelService(int invoiceID, String ActionType) { 
-//        setUndecorated(true);
+        setUndecorated(true);
         
         initComponents();
         
@@ -85,6 +85,7 @@ public class EditAndCancelService extends javax.swing.JFrame {
     }
 
     private EditAndCancelService() {
+        setUndecorated(true);
         initComponents();
     }
 
