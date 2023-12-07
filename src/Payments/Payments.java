@@ -8,6 +8,7 @@ import DBConnect.DBconnect;
 import Home.Home;
 import java.awt.Color;
 import java.awt.Component;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
@@ -29,6 +30,7 @@ public class Payments extends javax.swing.JFrame {
     private float discount;
     private float payableAmountCal = 0;
     private float balance = 0;
+    private float PrepaidAmount = 0;
     
     private Home home;
     /**
@@ -49,6 +51,23 @@ public class Payments extends javax.swing.JFrame {
         this.discountPercentage = discountPercentage;
         this.discount = Float.parseFloat(discount);
         this.payableAmountCal = payableAmountCal;
+        
+        
+        
+        try {
+            Statement statement = DBconnect.connectToDB().createStatement();
+            statement.execute("SELECT * FROM PaymentDetails WHERE InvoiceID = '"+ invoiceNo +"'");
+            ResultSet resultSet = statement.getResultSet();
+            if(resultSet.next()){
+                prepaidAmount.setText("Prepaid Amount : Rs. "+resultSet.getString("PayableAmount"));
+                PrepaidAmount = resultSet.getFloat("PayableAmount");
+            }else{
+                prepaidAmount.setVisible(false);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Payments.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         BalanceCalculate();
     }
 
@@ -77,8 +96,8 @@ public class Payments extends javax.swing.JFrame {
         qrAmount = new fosalgo.FTextField();
         jLabel5 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        balanceLable = new javax.swing.JLabel();
         myButton10 = new button.MyButton();
+        prepaidAmount = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         myButton1 = new button.MyButton();
         myButton2 = new button.MyButton();
@@ -95,6 +114,7 @@ public class Payments extends javax.swing.JFrame {
         myButton00 = new button.MyButton();
         backspaceButton = new button.MyButton();
         conform = new button.MyButton();
+        balanceLable = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -145,9 +165,6 @@ public class Payments extends javax.swing.JFrame {
         jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel9.setText("QR payment ");
 
-        balanceLable.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
-        balanceLable.setText("Balance : Rs. 0.00");
-
         myButton10.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
         myButton10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/arrow-small-left.png"))); // NOI18N
         myButton10.setText("Back");
@@ -164,6 +181,9 @@ public class Payments extends javax.swing.JFrame {
             }
         });
 
+        prepaidAmount.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
+        prepaidAmount.setText("Prepaid Amount : Rs. 0.00");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -171,10 +191,7 @@ public class Payments extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jSeparator1))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(34, 34, 34)
+                        .addGap(31, 31, 31)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addGroup(jPanel2Layout.createSequentialGroup()
@@ -199,18 +216,19 @@ public class Payments extends javax.swing.JFrame {
                                 .addComponent(jLabel9))
                             .addComponent(jLabel6)
                             .addComponent(jLabel3))
-                        .addGap(0, 107, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(payableAmount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(balanceLable, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(payableAmount, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 484, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jSeparator1)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                .addComponent(myButton10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(invoiceID, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(myButton10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(invoiceID, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(prepaidAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 422, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -224,13 +242,15 @@ public class Payments extends javax.swing.JFrame {
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(payableAmount)
-                .addGap(15, 15, 15)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
+                .addComponent(prepaidAmount)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cashAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
-                .addGap(46, 46, 46)
+                .addGap(40, 40, 40)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -240,15 +260,13 @@ public class Payments extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cardBillNo, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8))
-                .addGap(46, 46, 46)
+                .addGap(40, 40, 40)
                 .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(qrAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(balanceLable)
-                .addContainerGap())
+                .addGap(36, 36, 36))
         );
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
@@ -493,6 +511,9 @@ public class Payments extends javax.swing.JFrame {
             }
         });
 
+        balanceLable.setFont(new java.awt.Font("Segoe UI", 1, 26)); // NOI18N
+        balanceLable.setText("Balance : Rs. 0.00");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -525,40 +546,43 @@ public class Payments extends javax.swing.JFrame {
                                     .addComponent(myButton8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(backspaceButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(myButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(clearButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(clearButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(balanceLable, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(balanceLable)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(myButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(myButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(myButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(myButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(myButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(myButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(myButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(myButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(myButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(myButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(myButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(myButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(myButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(myButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(myButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(myButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(myButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(myButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(myButton00, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(myButton0, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(backspaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(myButton00, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(myButton0, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(backspaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(dotButton, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(clearButton, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(dotButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(clearButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(conform, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(conform, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -607,7 +631,6 @@ public class Payments extends javax.swing.JFrame {
     }
     
     private void BalanceCalculate(){
-//        payableAmountCal  cashAmount  cardAmount  qrAmount  balance  balanceLable
         float cash;
         float card;
         float qr;
@@ -628,8 +651,14 @@ public class Payments extends javax.swing.JFrame {
             qr = 0;
         }
         
-        balance = (card + qr + cash) - payableAmountCal;
-        balanceLable.setText("Balance : Rs. "+balance);
+        if(PrepaidAmount > 0){
+            balance = (card + qr + cash + PrepaidAmount) - payableAmountCal;
+            balanceLable.setText("Balance : Rs. "+balance);
+        }else{
+            balance = (card + qr + cash) - payableAmountCal;
+            balanceLable.setText("Balance : Rs. "+balance);
+        }
+        
     }
     
     private void myButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_myButton10ActionPerformed
@@ -856,13 +885,17 @@ public class Payments extends javax.swing.JFrame {
         String formattedDate = dateFormat.format(currentDate);
         
         float totalPayAmount = Float.parseFloat(cashAmount.getText().isEmpty() ? "0" : cashAmount.getText()) + Float.parseFloat(cardAmount.getText().isEmpty() ? "0" : cardAmount.getText()) + Float.parseFloat(qrAmount.getText().isEmpty() ? "0" : qrAmount.getText());
-        
         try {
             Statement statement = DBconnect.connectToDB().createStatement();
-            statement.execute("INSERT INTO PaymentDetails (InvoiceID, Date, SubTotal, Discount, DiscountMethod, PayableAmount, TotalPayAmount, CashPayAmount, CardPayAmount, CardBillNumber, QRPayAmount, Balance, Note) "
+            if(PrepaidAmount > 0){
+                statement.execute("UPDATE PaymentDetails Date = '"+formattedDate+"', SubTotal = '"+subTotalCal+"', Discount = '"+discount+"', DiscountMethod = '"+discountPercentage+"', PayableAmount = '"+payableAmountCal+"', TotalPayAmount = '"+totalPayAmount+"', CashPayAmount = '"+(cashAmount.getText().isEmpty() ? 0 : cashAmount.getText())+"', CardPayAmount = '"+(cardAmount.getText().isEmpty() ? 0 : cardAmount.getText())+"', CardBillNumber = '"+(cardBillNo.getText().isEmpty() ? null : cardBillNo.getText())+"', QRPayAmount = '"+(qrAmount.getText().isEmpty() ? 0 : qrAmount.getText())+"', Balance = '"+balance+"', Note = '' WHERE InvoiceID ='"+invoiceNo+"' "); 
+            }else{
+                statement.execute("INSERT INTO PaymentDetails (InvoiceID, Date, SubTotal, Discount, DiscountMethod, PayableAmount, TotalPayAmount, CashPayAmount, CardPayAmount, CardBillNumber, QRPayAmount, Balance, Note) "
                     + "VALUES('"+invoiceNo+"', '"+formattedDate+"', '"+subTotalCal+"', '"+discount+"', '"+discountPercentage+"', '"+payableAmountCal+"', '"+totalPayAmount+"', '"+(cashAmount.getText().isEmpty() ? 0 : cashAmount.getText())+"', '"+(cardAmount.getText().isEmpty() ? 0 : cardAmount.getText())+"', '"+(cardBillNo.getText().isEmpty() ? null : cardBillNo.getText())+"', '"+(qrAmount.getText().isEmpty() ? 0 : qrAmount.getText())+"', '"+balance+"', '')");
             
-            statement.execute("UPDATE VehicleDetails SET States = 'Done' WHERE InvoiceNo = '"+invoiceNo+"'");
+                statement.execute("UPDATE VehicleDetails SET States = 'Done' WHERE InvoiceNo = '"+invoiceNo+"'");
+            }
+            
 
         } catch (SQLException ex) {
             Logger.getLogger(Payments.class.getName()).log(Level.SEVERE, null, ex);
@@ -941,6 +974,7 @@ public class Payments extends javax.swing.JFrame {
     private button.MyButton myButton8;
     private button.MyButton myButton9;
     private javax.swing.JLabel payableAmount;
+    private javax.swing.JLabel prepaidAmount;
     private fosalgo.FTextField qrAmount;
     // End of variables declaration//GEN-END:variables
 }

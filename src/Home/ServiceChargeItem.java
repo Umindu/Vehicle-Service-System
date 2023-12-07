@@ -27,13 +27,13 @@ public class ServiceChargeItem extends javax.swing.JPanel {
         
         removeButton.addMouseListener(new MouseAdapter() { 
             public void mousePressed(MouseEvent e) { 
-             
+                home.RemoveService(name);
             } 
         }); 
         
         serCharge.addKeyListener(new KeyAdapter() {
             public void keyReleased(KeyEvent e) {
-                
+                home.UpdateService(name,serCharge.getText());
            }
         });
     }

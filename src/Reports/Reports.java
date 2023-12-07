@@ -5,15 +5,19 @@
 package Reports;
 
 import DBConnect.DBconnect;
+import Dashboard.Dashboard;
+import Home.Home;
 import Manage.Manage;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.beans.PropertyVetoException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.JTableHeader;
@@ -33,6 +37,8 @@ public class Reports extends javax.swing.JInternalFrame {
     CardLayout cardLayout;
     
     Reports reports;
+    JDesktopPane mainWindowPanel;
+    Dashboard dashboard;
     
     public Reports() {
         initComponents();
@@ -425,8 +431,10 @@ public class Reports extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public void setObject(Reports reports) {
+    public void setObject(Reports reports, JDesktopPane mainWindowPanel, Dashboard dashboard) {
         this.reports = reports;
+        this.mainWindowPanel = mainWindowPanel;
+        this.dashboard = dashboard;
     }
     
     private void showEnterdVehiclePaneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showEnterdVehiclePaneButtonActionPerformed
@@ -446,13 +454,14 @@ public class Reports extends javax.swing.JInternalFrame {
     private void DepSerCancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DepSerCancelButtonActionPerformed
         // TODO add your handling code here:
         int invoiceID = (int) departedVehiclesTable.getModel().getValueAt(departedVehiclesTable.getSelectedRow(),0);
-        CancelService(invoiceID, "Cancel");
+        CancelService(invoiceID, "Dep", "Cancel");
     }//GEN-LAST:event_DepSerCancelButtonActionPerformed
 
     private void DepSerEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DepSerEditButtonActionPerformed
         // TODO add your handling code here:
         int invoiceID = (int) departedVehiclesTable.getModel().getValueAt(departedVehiclesTable.getSelectedRow(),0);
-        CancelService(invoiceID, null);
+//        CancelService(invoiceID, "Dep", null);
+        dashboard.EditServiceAndProduct(invoiceID);
     }//GEN-LAST:event_DepSerEditButtonActionPerformed
 
     private void departedVehiclesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_departedVehiclesTableMouseClicked
@@ -464,13 +473,16 @@ public class Reports extends javax.swing.JInternalFrame {
     private void EntSerEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EntSerEditButtonActionPerformed
         // TODO add your handling code here:
         int invoiceID = (int) enterdVehiclesTable.getModel().getValueAt(enterdVehiclesTable.getSelectedRow(),0);
-        CancelService(invoiceID, null);
+//        CancelService(invoiceID, "Ent", null);
+        dashboard.EditServiceAndProduct(invoiceID);
+        
+        
     }//GEN-LAST:event_EntSerEditButtonActionPerformed
 
     private void EntSerCancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EntSerCancelButtonActionPerformed
         // TODO add your handling code here:
         int invoiceID = (int) enterdVehiclesTable.getModel().getValueAt(enterdVehiclesTable.getSelectedRow(),0);
-        CancelService(invoiceID, "Cancel");
+        CancelService(invoiceID, "Ent", "Cancel");
     }//GEN-LAST:event_EntSerCancelButtonActionPerformed
 
     private void enterdVehiclesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_enterdVehiclesTableMouseClicked
@@ -562,8 +574,8 @@ public class Reports extends javax.swing.JInternalFrame {
         }
     }
     
-    public void CancelService(int invoiceID, String ActionType){
-        EditAndCancelService editAndCancelService = new EditAndCancelService(invoiceID, ActionType);
+    public void CancelService(int invoiceID, String TableType, String ActionType){
+        EditAndCancelService editAndCancelService = new EditAndCancelService(invoiceID, TableType, ActionType);
         editAndCancelService.setObject(editAndCancelService, reports, invoiceID);
         
         editAndCancelService.setLocationRelativeTo(null); 

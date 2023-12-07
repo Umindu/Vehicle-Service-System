@@ -7,6 +7,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 /**
  *
@@ -17,7 +18,8 @@ public class ProductItem extends javax.swing.JPanel {
     /**
      * Creates new form ProductItem
      */
-  
+    ArrayList<String> editProduct =  new ArrayList<String>();
+    
     public ProductItem(Home home, String id, String name, float price, float qnt, float total) {
         initComponents();
         
@@ -26,47 +28,62 @@ public class ProductItem extends javax.swing.JPanel {
         proPrice.setText(String.valueOf(price));
         proTotal.setText(String.valueOf(total));
         
+        editProduct.add(id);
+        editProduct.add(name);
+        editProduct.add(String.valueOf(price));
+        editProduct.add(String.valueOf(qnt));
+        editProduct.add(String.valueOf(total));
+        
         removeButton.addMouseListener(new MouseAdapter() { 
+            
             public void mousePressed(MouseEvent e) { 
-//             home.RemoveProductListPanel(id);
+                home.RemoveProduct(id);
             } 
         }); 
         
         proQnt.addKeyListener(new KeyAdapter() {
             public void keyReleased(KeyEvent e) {
                 
-//                if(!proQnt.getText().isEmpty() == !proQnt.getText().equals("-")){
-//                    if(Float.parseFloat(proQnt.getText()) < 0){
-//                        proQnt.setText("1");
-//                    }
-//                    float total = Float.parseFloat(proQnt.getText()) * price;
-//                    proTotal.setText(String.valueOf(total));
-//                    home.ChangeProductQnt(id, Float.parseFloat(proQnt.getText()), total);
-//                }else{
-//                    float total = 1 * price;
-//                    proTotal.setText(String.valueOf(total));
-//                    home.ChangeProductQnt(id, 1, total);
-//                }
+                if(!proQnt.getText().isEmpty() == !proQnt.getText().equals("-")){
+                    if(Float.parseFloat(proQnt.getText()) < 0){
+                        proQnt.setText("1");
+                    }
+                    float total = Float.parseFloat(proQnt.getText()) * price;
+                    proTotal.setText(String.valueOf(total));
+                    editProduct.add(3, proQnt.getText());
+                    editProduct.add(4, proTotal.getText());
+                    home.UpdateProduct(editProduct);
+                }else{
+                    float total = 1 * price;
+                    proTotal.setText(String.valueOf(total));
+                    editProduct.add(3, "1");
+                    editProduct.add(4, proTotal.getText());
+                    home.UpdateProduct(editProduct);
+                }
            }
         });
         
         qntIncreaseButton.addMouseListener(new MouseAdapter() { 
             public void mousePressed(MouseEvent e) { 
-//             proQnt.setText(String.valueOf(Float.parseFloat(proQnt.getText())+1));
-//             float total = Float.parseFloat(proQnt.getText()) * price;
-//             proTotal.setText(String.valueOf(total));
-//             home.ChangeProductQnt(id, Float.parseFloat(proQnt.getText()), total);
+             proQnt.setText(String.valueOf(Float.parseFloat(proQnt.getText())+1));
+             float total = Float.parseFloat(proQnt.getText()) * price;
+             proTotal.setText(String.valueOf(total));
+             editProduct.add(3, proQnt.getText());
+             editProduct.add(4, proTotal.getText());
+             home.UpdateProduct(editProduct);
             } 
         });
         
         qntReduceButton.addMouseListener(new MouseAdapter() { 
             public void mousePressed(MouseEvent e) { 
-//             if(Float.parseFloat(proQnt.getText())-1 > 0){
-//                proQnt.setText(String.valueOf(Float.parseFloat(proQnt.getText())-1));
-//                float total = Float.parseFloat(proQnt.getText()) * price;
-//                proTotal.setText(String.valueOf(total));
-//                home.ChangeProductQnt(id, Float.parseFloat(proQnt.getText()), total);
-//             }
+             if(Float.parseFloat(proQnt.getText())-1 > 0){
+                proQnt.setText(String.valueOf(Float.parseFloat(proQnt.getText())-1));
+                float total = Float.parseFloat(proQnt.getText()) * price;
+                proTotal.setText(String.valueOf(total));
+                editProduct.add(3, proQnt.getText());
+                editProduct.add(4, proTotal.getText());
+                home.UpdateProduct(editProduct);
+             }
             } 
         });
 

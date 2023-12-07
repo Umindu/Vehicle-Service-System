@@ -65,6 +65,8 @@ public class Home extends javax.swing.JInternalFrame {
     
     ArrayList<ArrayList<String> > allServicesList =  new ArrayList<ArrayList<String> >(); 
     ArrayList<ArrayList<String> > allProductList =  new ArrayList<ArrayList<String> >();
+    ArrayList<String> removeProductList =  new ArrayList<String>();
+    ArrayList<String> removeServiceList =  new ArrayList<String>();
     
     public Home() {
         initComponents();
@@ -586,7 +588,7 @@ public class Home extends javax.swing.JInternalFrame {
         for (int i = 0; i < allServicesList.size(); i++) {
             String name = allServicesList.get(i).get(0);
             String charge = allServicesList.get(i).get(1);
-            serAndProPanel.add(new ServiceChargeItem(home, name, charge)); 
+            serAndProPanel.add(new ServiceChargeItem(this, name, charge)); 
             
             for (int j = 0; j < allProductList.size(); j++) {
                 if(allProductList.get(j).get(5).equals(name)){
@@ -595,7 +597,7 @@ public class Home extends javax.swing.JInternalFrame {
                     float price = Float.parseFloat(allProductList.get(j).get(2));
                     float qnt = Float.parseFloat(allProductList.get(j).get(3));
                     float total = Float.parseFloat(allProductList.get(j).get(4));
-                    serAndProPanel.add(new ProductItem(home, id, proname, price, qnt, total));  
+                    serAndProPanel.add(new ProductItem(this, id, proname, price, qnt, total));  
                 }
             } 
         } 
@@ -605,7 +607,18 @@ public class Home extends javax.swing.JInternalFrame {
         serAndProPanel.validate();
         serAndProPanel.repaint();
         
-//        payableAmountCal discount discountPercentage
+        CalculateSubTotalPayableAmount();
+    }
+    
+    private void CalculateSubTotalPayableAmount(){
+        subTotalCal = 0;
+        for(ArrayList Service : allServicesList){
+            subTotalCal = subTotalCal + Float.parseFloat((String) Service.get(1));
+        }
+        for(ArrayList Product : allProductList){
+            subTotalCal = subTotalCal + Float.parseFloat((String) Product.get(4));
+        }
+        
         subTotal.setText("Rs. "+String.valueOf(subTotalCal));
         if(!discount.getText().isEmpty()){
             if(discountPercentage == true){
@@ -703,7 +716,6 @@ public class Home extends javax.swing.JInternalFrame {
                 serviceList.add(resultSet.getString("ServiceUnit"));
                 serviceList.add(resultSet.getString("ServiceCharge"));
                 allServicesList.add(serviceList);
-                subTotalCal = subTotalCal + Float.parseFloat(resultSet.getString("ServiceCharge"));
             }
             for(int i=0; i < allServicesList.size(); i++){
                 String serUnit = allServicesList.get(i).get(0);
@@ -719,7 +731,6 @@ public class Home extends javax.swing.JInternalFrame {
                     productList.add(resultSetProducts.getString("Total"));
                     productList.add(resultSetProducts.getString("ServiceUnit"));
                     allProductList.add(productList);
-                    subTotalCal = subTotalCal + Float.parseFloat(resultSetProducts.getString("Total"));
                 }
             }
             RefrashSerAndProPanel();
@@ -834,6 +845,105 @@ public class Home extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_discountKeyReleased
 
+    public void EditServiceAndProduct(int InvoiceID){
+        ClearSidePane();
+        
+        invoiceNoLable.setText("#"+InvoiceID);
+        try {
+            Statement statement = DBconnect.connectToDB().createStatement();
+            statement.execute("SELECT * FROM ServiceCharges WHERE InvoiceID = '"+ InvoiceID +"'");
+            ResultSet resultSet = statement.getResultSet();
+            while(resultSet.next()){
+                ArrayList<String> serviceList =  new ArrayList<String>();
+                serviceList.add(resultSet.getString("ServiceUnit"));
+                serviceList.add(resultSet.getString("ServiceCharge"));
+                allServicesList.add(serviceList);
+            }
+            for(int i=0; i < allServicesList.size(); i++){
+                String serUnit = allServicesList.get(i).get(0);
+                Statement statement2 = DBconnect.connectToDB().createStatement();
+                statement2.execute("SELECT * FROM SoldProducts WHERE InvoiceID = '"+ InvoiceID +"' AND ServiceUnit = '"+ serUnit +"'");
+                ResultSet resultSetProducts = statement2.getResultSet();
+                while(resultSetProducts.next()){
+                    ArrayList<String> productList =  new ArrayList<String>();
+                    productList.add(resultSetProducts.getString("ProductID"));
+                    productList.add(resultSetProducts.getString("Name"));
+                    productList.add(resultSetProducts.getString("Price"));
+                    productList.add(resultSetProducts.getString("Qnt"));
+                    productList.add(resultSetProducts.getString("Total"));
+                    productList.add(resultSetProducts.getString("ServiceUnit"));
+                    allProductList.add(productList);
+                }
+            }
+            RefrashSerAndProPanel();
+        } catch (SQLException ex) {
+            Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        searchMenu.setVisible(false);
+        invoiceSearch.setText("");
+    }
+    
+    public void RemoveProduct(String id){
+        removeProductList.add(id);
+        for(int i=0; i < allProductList.size(); i++){
+            if(allProductList.get(i).get(0).equals(id)){
+                allProductList.remove(i);
+            }
+        } 
+        RefrashSerAndProPanel();
+        CalculateSubTotalPayableAmount();
+    }
+    
+    public void UpdateProduct(ArrayList editProduct){
+        for(int i=0; i < allProductList.size(); i++){
+            if(allProductList.get(i).get(0).equals(editProduct.get(0))){
+                allProductList.get(i).set(3, String.valueOf(editProduct.get(3)));
+                allProductList.get(i).set(4, String.valueOf(editProduct.get(4)));
+            }
+        } 
+        
+        CalculateSubTotalPayableAmount();
+    }
+    
+    public void RemoveService(String name){
+        for(int i=0; i < allProductList.size(); i++){
+            if(allProductList.get(i).get(5).equals(name)){
+                JOptionPane.showMessageDialog(null, "First, remove these unit products !", "Remove", JOptionPane.ERROR_MESSAGE);
+                break;
+            }else{
+                removeServiceList.add(name);
+                for(int j=0; j < allServicesList.size(); j++){
+                    if(allServicesList.get(j).get(0).equals(name)){
+                        allServicesList.remove(j);
+                    }
+                } 
+                RefrashSerAndProPanel();
+                CalculateSubTotalPayableAmount();
+            }
+        }
+        
+        if(allProductList.isEmpty()){
+            removeServiceList.add(name);
+            for(int j=0; j < allServicesList.size(); j++){
+                if(allServicesList.get(j).get(0).equals(name)){
+                    allServicesList.remove(j);
+                }
+            } 
+            RefrashSerAndProPanel();
+            CalculateSubTotalPayableAmount();
+        }
+    }
+    
+    public void UpdateService(String name, String charge){
+        System.out.println(charge);
+        for(int i=0; i < allServicesList.size(); i++){
+            if(allServicesList.get(i).get(0).equals(name)){
+                allServicesList.get(i).set(1, charge);
+            }
+        } 
+        CalculateSubTotalPayableAmount();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private fosalgo.FTextField VehicleRegNo;

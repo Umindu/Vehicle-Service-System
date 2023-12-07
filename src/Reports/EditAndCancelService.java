@@ -6,6 +6,7 @@ package Reports;
 
 import DBConnect.DBconnect;
 import Login.Login;
+import Payments.Payments;
 import Reports.Templates.ProductItem;
 import Reports.Templates.ServiceChargeItem;
 import Vehicles.Vehicles;
@@ -37,18 +38,20 @@ public class EditAndCancelService extends javax.swing.JFrame {
     ArrayList<String> removeProductList =  new ArrayList<String>();
     ArrayList<String> removeServiceList =  new ArrayList<String>();
     
-    String ActionType;
+    private String ActionType;
+    private String TableType;
     
     private EditAndCancelService editAndCancelService;
     
-    Reports reports;
+    private Reports reports;
     
-    public EditAndCancelService(int invoiceID, String ActionType) { 
+    public EditAndCancelService(int invoiceID, String TableType, String ActionType) { 
         setUndecorated(true);
-        
         initComponents();
         
         this.ActionType = ActionType;
+        this.TableType = TableType;
+        
         if(ActionType == "Cancel"){
             ActionButton.setText("Service Cancel");
         }
@@ -383,6 +386,14 @@ public class EditAndCancelService extends javax.swing.JFrame {
                 this.dispose();
                 reports.LoadEnterdVehiclesTable("All");
             }
+            
+//            if(TableType == "Dep"){
+//                Payments payments = new Payments(invoiceNo.getText() , subTotalCal, discountPercentage, discount.getText().isEmpty() ? "0" : discount.getText(), payableAmountCal);
+//                payments.setLocationRelativeTo(null); 
+//                payments.setExtendedState(JFrame.MAXIMIZED_BOTH);
+//                payments.setBackground(new Color(0,0,0,150));
+//                payments.setVisible(true);
+//            }
         }
     }//GEN-LAST:event_ActionButtonActionPerformed
 

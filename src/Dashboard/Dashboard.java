@@ -463,7 +463,7 @@ public class Dashboard extends javax.swing.JFrame {
         Reports reports = new Reports();
         mainWindowPanel.removeAll();
         mainWindowPanel.add(reports).setVisible(true);
-        reports.setObject(reports);
+        reports.setObject(reports, mainWindowPanel, this);
         try {
             reports.setMaximum(true);
         } catch (PropertyVetoException ex) {
@@ -498,6 +498,24 @@ public class Dashboard extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_myButton1ActionPerformed
 
+    public void EditServiceAndProduct(int InvoiceID){
+        resetButonStyles();
+        homeButton.setBorderColor(new Color(13,180,185));
+        homeButton.setColor(new Color(184,248,250));
+        
+        Home home = new Home();
+        mainWindowPanel.removeAll();
+        mainWindowPanel.add(home).setVisible(true);
+        
+        home.EditServiceAndProduct(InvoiceID);
+        try {
+            home.setMaximum(true);
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(Dashboard.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        home.setObject(home);
+    }
     /**
      * @param args the command line arguments
      */
