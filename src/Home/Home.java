@@ -7,6 +7,7 @@ package Home;
 import DBConnect.DBconnect;
 import Manage.Manage;
 import Payments.Payments;
+import Reports.EditAndCancelService;
 import Vehicles.Vehicles;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
@@ -62,6 +63,7 @@ public class Home extends javax.swing.JInternalFrame {
     
     private float payableAmountCal = 0;
 
+    private boolean edited = false;
     
     ArrayList<ArrayList<String> > allServicesList =  new ArrayList<ArrayList<String> >(); 
     ArrayList<ArrayList<String> > allProductList =  new ArrayList<ArrayList<String> >();
@@ -139,6 +141,7 @@ public class Home extends javax.swing.JInternalFrame {
         discountToggle = new javax.swing.JToggleButton();
         jLabel14 = new javax.swing.JLabel();
         subTotal = new javax.swing.JLabel();
+        cancelButton1 = new button.MyButton();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel7 = new javax.swing.JLabel();
         ownerPhone = new fosalgo.FTextField();
@@ -314,6 +317,22 @@ public class Home extends javax.swing.JInternalFrame {
         subTotal.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         subTotal.setText("Rs. 0.00");
 
+        cancelButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/refresh.png"))); // NOI18N
+        cancelButton1.setBorderColor(new java.awt.Color(13, 180, 185));
+        cancelButton1.setBorderPainted(false);
+        cancelButton1.setColorClick(new java.awt.Color(126, 240, 244));
+        cancelButton1.setColorOver(new java.awt.Color(126, 240, 244));
+        cancelButton1.setFocusPainted(false);
+        cancelButton1.setFocusable(false);
+        cancelButton1.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        cancelButton1.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        cancelButton1.setRadius(20);
+        cancelButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout sidePanelLayout = new javax.swing.GroupLayout(sidePanel);
         sidePanel.setLayout(sidePanelLayout);
         sidePanelLayout.setHorizontalGroup(
@@ -325,13 +344,15 @@ public class Home extends javax.swing.JInternalFrame {
                     .addComponent(progressButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sidePanelLayout.createSequentialGroup()
                         .addComponent(invoiceSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 98, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(cancelButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(invoiceNoLable, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sidePanelLayout.createSequentialGroup()
                         .addGroup(sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel12)
                             .addComponent(jLabel11))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
                         .addGroup(sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sidePanelLayout.createSequentialGroup()
                                 .addComponent(discountToggle, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -350,9 +371,10 @@ public class Home extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(invoiceSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(invoiceNoLable))
+                    .addComponent(invoiceNoLable)
+                    .addComponent(cancelButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 425, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(subTotal)
@@ -436,7 +458,7 @@ public class Home extends javax.swing.JInternalFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 276, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(progressButton, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -460,7 +482,7 @@ public class Home extends javax.swing.JInternalFrame {
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(invoiceNo, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
                         .addComponent(dateLable)
                         .addGap(27, 27, 27)
                         .addComponent(timeLabel)))
@@ -620,6 +642,7 @@ public class Home extends javax.swing.JInternalFrame {
         }
         
         subTotal.setText("Rs. "+String.valueOf(subTotalCal));
+        
         if(!discount.getText().isEmpty()){
             if(discountPercentage == true){
                 payableAmountCal = subTotalCal - ((subTotalCal * (Float.parseFloat(discount.getText()) / 100)));
@@ -774,20 +797,68 @@ public class Home extends javax.swing.JInternalFrame {
         payableAmountCal = 0;
         discount.setText("");
         invoiceNoLable.setText("Invoice No");
+        edited = false;
         
         RefrashSerAndProPanel();
     }
     
     private void progressButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_progressButton1ActionPerformed
         // TODO add your handling code here:
-        if(!invoiceNoLable.getText().equals("Invoice No")){
-            Payments payments = new Payments(invoiceNoLable.getText().substring(1) , subTotalCal, discountPercentage, discount.getText().isEmpty() ? "0" : discount.getText(), payableAmountCal);
-            payments.setLocationRelativeTo(null); 
-            payments.setExtendedState(JFrame.MAXIMIZED_BOTH);
-            payments.setBackground(new Color(0,0,0,150));
-            payments.setVisible(true);
-            
-            payments.setObject(home);
+        if(edited == true){
+            int result = JOptionPane.showConfirmDialog(null,"Sure? Update this?", "Update", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if(result == JOptionPane.YES_OPTION){
+                try {
+                    Statement statement = DBconnect.connectToDB().createStatement();
+                    //remove services
+                    if(!removeServiceList.isEmpty()){
+                        for(String index : removeServiceList){
+                            statement.execute("DELETE ServiceCharges WHERE InvoiceID = '"+ invoiceNo.getText() +"' AND ServiceUnit = '"+ index +"'");
+                        }
+                    }
+                    //update service
+                    if(!allServicesList.isEmpty()){
+                        for(ArrayList Service : allServicesList){
+                            statement.execute("UPDATE ServiceCharges SET ServiceCharge = '"+ Service.get(1) +"' WHERE InvoiceID = '"+ invoiceNo.getText() +"' AND ServiceUnit = '"+ Service.get(0) +"'");
+                        }
+                    }
+                    //remove products
+                    if(!removeProductList.isEmpty()){
+                        for(String index : removeProductList){
+                            statement.execute("DELETE SoldProducts WHERE InvoiceID = '"+ invoiceNo.getText() +"' AND ProductID = '"+ index +"'");
+                        }
+                    }
+                    //update products
+                    if(!allProductList.isEmpty()){
+                        for(ArrayList Product : allProductList){
+                            statement.execute("UPDATE SoldProducts SET Qnt = '"+ Product.get(3) +"', Total = '"+ Product.get(4) +"' WHERE InvoiceID = '"+ invoiceNo.getText() +"' AND ProductID = '"+ Product.get(0) +"'");
+                        }
+                    }
+                    
+                    if(!invoiceNoLable.getText().equals("Invoice No")){
+                        Payments payments = new Payments(invoiceNoLable.getText().substring(1) , subTotalCal, discountPercentage, discount.getText().isEmpty() ? "0" : discount.getText(), payableAmountCal);
+                        payments.setLocationRelativeTo(null); 
+                        payments.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                        payments.setBackground(new Color(0,0,0,150));
+                        payments.setVisible(true);
+
+                        payments.setObject(this);
+                    }
+
+                } catch (SQLException ex) {
+                    Logger.getLogger(EditAndCancelService.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                this.dispose();
+            }
+        }else{
+            if(!invoiceNoLable.getText().equals("Invoice No")){
+                Payments payments = new Payments(invoiceNoLable.getText().substring(1) , subTotalCal, discountPercentage, discount.getText().isEmpty() ? "0" : discount.getText(), payableAmountCal);
+                payments.setLocationRelativeTo(null); 
+                payments.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                payments.setBackground(new Color(0,0,0,150));
+                payments.setVisible(true);
+
+                payments.setObject(this);
+            }
         }
     }//GEN-LAST:event_progressButton1ActionPerformed
 
@@ -845,6 +916,11 @@ public class Home extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_discountKeyReleased
 
+    private void cancelButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButton1ActionPerformed
+        // TODO add your handling code here:
+        ClearSidePane();
+    }//GEN-LAST:event_cancelButton1ActionPerformed
+
     public void EditServiceAndProduct(int InvoiceID){
         ClearSidePane();
         
@@ -875,6 +951,21 @@ public class Home extends javax.swing.JInternalFrame {
                     allProductList.add(productList);
                 }
             }
+            
+            try {
+                Statement statement3 = DBconnect.connectToDB().createStatement();
+                statement3.execute("SELECT Discount, DiscountMethod FROM PaymentDetails WHERE InvoiceID = '"+InvoiceID+"'");
+                ResultSet resultSet3 = statement3.getResultSet();
+                if(resultSet3.next()){
+                    discount.setText(resultSet3.getString("Discount"));
+                    discountPercentage = resultSet3.getBoolean("DiscountMethod");
+                    discountToggle.setSelected(!discountPercentage);
+                    discountToggleActionPerformed(null);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        
             RefrashSerAndProPanel();
         } catch (SQLException ex) {
             Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
@@ -891,6 +982,7 @@ public class Home extends javax.swing.JInternalFrame {
                 allProductList.remove(i);
             }
         } 
+        edited = true;
         RefrashSerAndProPanel();
         CalculateSubTotalPayableAmount();
     }
@@ -902,7 +994,7 @@ public class Home extends javax.swing.JInternalFrame {
                 allProductList.get(i).set(4, String.valueOf(editProduct.get(4)));
             }
         } 
-        
+        edited = true;
         CalculateSubTotalPayableAmount();
     }
     
@@ -933,6 +1025,7 @@ public class Home extends javax.swing.JInternalFrame {
             RefrashSerAndProPanel();
             CalculateSubTotalPayableAmount();
         }
+        edited = true;
     }
     
     public void UpdateService(String name, String charge){
@@ -942,6 +1035,7 @@ public class Home extends javax.swing.JInternalFrame {
                 allServicesList.get(i).set(1, charge);
             }
         } 
+        edited = true;
         CalculateSubTotalPayableAmount();
     }
 
@@ -949,6 +1043,7 @@ public class Home extends javax.swing.JInternalFrame {
     private fosalgo.FTextField VehicleRegNo;
     private CustomComponents.Combobox VehicleTypeComboBox;
     private button.MyButton cancelButton;
+    private button.MyButton cancelButton1;
     private javax.swing.JLabel dateLable;
     private CustomComponents.MyTextArea description;
     private fosalgo.FTextField discount;
