@@ -36,7 +36,6 @@ public class Reports extends javax.swing.JInternalFrame {
      */
     CardLayout cardLayout;
     
-    Reports reports;
     JDesktopPane mainWindowPanel;
     Dashboard dashboard;
     
@@ -71,7 +70,6 @@ public class Reports extends javax.swing.JInternalFrame {
         showEnterdVehiclePaneButton = new button.MyButton();
         showDepartedVehiclePaneButton = new button.MyButton();
         VehicleTypesButton = new button.MyButton();
-        productButton = new button.MyButton();
         panelCards = new javax.swing.JPanel();
         enterdVehiclesCard = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -132,7 +130,7 @@ public class Reports extends javax.swing.JInternalFrame {
 
         VehicleTypesButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 20, 1, 1));
         VehicleTypesButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/angle-small-down.png"))); // NOI18N
-        VehicleTypesButton.setText("Vehicle Types");
+        VehicleTypesButton.setText("Daily Report");
         VehicleTypesButton.setBorderColor(new java.awt.Color(255, 255, 255));
         VehicleTypesButton.setBorderPainted(false);
         VehicleTypesButton.setColorClick(new java.awt.Color(126, 240, 244));
@@ -144,20 +142,6 @@ public class Reports extends javax.swing.JInternalFrame {
         VehicleTypesButton.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         VehicleTypesButton.setIconTextGap(10);
 
-        productButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 20, 1, 1));
-        productButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/angle-small-down.png"))); // NOI18N
-        productButton.setText("Products");
-        productButton.setBorderColor(new java.awt.Color(255, 255, 255));
-        productButton.setBorderPainted(false);
-        productButton.setColorClick(new java.awt.Color(126, 240, 244));
-        productButton.setColorOver(new java.awt.Color(126, 240, 244));
-        productButton.setFocusPainted(false);
-        productButton.setFocusable(false);
-        productButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        productButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        productButton.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
-        productButton.setIconTextGap(10);
-
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -165,7 +149,6 @@ public class Reports extends javax.swing.JInternalFrame {
             .addComponent(showEnterdVehiclePaneButton, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
             .addComponent(showDepartedVehiclePaneButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(VehicleTypesButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(productButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -175,8 +158,6 @@ public class Reports extends javax.swing.JInternalFrame {
                 .addComponent(showDepartedVehiclePaneButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(VehicleTypesButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(productButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -431,8 +412,7 @@ public class Reports extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public void setObject(Reports reports, JDesktopPane mainWindowPanel, Dashboard dashboard) {
-        this.reports = reports;
+    public void setObject(JDesktopPane mainWindowPanel, Dashboard dashboard) {
         this.mainWindowPanel = mainWindowPanel;
         this.dashboard = dashboard;
     }
@@ -454,7 +434,7 @@ public class Reports extends javax.swing.JInternalFrame {
     private void DepSerCancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DepSerCancelButtonActionPerformed
         // TODO add your handling code here:
         int invoiceID = (int) departedVehiclesTable.getModel().getValueAt(departedVehiclesTable.getSelectedRow(),0);
-        CancelService(invoiceID, "Dep", "Cancel");
+        CancelService(invoiceID);
     }//GEN-LAST:event_DepSerCancelButtonActionPerformed
 
     private void DepSerEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DepSerEditButtonActionPerformed
@@ -482,7 +462,7 @@ public class Reports extends javax.swing.JInternalFrame {
     private void EntSerCancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EntSerCancelButtonActionPerformed
         // TODO add your handling code here:
         int invoiceID = (int) enterdVehiclesTable.getModel().getValueAt(enterdVehiclesTable.getSelectedRow(),0);
-        CancelService(invoiceID, "Ent", "Cancel");
+        CancelService(invoiceID);
     }//GEN-LAST:event_EntSerCancelButtonActionPerformed
 
     private void enterdVehiclesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_enterdVehiclesTableMouseClicked
@@ -554,7 +534,7 @@ public class Reports extends javax.swing.JInternalFrame {
         }
     }
     
-    private void LoadDepartedVehiclesTable(String search){
+    public void LoadDepartedVehiclesTable(String search){
         //serviceUnitTable data load
         JTableHeader header = departedVehiclesTable.getTableHeader();
         header.setFont(new Font("Segoe UI", Font.BOLD , 14));
@@ -574,10 +554,9 @@ public class Reports extends javax.swing.JInternalFrame {
         }
     }
     
-    public void CancelService(int invoiceID, String TableType, String ActionType){
-        EditAndCancelService editAndCancelService = new EditAndCancelService(invoiceID, TableType, ActionType);
-        editAndCancelService.setObject(editAndCancelService, reports, invoiceID);
-        
+    public void CancelService(int invoiceID){
+        CancelService editAndCancelService = new CancelService(invoiceID);
+        editAndCancelService.setObject(this);
         editAndCancelService.setLocationRelativeTo(null); 
         editAndCancelService.setExtendedState(JFrame.MAXIMIZED_BOTH);
         editAndCancelService.setBackground(new Color(0,0,0,150));
@@ -601,7 +580,6 @@ public class Reports extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPanel panelCards;
-    private button.MyButton productButton;
     private fosalgo.FTextField searchDepVehicle;
     private fosalgo.FTextField searchEntVehicle;
     private button.MyButton showDepartedVehiclePaneButton;

@@ -51,9 +51,7 @@ public class Payments extends javax.swing.JFrame {
         this.discountPercentage = discountPercentage;
         this.discount = Float.parseFloat(discount);
         this.payableAmountCal = payableAmountCal;
-        
-        
-        
+
         try {
             Statement statement = DBconnect.connectToDB().createStatement();
             statement.execute("SELECT * FROM PaymentDetails WHERE InvoiceID = '"+ invoiceNo +"'");
@@ -61,6 +59,11 @@ public class Payments extends javax.swing.JFrame {
             if(resultSet.next()){
                 prepaidAmount.setText("Prepaid Amount : Rs. "+resultSet.getString("PayableAmount"));
                 PrepaidAmount = resultSet.getFloat("PayableAmount");
+                
+                cashAmount.setText(resultSet.getString("CashPayAmount"));
+                cardAmount.setText(resultSet.getString("CardPayAmount"));
+                cardBillNo.setText(resultSet.getString("CardBillNumber"));
+                qrAmount.setText(resultSet.getString("QRPayAmount"));
             }else{
                 prepaidAmount.setVisible(false);
             }
@@ -134,6 +137,11 @@ public class Payments extends javax.swing.JFrame {
         cashAmount.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         cashAmount.setName("cashAmount"); // NOI18N
         cashAmount.setRadius(10);
+        cashAmount.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                cashAmountKeyReleased(evt);
+            }
+        });
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel4.setText("Amount :");
@@ -147,6 +155,11 @@ public class Payments extends javax.swing.JFrame {
         cardAmount.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         cardAmount.setName("cardAmount"); // NOI18N
         cardAmount.setRadius(10);
+        cardAmount.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                cardAmountKeyReleased(evt);
+            }
+        });
 
         cardBillNo.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         cardBillNo.setName("cardBillNo"); // NOI18N
@@ -158,6 +171,11 @@ public class Payments extends javax.swing.JFrame {
         qrAmount.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         qrAmount.setName("qrAmount"); // NOI18N
         qrAmount.setRadius(10);
+        qrAmount.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                qrAmountKeyReleased(evt);
+            }
+        });
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel5.setText("Amount :");
@@ -652,7 +670,7 @@ public class Payments extends javax.swing.JFrame {
         }
         
         if(PrepaidAmount > 0){
-            balance = (card + qr + cash + PrepaidAmount) - payableAmountCal;
+            balance = (card + qr + cash) - payableAmountCal;
             balanceLable.setText("Balance : Rs. "+balance);
         }else{
             balance = (card + qr + cash) - payableAmountCal;
@@ -888,7 +906,7 @@ public class Payments extends javax.swing.JFrame {
         try {
             Statement statement = DBconnect.connectToDB().createStatement();
             if(PrepaidAmount > 0){
-                statement.execute("UPDATE PaymentDetails Date = '"+formattedDate+"', SubTotal = '"+subTotalCal+"', Discount = '"+discount+"', DiscountMethod = '"+discountPercentage+"', PayableAmount = '"+payableAmountCal+"', TotalPayAmount = '"+totalPayAmount+"', CashPayAmount = '"+(cashAmount.getText().isEmpty() ? 0 : cashAmount.getText())+"', CardPayAmount = '"+(cardAmount.getText().isEmpty() ? 0 : cardAmount.getText())+"', CardBillNumber = '"+(cardBillNo.getText().isEmpty() ? null : cardBillNo.getText())+"', QRPayAmount = '"+(qrAmount.getText().isEmpty() ? 0 : qrAmount.getText())+"', Balance = '"+balance+"', Note = '' WHERE InvoiceID ='"+invoiceNo+"' "); 
+                statement.execute("UPDATE PaymentDetails SET Date = '"+formattedDate+"', SubTotal = '"+subTotalCal+"', Discount = '"+discount+"', DiscountMethod = '"+discountPercentage+"', PayableAmount = '"+payableAmountCal+"', TotalPayAmount = '"+totalPayAmount+"', CashPayAmount = '"+(cashAmount.getText().isEmpty() ? 0 : cashAmount.getText())+"', CardPayAmount = '"+(cardAmount.getText().isEmpty() ? 0 : cardAmount.getText())+"', CardBillNumber = '"+(cardBillNo.getText().isEmpty() ? null : cardBillNo.getText())+"', QRPayAmount = '"+(qrAmount.getText().isEmpty() ? 0 : qrAmount.getText())+"', Balance = '"+balance+"', Note = '' WHERE InvoiceID ='"+invoiceNo+"' "); 
             }else{
                 statement.execute("INSERT INTO PaymentDetails (InvoiceID, Date, SubTotal, Discount, DiscountMethod, PayableAmount, TotalPayAmount, CashPayAmount, CardPayAmount, CardBillNumber, QRPayAmount, Balance, Note) "
                     + "VALUES('"+invoiceNo+"', '"+formattedDate+"', '"+subTotalCal+"', '"+discount+"', '"+discountPercentage+"', '"+payableAmountCal+"', '"+totalPayAmount+"', '"+(cashAmount.getText().isEmpty() ? 0 : cashAmount.getText())+"', '"+(cardAmount.getText().isEmpty() ? 0 : cardAmount.getText())+"', '"+(cardBillNo.getText().isEmpty() ? null : cardBillNo.getText())+"', '"+(qrAmount.getText().isEmpty() ? 0 : qrAmount.getText())+"', '"+balance+"', '')");
@@ -904,6 +922,21 @@ public class Payments extends javax.swing.JFrame {
         this.home.ClearSidePane();
         this.dispose();
     }//GEN-LAST:event_conformActionPerformed
+
+    private void cashAmountKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cashAmountKeyReleased
+        // TODO add your handling code here:
+        BalanceCalculate();
+    }//GEN-LAST:event_cashAmountKeyReleased
+
+    private void cardAmountKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cardAmountKeyReleased
+        // TODO add your handling code here:
+        BalanceCalculate();
+    }//GEN-LAST:event_cardAmountKeyReleased
+
+    private void qrAmountKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_qrAmountKeyReleased
+        // TODO add your handling code here:
+        BalanceCalculate();
+    }//GEN-LAST:event_qrAmountKeyReleased
 
     /**
      * @param args the command line arguments

@@ -27,7 +27,7 @@ import net.miginfocom.swing.MigLayout;
  *
  * @author Umindu
  */
-public class EditAndCancelService extends javax.swing.JFrame {
+public class CancelService extends javax.swing.JFrame {
 
     /**
      * Creates new form CancelService
@@ -35,26 +35,14 @@ public class EditAndCancelService extends javax.swing.JFrame {
     
     ArrayList<ArrayList<String> > allServicesList =  new ArrayList<ArrayList<String> >(); 
     ArrayList<ArrayList<String> > allProductList =  new ArrayList<ArrayList<String> >();
-    ArrayList<String> removeProductList =  new ArrayList<String>();
-    ArrayList<String> removeServiceList =  new ArrayList<String>();
-    
-    private String ActionType;
-    private String TableType;
-    
-    private EditAndCancelService editAndCancelService;
     
     private Reports reports;
     
-    public EditAndCancelService(int invoiceID, String TableType, String ActionType) { 
+    public CancelService(int invoiceID) { 
         setUndecorated(true);
         initComponents();
         
-        this.ActionType = ActionType;
-        this.TableType = TableType;
-        
-        if(ActionType == "Cancel"){
-            ActionButton.setText("Service Cancel");
-        }
+        serAndProPanel4.setLayout(new MigLayout("inset 0, fillx, wrap", "[fill]"));
         
         //close window
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -80,14 +68,14 @@ public class EditAndCancelService extends javax.swing.JFrame {
             }
             
         } catch (SQLException ex) {
-            Logger.getLogger(EditAndCancelService.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CancelService.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        serAndProPanel4.setLayout(new MigLayout("inset 0, fillx, wrap", "[fill]"));
         
+        LoadVehicleServiceList(invoiceID);
     }
 
-    private EditAndCancelService() {
+    private CancelService() {
         setUndecorated(true);
         initComponents();
     }
@@ -101,6 +89,7 @@ public class EditAndCancelService extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel2 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         ownerName = new fosalgo.FTextField();
         dateLable = new javax.swing.JLabel();
@@ -174,7 +163,7 @@ public class EditAndCancelService extends javax.swing.JFrame {
         ownerPhone.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         ownerPhone.setRadius(20);
 
-        ActionButton.setText("Service Update");
+        ActionButton.setText("Service Cancel");
         ActionButton.setBorderColor(new java.awt.Color(13, 180, 185));
         ActionButton.setBorderPainted(false);
         ActionButton.setColor(new java.awt.Color(184, 248, 250));
@@ -203,8 +192,8 @@ public class EditAndCancelService extends javax.swing.JFrame {
         jScrollPane6.setBackground(new java.awt.Color(255, 255, 255));
         jScrollPane6.setBorder(null);
         jScrollPane6.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane6.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
+        serAndProPanel4.setBackground(new java.awt.Color(246, 246, 246));
         serAndProPanel4.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         javax.swing.GroupLayout serAndProPanel4Layout = new javax.swing.GroupLayout(serAndProPanel4);
@@ -313,20 +302,37 @@ public class EditAndCancelService extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -335,65 +341,19 @@ public class EditAndCancelService extends javax.swing.JFrame {
 
     private void ActionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ActionButtonActionPerformed
         // TODO add your handling code here:
-        if(ActionType == "Cancel"){
-            int result = JOptionPane.showConfirmDialog(null,"Sure? Cancel this service?", "Cancel Service", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-            if(result == JOptionPane.YES_OPTION){
-                try {
-                    Statement statement = DBconnect.connectToDB().createStatement();
-                    statement.execute("DELETE FROM VehicleDetails WHERE InvoiceNo = '"+ invoiceNo.getText() +"'");
-                    statement.execute("DELETE FROM SoldProducts WHERE InvoiceID = '"+ invoiceNo.getText() +"'");
-                    statement.execute("DELETE FROM ServiceCharges WHERE InvoiceID = '"+ invoiceNo.getText() +"'");
-                } catch (SQLException ex) {
-                    Logger.getLogger(EditAndCancelService.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                this.dispose();
-                reports.LoadEnterdVehiclesTable("All");
+        int result = JOptionPane.showConfirmDialog(null,"Sure? Cancel this service?", "Cancel Service", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if(result == JOptionPane.YES_OPTION){
+            try {
+                Statement statement = DBconnect.connectToDB().createStatement();
+                statement.execute("DELETE FROM VehicleDetails WHERE InvoiceNo = '"+ invoiceNo.getText() +"'");
+                statement.execute("DELETE FROM SoldProducts WHERE InvoiceID = '"+ invoiceNo.getText() +"'");
+                statement.execute("DELETE FROM ServiceCharges WHERE InvoiceID = '"+ invoiceNo.getText() +"'");
+            } catch (SQLException ex) {
+                Logger.getLogger(CancelService.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }else{
-            //removeServiceList 
-            int result = JOptionPane.showConfirmDialog(null,"Sure? Update this?", "Delete", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-            if(result == JOptionPane.YES_OPTION){
-                try {
-                    Statement statement = DBconnect.connectToDB().createStatement();
-                    //remove services
-                    if(!removeServiceList.isEmpty()){
-                        for(String index : removeServiceList){
-                            statement.execute("DELETE ServiceCharges WHERE InvoiceID = '"+ invoiceNo.getText() +"' AND ServiceUnit = '"+ index +"'");
-                        }
-                    }
-                    //update service
-                    if(!allServicesList.isEmpty()){
-                        for(ArrayList Service : allServicesList){
-                            statement.execute("UPDATE ServiceCharges SET ServiceCharge = '"+ Service.get(1) +"' WHERE InvoiceID = '"+ invoiceNo.getText() +"' AND ServiceUnit = '"+ Service.get(0) +"'");
-                        }
-                    }
-                    //remove products
-                    if(!removeProductList.isEmpty()){
-                        for(String index : removeProductList){
-                            statement.execute("DELETE SoldProducts WHERE InvoiceID = '"+ invoiceNo.getText() +"' AND ProductID = '"+ index +"'");
-                        }
-                    }
-                    //update products
-                    if(!allProductList.isEmpty()){
-                        for(ArrayList Product : allProductList){
-                            statement.execute("UPDATE SoldProducts SET Qnt = '"+ Product.get(3) +"', Total = '"+ Product.get(4) +"' WHERE InvoiceID = '"+ invoiceNo.getText() +"' AND ProductID = '"+ Product.get(0) +"'");
-                        }
-                    }
-                    
-                } catch (SQLException ex) {
-                    Logger.getLogger(EditAndCancelService.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                this.dispose();
-                reports.LoadEnterdVehiclesTable("All");
-            }
-            
-//            if(TableType == "Dep"){
-//                Payments payments = new Payments(invoiceNo.getText() , subTotalCal, discountPercentage, discount.getText().isEmpty() ? "0" : discount.getText(), payableAmountCal);
-//                payments.setLocationRelativeTo(null); 
-//                payments.setExtendedState(JFrame.MAXIMIZED_BOTH);
-//                payments.setBackground(new Color(0,0,0,150));
-//                payments.setVisible(true);
-//            }
+            reports.LoadEnterdVehiclesTable("All");
+            reports.LoadDepartedVehiclesTable("All");
+            this.dispose();
         }
     }//GEN-LAST:event_ActionButtonActionPerformed
 
@@ -402,18 +362,16 @@ public class EditAndCancelService extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_DepSerCancelButton1ActionPerformed
 
-    public void setObject(EditAndCancelService editAndCancelService1, Reports reports, int invoiceID){
-        this.editAndCancelService = editAndCancelService1;
+    public void setObject(Reports reports){
         this.reports = reports;
-        LoadVehicleServiceList(invoiceID);
     }
         
-    public void RefrashSerAndProPanel(int invoiceID){
+    public void RefrashSerAndProPanel(){
         serAndProPanel4.removeAll();
         for (int i = 0; i < allServicesList.size(); i++) {
             String name = allServicesList.get(i).get(0);
             String charge = allServicesList.get(i).get(1);
-            serAndProPanel4.add(new ServiceChargeItem(editAndCancelService, invoiceID, name, charge, ActionType)); 
+            serAndProPanel4.add(new ServiceChargeItem(name, charge)); 
             
             for (int j = 0; j < allProductList.size(); j++) {
                 if(allProductList.get(j).get(5).equals(name)){
@@ -422,7 +380,7 @@ public class EditAndCancelService extends javax.swing.JFrame {
                     float price = Float.parseFloat(allProductList.get(j).get(2));
                     float qnt = Float.parseFloat(allProductList.get(j).get(3));
                     float total = Float.parseFloat(allProductList.get(j).get(4));
-                    serAndProPanel4.add(new ProductItem(editAndCancelService, invoiceID, id, proname, price, qnt, total, ActionType));  
+                    serAndProPanel4.add(new ProductItem(id, proname, price, qnt, total));  
                 }
             } 
         } 
@@ -462,66 +420,11 @@ public class EditAndCancelService extends javax.swing.JFrame {
                     allProductList.add(productList);
                 }
             }
-            RefrashSerAndProPanel(invoiceID);
+            RefrashSerAndProPanel();
         } catch (SQLException ex) {
             Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
         }
     } 
-    
-    public void RemoveProduct(String id, int invoiceID){
-        removeProductList.add(id);
-        for(int i=0; i < allProductList.size(); i++){
-            if(allProductList.get(i).get(0).equals(id)){
-                allProductList.remove(i);
-            }
-        } 
-        RefrashSerAndProPanel(invoiceID);
-    }
-    
-    public void UpdateProduct(ArrayList editProduct){
-        for(int i=0; i < allProductList.size(); i++){
-            if(allProductList.get(i).get(0).equals(editProduct.get(0))){
-                allProductList.get(i).set(3, String.valueOf(editProduct.get(3)));
-                allProductList.get(i).set(4, String.valueOf(editProduct.get(4)));
-            }
-        } 
-    }
-    
-    public void RemoveService(String name, int invoiceID){
-        for(int i=0; i < allProductList.size(); i++){
-            if(allProductList.get(i).get(5).equals(name)){
-                JOptionPane.showMessageDialog(null, "First, remove these unit products !", "Remove", JOptionPane.ERROR_MESSAGE);
-                break;
-            }else{
-                removeServiceList.add(name);
-                for(int j=0; j < allServicesList.size(); j++){
-                    if(allServicesList.get(j).get(0).equals(name)){
-                        allServicesList.remove(j);
-                    }
-                } 
-                RefrashSerAndProPanel(invoiceID);
-            }
-        }
-        
-        if(allProductList.isEmpty()){
-                removeServiceList.add(name);
-                for(int j=0; j < allServicesList.size(); j++){
-                    if(allServicesList.get(j).get(0).equals(name)){
-                        allServicesList.remove(j);
-                    }
-                } 
-                RefrashSerAndProPanel(invoiceID);
-        }
-    }
-    
-    public void UpdateService(String name, String charge){
-        System.out.println(charge);
-        for(int i=0; i < allServicesList.size(); i++){
-            if(allServicesList.get(i).get(0).equals(name)){
-                allServicesList.get(i).set(1, charge);
-            }
-        } 
-    }
     /**
      * @param args the command line arguments
      */
@@ -539,21 +442,23 @@ public class EditAndCancelService extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(EditAndCancelService.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CancelService.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(EditAndCancelService.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CancelService.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(EditAndCancelService.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CancelService.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(EditAndCancelService.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CancelService.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new EditAndCancelService().setVisible(true);
+                new CancelService().setVisible(true);
             }
         });
     }
@@ -572,6 +477,7 @@ public class EditAndCancelService extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane6;
     private fosalgo.FTextField ownerName;

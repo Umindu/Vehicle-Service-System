@@ -219,6 +219,9 @@
                 <Property name="name" type="java.lang.String" value="cashAmount" noResource="true"/>
                 <Property name="radius" type="int" value="10"/>
               </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="cashAmountKeyReleased"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel4">
               <Properties>
@@ -252,6 +255,9 @@
                 <Property name="name" type="java.lang.String" value="cardAmount" noResource="true"/>
                 <Property name="radius" type="int" value="10"/>
               </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="cardAmountKeyReleased"/>
+              </Events>
             </Component>
             <Component class="fosalgo.FTextField" name="cardBillNo">
               <Properties>
@@ -278,6 +284,9 @@
                 <Property name="name" type="java.lang.String" value="qrAmount" noResource="true"/>
                 <Property name="radius" type="int" value="10"/>
               </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="qrAmountKeyReleased"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel5">
               <Properties>

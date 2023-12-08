@@ -58,7 +58,7 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
     
     ArrayList<ArrayList<String> > cartProductList =  new ArrayList<ArrayList<String> >(); 
     
-    public Vehicles() {
+    public Vehicles(String jobroleLable) {
         initComponents();
         
         BasicInternalFrameUI bi = (BasicInternalFrameUI)this.getUI();
@@ -75,6 +75,7 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
             while(resultSet.next()){
                 selectServiceUnitCombobox.addItem(resultSet.getString("Name"));
             }
+            
         } catch (SQLException ex) {
             Logger.getLogger(Manage.class.getName()).log(Level.SEVERE, null, ex);
         }

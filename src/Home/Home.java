@@ -7,7 +7,7 @@ package Home;
 import DBConnect.DBconnect;
 import Manage.Manage;
 import Payments.Payments;
-import Reports.EditAndCancelService;
+import Reports.CancelService;
 import Vehicles.Vehicles;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
@@ -257,8 +257,8 @@ public class Home extends javax.swing.JInternalFrame {
         jScrollPane2.setBackground(new java.awt.Color(255, 255, 255));
         jScrollPane2.setBorder(null);
         jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
+        serAndProPanel.setBackground(new java.awt.Color(246, 246, 246));
         serAndProPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         javax.swing.GroupLayout serAndProPanelLayout = new javax.swing.GroupLayout(serAndProPanel);
@@ -687,30 +687,32 @@ public class Home extends javax.swing.JInternalFrame {
 
     private void progressButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_progressButtonActionPerformed
         // TODO add your handling code here:
-        Date currentDate = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String formattedDate = dateFormat.format(currentDate);
-        
-        String Vehicleregno = VehicleRegNo.getText();
-        String ownername = ownerName.getText();
-        String ownerphone = ownerPhone.getText();
-        String Vehicletype = VehicleTypeComboBox.getSelectedItem().toString();
-        String descriptions = description.getText();
-        try {
-            Statement statement = DBconnect.connectToDB().createStatement();
-            statement.execute("INSERT INTO VehicleDetails (Date, VehicleNo, OwnerName, Phone, VehicleType, States, Description) VALUES('" + formattedDate + "', '" + Vehicleregno + "', '" + ownername + "', '" + ownerphone + "', '" + Vehicletype + "', 'Processing', '"+ descriptions +"')");
-            System.out.println("Vehicle added successfully");
-            
-            VehicleRegNo.setText("");
-            ownerName.setText("");
-            ownerPhone.setText("");
-            description.setText("");
-            VehicleTypeComboBox.setSelectedIndex(0);
-            
-            setInvoiceNo();
-        } catch (SQLException ex) {
-            Logger.getLogger(Manage.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(null, "Vehicle add unsuccessful !, try again ");
+        if(!VehicleRegNo.getText().isEmpty()){
+            Date currentDate = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String formattedDate = dateFormat.format(currentDate);
+
+            String Vehicleregno = VehicleRegNo.getText();
+            String ownername = ownerName.getText();
+            String ownerphone = ownerPhone.getText();
+            String Vehicletype = VehicleTypeComboBox.getSelectedItem().toString();
+            String descriptions = description.getText();
+            try {
+                Statement statement = DBconnect.connectToDB().createStatement();
+                statement.execute("INSERT INTO VehicleDetails (Date, VehicleNo, OwnerName, Phone, VehicleType, States, Description) VALUES('" + formattedDate + "', '" + Vehicleregno + "', '" + ownername + "', '" + ownerphone + "', '" + Vehicletype + "', 'Processing', '"+ descriptions +"')");
+                System.out.println("Vehicle added successfully");
+
+                VehicleRegNo.setText("");
+                ownerName.setText("");
+                ownerPhone.setText("");
+                description.setText("");
+                VehicleTypeComboBox.setSelectedIndex(0);
+
+                setInvoiceNo();
+            } catch (SQLException ex) {
+                Logger.getLogger(Manage.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null, "Vehicle add unsuccessful !, try again ");
+            }
         }
     }//GEN-LAST:event_progressButtonActionPerformed
 
@@ -804,6 +806,8 @@ public class Home extends javax.swing.JInternalFrame {
     
     private void progressButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_progressButton1ActionPerformed
         // TODO add your handling code here:
+        String invoiceID = invoiceNoLable.getText().substring(1);
+        
         if(edited == true){
             int result = JOptionPane.showConfirmDialog(null,"Sure? Update this?", "Update", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             if(result == JOptionPane.YES_OPTION){
@@ -812,54 +816,44 @@ public class Home extends javax.swing.JInternalFrame {
                     //remove services
                     if(!removeServiceList.isEmpty()){
                         for(String index : removeServiceList){
-                            statement.execute("DELETE ServiceCharges WHERE InvoiceID = '"+ invoiceNo.getText() +"' AND ServiceUnit = '"+ index +"'");
+                            statement.execute("DELETE ServiceCharges WHERE InvoiceID = '"+ invoiceID +"' AND ServiceUnit = '"+ index +"'");
                         }
                     }
                     //update service
                     if(!allServicesList.isEmpty()){
                         for(ArrayList Service : allServicesList){
-                            statement.execute("UPDATE ServiceCharges SET ServiceCharge = '"+ Service.get(1) +"' WHERE InvoiceID = '"+ invoiceNo.getText() +"' AND ServiceUnit = '"+ Service.get(0) +"'");
+                            statement.execute("UPDATE ServiceCharges SET ServiceCharge = '"+ Service.get(1) +"' WHERE InvoiceID = '"+ invoiceID +"' AND ServiceUnit = '"+ Service.get(0) +"'");
                         }
                     }
                     //remove products
                     if(!removeProductList.isEmpty()){
                         for(String index : removeProductList){
-                            statement.execute("DELETE SoldProducts WHERE InvoiceID = '"+ invoiceNo.getText() +"' AND ProductID = '"+ index +"'");
+                            statement.execute("DELETE SoldProducts WHERE InvoiceID = '"+ invoiceID +"' AND ProductID = '"+ index +"'");
                         }
                     }
                     //update products
                     if(!allProductList.isEmpty()){
                         for(ArrayList Product : allProductList){
-                            statement.execute("UPDATE SoldProducts SET Qnt = '"+ Product.get(3) +"', Total = '"+ Product.get(4) +"' WHERE InvoiceID = '"+ invoiceNo.getText() +"' AND ProductID = '"+ Product.get(0) +"'");
+                            statement.execute("UPDATE SoldProducts SET Qnt = '"+ Product.get(3) +"', Total = '"+ Product.get(4) +"' WHERE InvoiceID = '"+ invoiceID +"' AND ProductID = '"+ Product.get(0) +"'");
                         }
                     }
-                    
-                    if(!invoiceNoLable.getText().equals("Invoice No")){
-                        Payments payments = new Payments(invoiceNoLable.getText().substring(1) , subTotalCal, discountPercentage, discount.getText().isEmpty() ? "0" : discount.getText(), payableAmountCal);
-                        payments.setLocationRelativeTo(null); 
-                        payments.setExtendedState(JFrame.MAXIMIZED_BOTH);
-                        payments.setBackground(new Color(0,0,0,150));
-                        payments.setVisible(true);
-
-                        payments.setObject(this);
-                    }
-
                 } catch (SQLException ex) {
-                    Logger.getLogger(EditAndCancelService.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(CancelService.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                this.dispose();
-            }
-        }else{
-            if(!invoiceNoLable.getText().equals("Invoice No")){
-                Payments payments = new Payments(invoiceNoLable.getText().substring(1) , subTotalCal, discountPercentage, discount.getText().isEmpty() ? "0" : discount.getText(), payableAmountCal);
-                payments.setLocationRelativeTo(null); 
-                payments.setExtendedState(JFrame.MAXIMIZED_BOTH);
-                payments.setBackground(new Color(0,0,0,150));
-                payments.setVisible(true);
-
-                payments.setObject(this);
             }
         }
+        edited = false;
+        if(!invoiceNoLable.getText().equals("Invoice No")){
+            Payments payments = new Payments(invoiceNoLable.getText().substring(1) , subTotalCal, discountPercentage, discount.getText().isEmpty() ? "0" : discount.getText(), payableAmountCal);
+            payments.setLocationRelativeTo(null); 
+            payments.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            payments.setBackground(new Color(0,0,0,150));
+            payments.setVisible(true);
+
+            payments.setObject(this);
+        }
+        
+        
     }//GEN-LAST:event_progressButton1ActionPerformed
 
     private void VehicleRegNoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_VehicleRegNoKeyReleased

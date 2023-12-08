@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package Reports.Templates;
-import Reports.EditAndCancelService;
+import Reports.CancelService;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -22,15 +22,8 @@ public class ProductItem extends javax.swing.JPanel {
     
     ArrayList<String> editProduct =  new ArrayList<String>();
   
-    public ProductItem(EditAndCancelService editAndCancelService, int invoiceID, String id, String name, float price, float qnt, float total, String ActionType) {
+    public ProductItem(String id, String name, float price, float qnt, float total) {
         initComponents();
-        
-        if(ActionType == "Cancel"){
-            removeButton.setVisible(false);
-            qntReduceButton.setVisible(false);
-            qntIncreaseButton.setVisible(false);
-            proQnt.setFocusable(false);
-        }
         
         proName.setText(name);
         proQnt.setText(String.valueOf(qnt));
@@ -42,60 +35,6 @@ public class ProductItem extends javax.swing.JPanel {
         editProduct.add(String.valueOf(price));
         editProduct.add(String.valueOf(qnt));
         editProduct.add(String.valueOf(total));
-        
-        removeButton.addMouseListener(new MouseAdapter() { 
-            
-            public void mousePressed(MouseEvent e) { 
-                editAndCancelService.RemoveProduct(id, invoiceID);
-            } 
-        }); 
-        
-        proQnt.addKeyListener(new KeyAdapter() {
-            public void keyReleased(KeyEvent e) {
-                
-                if(!proQnt.getText().isEmpty() == !proQnt.getText().equals("-")){
-                    if(Float.parseFloat(proQnt.getText()) < 0){
-                        proQnt.setText("1");
-                    }
-                    float total = Float.parseFloat(proQnt.getText()) * price;
-                    proTotal.setText(String.valueOf(total));
-                    editProduct.add(3, proQnt.getText());
-                    editProduct.add(4, proTotal.getText());
-                    editAndCancelService.UpdateProduct(editProduct);
-                }else{
-                    float total = 1 * price;
-                    proTotal.setText(String.valueOf(total));
-                    editProduct.add(3, "1");
-                    editProduct.add(4, proTotal.getText());
-                    editAndCancelService.UpdateProduct(editProduct);
-                }
-           }
-        });
-        
-        qntIncreaseButton.addMouseListener(new MouseAdapter() { 
-            public void mousePressed(MouseEvent e) { 
-             proQnt.setText(String.valueOf(Float.parseFloat(proQnt.getText())+1));
-             float total = Float.parseFloat(proQnt.getText()) * price;
-             proTotal.setText(String.valueOf(total));
-             editProduct.add(3, proQnt.getText());
-             editProduct.add(4, proTotal.getText());
-             editAndCancelService.UpdateProduct(editProduct);
-            } 
-        });
-        
-        qntReduceButton.addMouseListener(new MouseAdapter() { 
-            public void mousePressed(MouseEvent e) { 
-             if(Float.parseFloat(proQnt.getText())-1 > 0){
-                proQnt.setText(String.valueOf(Float.parseFloat(proQnt.getText())-1));
-                float total = Float.parseFloat(proQnt.getText()) * price;
-                proTotal.setText(String.valueOf(total));
-                editProduct.add(3, proQnt.getText());
-                editProduct.add(4, proTotal.getText());
-                editAndCancelService.UpdateProduct(editProduct);
-             }
-            } 
-        });
-
     }
 
     /**
@@ -108,33 +47,18 @@ public class ProductItem extends javax.swing.JPanel {
     private void initComponents() {
 
         proName = new javax.swing.JLabel();
-        removeButton = new button.MyButton();
         proQnt = new fosalgo.FTextField();
         proTotal = new javax.swing.JLabel();
         proPrice = new javax.swing.JLabel();
-        qntReduceButton = new button.MyButton();
-        qntIncreaseButton = new button.MyButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
         proName.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         proName.setText("Name");
 
-        removeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/cross.png"))); // NOI18N
-        removeButton.setBorderColor(new java.awt.Color(255, 255, 255));
-        removeButton.setBorderPainted(false);
-        removeButton.setColorClick(new java.awt.Color(204, 204, 204));
-        removeButton.setColorOver(new java.awt.Color(204, 204, 204));
-        removeButton.setFocusable(false);
-        removeButton.setRadius(50);
-        removeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                removeButtonActionPerformed(evt);
-            }
-        });
-
         proQnt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         proQnt.setFocusTraversalPolicyProvider(true);
+        proQnt.setFocusable(false);
         proQnt.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         proQnt.setRadius(10);
 
@@ -144,18 +68,6 @@ public class ProductItem extends javax.swing.JPanel {
         proPrice.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         proPrice.setText("x  0.00");
 
-        qntReduceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/minus-small.png"))); // NOI18N
-        qntReduceButton.setBorderColor(new java.awt.Color(13, 180, 185));
-        qntReduceButton.setColorClick(new java.awt.Color(204, 204, 204));
-        qntReduceButton.setColorOver(new java.awt.Color(204, 204, 204));
-        qntReduceButton.setRadius(10);
-
-        qntIncreaseButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/plus-small.png"))); // NOI18N
-        qntIncreaseButton.setBorderColor(new java.awt.Color(13, 180, 185));
-        qntIncreaseButton.setColorClick(new java.awt.Color(204, 204, 204));
-        qntIncreaseButton.setColorOver(new java.awt.Color(204, 204, 204));
-        qntIncreaseButton.setRadius(10);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -164,50 +76,28 @@ public class ProductItem extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(qntReduceButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(proQnt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(qntIncreaseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addGap(10, 10, 10)
                         .addComponent(proPrice, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(proTotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE))
+                        .addComponent(proTotal))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(proName)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addComponent(removeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(2, 2, 2)
-                .addComponent(proName)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(proQnt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(proTotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(proPrice, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(qntReduceButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(qntIncreaseButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addComponent(proName, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(proQnt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(proTotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(proPrice, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(5, 5, 5))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(removeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
-        // TODO add your handling code here:
-        System.out.println();
-    }//GEN-LAST:event_removeButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -215,8 +105,5 @@ public class ProductItem extends javax.swing.JPanel {
     private javax.swing.JLabel proPrice;
     private fosalgo.FTextField proQnt;
     private javax.swing.JLabel proTotal;
-    private button.MyButton qntIncreaseButton;
-    private button.MyButton qntReduceButton;
-    private button.MyButton removeButton;
     // End of variables declaration//GEN-END:variables
 }

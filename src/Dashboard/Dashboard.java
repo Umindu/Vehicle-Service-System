@@ -57,26 +57,12 @@ public class Dashboard extends javax.swing.JFrame {
     public void SetUserDetails(String jobRole, String name, String imgUrl){
         jobroleLable.setText(jobRole);
         usernameLable.setText(name);
-         System.out.println(imgUrl);
-        
         
         ImageIcon icon = new ImageIcon(imgUrl);
         Image in = icon.getImage();
         Image modified = in.getScaledInstance(46, 46, java.awt.Image.SCALE_SMOOTH);
         icon = new ImageIcon(modified);
-        myButton1.setIcon(icon);
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+        myButton1.setIcon(icon);  
     }
 
     /**
@@ -443,7 +429,7 @@ public class Dashboard extends javax.swing.JFrame {
         VehicleButton.setBorderColor(new Color(13,180,185));
         VehicleButton.setColor(new Color(184,248,250));
         
-        Vehicles vehicles = new Vehicles();
+        Vehicles vehicles = new Vehicles(jobroleLable.getText());
         mainWindowPanel.removeAll();
         mainWindowPanel.add(vehicles).setVisible(true);
         vehicles.setObject(vehicles);
@@ -463,7 +449,7 @@ public class Dashboard extends javax.swing.JFrame {
         Reports reports = new Reports();
         mainWindowPanel.removeAll();
         mainWindowPanel.add(reports).setVisible(true);
-        reports.setObject(reports, mainWindowPanel, this);
+        reports.setObject(mainWindowPanel, this);
         try {
             reports.setMaximum(true);
         } catch (PropertyVetoException ex) {

@@ -55,18 +55,22 @@ public class Manage extends javax.swing.JInternalFrame {
         jobRoleComboBox.addItem("Cashier");
         
         //serviceUnitTable data load
-        LoadServiceUnitTable();
+        LoadServiceUnitTable("All");
         
         employeeDeleteButton.setVisible(false);
     }
     
-    private void LoadServiceUnitTable(){
+    private void LoadServiceUnitTable(String search){
         //serviceUnitTable data load
         JTableHeader header = serviceUnitTable.getTableHeader();
         header.setFont(new Font("Segoe UI", Font.BOLD , 14));
         try {
             Statement statement = DBconnect.connectToDB().createStatement();
-            statement.execute("Select ID AS 'Unit ID' , Name AS 'Unit Name' From ServiceUnits");
+            if(search.equals("All")){
+                statement.execute("Select ID AS 'Unit ID' , Name AS 'Unit Name' From ServiceUnits");
+            }else{
+                statement.execute("Select ID AS 'Unit ID' , Name AS 'Unit Name' From ServiceUnits Where ID like '%"+ search +"%' OR Name like '%"+ search +"%'");
+            }
             ResultSet resultSet = statement.getResultSet(); 
             
             serviceUnitTable.setModel(DbUtils.resultSetToTableModel(resultSet));
@@ -76,13 +80,17 @@ public class Manage extends javax.swing.JInternalFrame {
         }
     }
     
-    private void LoadServicesTable(){
+    private void LoadServicesTable(String search){
         //serviceTable data load
         JTableHeader header = serviceTable.getTableHeader();
         header.setFont(new Font("Segoe UI", Font.BOLD , 14));
         try {
             Statement statement = DBconnect.connectToDB().createStatement();
-            statement.execute("Select ID , Name, ServiceUnit, VehicleType, ServiceCharge From Services");
+            if(search.equals("All")){
+                statement.execute("Select ID , Name, ServiceUnit, VehicleType, ServiceCharge From Services");
+            }else{
+                statement.execute("Select ID , Name, ServiceUnit, VehicleType, ServiceCharge From Services Where ID like '%"+ search +"%' OR Name like '%"+ search +"%'");
+            }
             ResultSet resultSet = statement.getResultSet(); 
             
             serviceTable.setModel(DbUtils.resultSetToTableModel(resultSet));
@@ -92,13 +100,17 @@ public class Manage extends javax.swing.JInternalFrame {
         }
     }
     
-    private void LoademployeeTable(){
+    private void LoademployeeTable(String search){
         //serviceUnitTable data load
         JTableHeader header = employeeTable.getTableHeader();
         header.setFont(new Font("Segoe UI", Font.BOLD , 14));
         try {
             Statement statement = DBconnect.connectToDB().createStatement();
-            statement.execute("Select ID, Name, NIC, JobRole, Email, Phone From Employees");
+            if(search.equals("All")){
+                statement.execute("Select ID, Name, NIC, JobRole, Email, Phone From Employees");
+            }else{
+                statement.execute("Select ID, Name, NIC, JobRole, Email, Phone From Employees Where ID like '%"+ search +"%' OR Name like '%"+ search +"%' OR NIC like '%"+ search +"%' OR JobRole like '%"+ search +"%' OR Email like '%"+ search +"%' OR Phone like '%"+ search +"%'");
+            }
             ResultSet resultSet = statement.getResultSet(); 
             
             employeeTable.setModel(DbUtils.resultSetToTableModel(resultSet));
@@ -108,13 +120,17 @@ public class Manage extends javax.swing.JInternalFrame {
         }
     }
     
-    private void LoadVehicalTypeTable(){
+    private void LoadVehicalTypeTable(String search){
         //serviceUnitTable data load
         JTableHeader header = VehicleTypeTable.getTableHeader();
         header.setFont(new Font("Segoe UI", Font.BOLD , 14));
         try {
             Statement statement = DBconnect.connectToDB().createStatement();
-            statement.execute("Select ID, Name From VehicleType");
+            if(search.equals("All")){
+                statement.execute("Select ID, Name From VehicleType");
+            }else{
+                statement.execute("Select ID, Name From VehicleType Where ID like '%"+ search +"%' OR Name like '%"+ search +"%'");
+            }
             ResultSet resultSet = statement.getResultSet(); 
             
             VehicleTypeTable.setModel(DbUtils.resultSetToTableModel(resultSet));
@@ -124,13 +140,17 @@ public class Manage extends javax.swing.JInternalFrame {
         }
     }
     
-    private void LoadProductTable(){
+    private void LoadProductTable(String search){
         //serviceTable data load
         JTableHeader header = productTable.getTableHeader();
         header.setFont(new Font("Segoe UI", Font.BOLD , 14));
         try {
             Statement statement = DBconnect.connectToDB().createStatement();
-            statement.execute("Select ID , Name, Price, Qnt, ServiceUnit From Products");
+            if(search.equals("All")){
+                statement.execute("Select ID , Name, Price, Qnt, ServiceUnit From Products");
+            }else{
+                statement.execute("Select ID , Name, Price, Qnt, ServiceUnit From Products Where ID like '%"+ search +"%' OR Name like '%"+ search +"%'");
+            }
             ResultSet resultSet = statement.getResultSet(); 
             
             productTable.setModel(DbUtils.resultSetToTableModel(resultSet));
@@ -180,6 +200,7 @@ public class Manage extends javax.swing.JInternalFrame {
         addServiceUnitButton = new button.MyButton();
         servicesUnitDeleteButton = new button.MyButton();
         servicesUnitClearButton = new button.MyButton();
+        searchSerUnits = new fosalgo.FTextField();
         serviesCard = new javax.swing.JPanel();
         addServiceButton = new button.MyButton();
         serName = new fosalgo.FTextField();
@@ -201,10 +222,12 @@ public class Manage extends javax.swing.JInternalFrame {
         vehicalTypeComboBox = new CustomComponents.Combobox();
         servicesDeleteButton = new button.MyButton();
         servicesClearButton = new button.MyButton();
+        searchService = new fosalgo.FTextField();
         allEmployeeCard = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         employeeTable = new javax.swing.JTable();
+        searchEmployees = new fosalgo.FTextField();
         addEmployeeCard = new javax.swing.JPanel();
         addEmployeeTitle = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
@@ -245,6 +268,7 @@ public class Manage extends javax.swing.JInternalFrame {
         addVehicleTypeButton = new button.MyButton();
         VehiclelTypeDeleteButton = new button.MyButton();
         vehicalTypeClearButton1 = new button.MyButton();
+        searchVehicalType = new fosalgo.FTextField();
         productCard = new javax.swing.JPanel();
         jLabel29 = new javax.swing.JLabel();
         jScrollPane7 = new javax.swing.JScrollPane();
@@ -263,6 +287,7 @@ public class Manage extends javax.swing.JInternalFrame {
         productQnt = new fosalgo.FTextField();
         jLabel34 = new javax.swing.JLabel();
         selectServiceUnitCombobox = new CustomComponents.Combobox();
+        searchProducts = new fosalgo.FTextField();
 
         setBorder(null);
 
@@ -574,6 +599,24 @@ public class Manage extends javax.swing.JInternalFrame {
             }
         });
 
+        searchSerUnits.setForeground(new java.awt.Color(153, 153, 153));
+        searchSerUnits.setText("Search service units");
+        searchSerUnits.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        searchSerUnits.setRadius(20);
+        searchSerUnits.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                searchSerUnitsFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                searchSerUnitsFocusLost(evt);
+            }
+        });
+        searchSerUnits.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                searchSerUnitsKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout serviesUnitCardLayout = new javax.swing.GroupLayout(serviesUnitCard);
         serviesUnitCard.setLayout(serviesUnitCardLayout);
         serviesUnitCardLayout.setHorizontalGroup(
@@ -583,7 +626,8 @@ public class Manage extends javax.swing.JInternalFrame {
                 .addGroup(serviesUnitCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(serviesUnitCardLayout.createSequentialGroup()
                         .addComponent(jLabel2)
-                        .addGap(0, 575, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(searchSerUnits, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(serviesUnitCardLayout.createSequentialGroup()
                         .addGap(0, 556, Short.MAX_VALUE)
                         .addComponent(servicesUnitDeleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -602,11 +646,12 @@ public class Manage extends javax.swing.JInternalFrame {
         serviesUnitCardLayout.setVerticalGroup(
             serviesUnitCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(serviesUnitCardLayout.createSequentialGroup()
-                .addGap(13, 13, 13)
+                .addGap(7, 7, 7)
                 .addGroup(serviesUnitCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(serUnitTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(jLabel2)
+                    .addComponent(searchSerUnits, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(6, 6, 6)
                 .addGroup(serviesUnitCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(serviesUnitCardLayout.createSequentialGroup()
                         .addComponent(jLabel3)
@@ -618,7 +663,7 @@ public class Manage extends javax.swing.JInternalFrame {
                         .addComponent(serUnitName, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(servicesUnitClearButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 563, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(serviesUnitCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addServiceUnitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -756,6 +801,24 @@ public class Manage extends javax.swing.JInternalFrame {
             }
         });
 
+        searchService.setForeground(new java.awt.Color(153, 153, 153));
+        searchService.setText("Search service");
+        searchService.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        searchService.setRadius(20);
+        searchService.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                searchServiceFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                searchServiceFocusLost(evt);
+            }
+        });
+        searchService.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                searchServiceKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout serviesCardLayout = new javax.swing.GroupLayout(serviesCard);
         serviesCard.setLayout(serviesCardLayout);
         serviesCardLayout.setHorizontalGroup(
@@ -766,7 +829,10 @@ public class Manage extends javax.swing.JInternalFrame {
                     .addGroup(serviesCardLayout.createSequentialGroup()
                         .addGap(0, 556, Short.MAX_VALUE)
                         .addComponent(servicesDeleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel8)
+                    .addGroup(serviesCardLayout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(searchService, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 715, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(serviesCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -791,11 +857,12 @@ public class Manage extends javax.swing.JInternalFrame {
         serviesCardLayout.setVerticalGroup(
             serviesCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(serviesCardLayout.createSequentialGroup()
-                .addGap(13, 13, 13)
+                .addGap(7, 7, 7)
                 .addGroup(serviesCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(serTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8))
-                .addGap(18, 18, 18)
+                    .addComponent(jLabel8)
+                    .addComponent(searchService, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(6, 6, 6)
                 .addGroup(serviesCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(serviesCardLayout.createSequentialGroup()
                         .addComponent(jLabel6)
@@ -821,7 +888,7 @@ public class Manage extends javax.swing.JInternalFrame {
                         .addComponent(jLabel11)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
                         .addComponent(servicesClearButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -860,6 +927,24 @@ public class Manage extends javax.swing.JInternalFrame {
         });
         jScrollPane4.setViewportView(employeeTable);
 
+        searchEmployees.setForeground(new java.awt.Color(153, 153, 153));
+        searchEmployees.setText("Search employees");
+        searchEmployees.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        searchEmployees.setRadius(20);
+        searchEmployees.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                searchEmployeesFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                searchEmployeesFocusLost(evt);
+            }
+        });
+        searchEmployees.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                searchEmployeesKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout allEmployeeCardLayout = new javax.swing.GroupLayout(allEmployeeCard);
         allEmployeeCard.setLayout(allEmployeeCardLayout);
         allEmployeeCardLayout.setHorizontalGroup(
@@ -869,7 +954,8 @@ public class Manage extends javax.swing.JInternalFrame {
                 .addGroup(allEmployeeCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(allEmployeeCardLayout.createSequentialGroup()
                         .addComponent(jLabel12)
-                        .addGap(0, 894, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(searchEmployees, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(allEmployeeCardLayout.createSequentialGroup()
                         .addGap(6, 6, 6)
                         .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 1014, Short.MAX_VALUE)))
@@ -878,10 +964,12 @@ public class Manage extends javax.swing.JInternalFrame {
         allEmployeeCardLayout.setVerticalGroup(
             allEmployeeCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(allEmployeeCardLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel12)
+                .addGap(7, 7, 7)
+                .addGroup(allEmployeeCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel12)
+                    .addComponent(searchEmployees, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 621, Short.MAX_VALUE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1254,6 +1342,24 @@ public class Manage extends javax.swing.JInternalFrame {
             }
         });
 
+        searchVehicalType.setForeground(new java.awt.Color(153, 153, 153));
+        searchVehicalType.setText("Search vehicle type");
+        searchVehicalType.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        searchVehicalType.setRadius(20);
+        searchVehicalType.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                searchVehicalTypeFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                searchVehicalTypeFocusLost(evt);
+            }
+        });
+        searchVehicalType.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                searchVehicalTypeKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout vehicleTypesCardLayout = new javax.swing.GroupLayout(vehicleTypesCard);
         vehicleTypesCard.setLayout(vehicleTypesCardLayout);
         vehicleTypesCardLayout.setHorizontalGroup(
@@ -1264,10 +1370,11 @@ public class Manage extends javax.swing.JInternalFrame {
                     .addGroup(vehicleTypesCardLayout.createSequentialGroup()
                         .addGap(0, 556, Short.MAX_VALUE)
                         .addComponent(VehiclelTypeDeleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane6)
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 727, Short.MAX_VALUE)
                     .addGroup(vehicleTypesCardLayout.createSequentialGroup()
                         .addComponent(jLabel26)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(searchVehicalType, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(vehicleTypesCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(addVehicleTypeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1283,11 +1390,12 @@ public class Manage extends javax.swing.JInternalFrame {
         vehicleTypesCardLayout.setVerticalGroup(
             vehicleTypesCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(vehicleTypesCardLayout.createSequentialGroup()
-                .addGap(13, 13, 13)
+                .addGap(7, 7, 7)
                 .addGroup(vehicleTypesCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(VehicleTypeTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel26))
-                .addGap(18, 18, 18)
+                    .addComponent(jLabel26)
+                    .addComponent(searchVehicalType, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(6, 6, 6)
                 .addGroup(vehicleTypesCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(vehicleTypesCardLayout.createSequentialGroup()
                         .addComponent(jLabel27)
@@ -1299,7 +1407,7 @@ public class Manage extends javax.swing.JInternalFrame {
                         .addComponent(VehicleTypeName, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(vehicalTypeClearButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 546, Short.MAX_VALUE))
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 563, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(vehicleTypesCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addVehicleTypeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1428,6 +1536,24 @@ public class Manage extends javax.swing.JInternalFrame {
             }
         });
 
+        searchProducts.setForeground(new java.awt.Color(153, 153, 153));
+        searchProducts.setText("Search products");
+        searchProducts.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        searchProducts.setRadius(20);
+        searchProducts.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                searchProductsFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                searchProductsFocusLost(evt);
+            }
+        });
+        searchProducts.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                searchProductsKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout productCardLayout = new javax.swing.GroupLayout(productCard);
         productCard.setLayout(productCardLayout);
         productCardLayout.setHorizontalGroup(
@@ -1441,7 +1567,8 @@ public class Manage extends javax.swing.JInternalFrame {
                     .addComponent(jScrollPane7)
                     .addGroup(productCardLayout.createSequentialGroup()
                         .addComponent(jLabel29)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(searchProducts, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(productCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(addProductButton, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE)
@@ -1462,11 +1589,12 @@ public class Manage extends javax.swing.JInternalFrame {
         productCardLayout.setVerticalGroup(
             productCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(productCardLayout.createSequentialGroup()
-                .addGap(13, 13, 13)
+                .addGap(7, 7, 7)
                 .addGroup(productCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(productTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel29))
-                .addGap(18, 18, 18)
+                    .addComponent(jLabel29)
+                    .addComponent(searchProducts, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(6, 6, 6)
                 .addGroup(productCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(productCardLayout.createSequentialGroup()
                         .addComponent(jLabel30)
@@ -1490,7 +1618,7 @@ public class Manage extends javax.swing.JInternalFrame {
                         .addComponent(selectServiceUnitCombobox, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(productClearButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 546, Short.MAX_VALUE))
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 563, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(productCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addProductButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1576,7 +1704,7 @@ public class Manage extends javax.swing.JInternalFrame {
         }
         
         //serviceTable data load
-        LoadServicesTable();
+        LoadServicesTable("All");
     }//GEN-LAST:event_serButtonActionPerformed
 
     private void serUnitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serUnitButtonActionPerformed
@@ -1613,7 +1741,7 @@ public class Manage extends javax.swing.JInternalFrame {
         resetButtonStyle();
         allEmployeeButton.setColor(new Color(184,248,250));
         
-        LoademployeeTable();
+        LoademployeeTable("All");
     }//GEN-LAST:event_allEmployeeButtonActionPerformed
 
     private void addServiceUnitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addServiceUnitButtonActionPerformed
@@ -1640,7 +1768,7 @@ public class Manage extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Service Unit add unsuccessful !, try again ");
         }
         
-        LoadServiceUnitTable();
+        LoadServiceUnitTable("All");
     }//GEN-LAST:event_addServiceUnitButtonActionPerformed
 
     private void addServiceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addServiceButtonActionPerformed
@@ -1676,7 +1804,7 @@ public class Manage extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Service add unsuccessful !, try again ");
         }
         
-        LoadServicesTable();
+        LoadServicesTable("All");
     }//GEN-LAST:event_addServiceButtonActionPerformed
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
@@ -1796,7 +1924,7 @@ public class Manage extends javax.swing.JInternalFrame {
         resetButtonStyle();
         VehicleTypesButton.setColor(new Color(184,248,250));
         
-        LoadVehicalTypeTable();
+        LoadVehicalTypeTable("All");
     }//GEN-LAST:event_VehicleTypesButtonActionPerformed
 
     private void addVehicleTypeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addVehicleTypeButtonActionPerformed
@@ -1824,7 +1952,7 @@ public class Manage extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Vehicle Type add unsuccessful !, try again ");
         }
         
-        LoadVehicalTypeTable();
+        LoadVehicalTypeTable("All");
     }//GEN-LAST:event_addVehicleTypeButtonActionPerformed
 
     private void servicesUnitDeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_servicesUnitDeleteButtonActionPerformed
@@ -1840,7 +1968,7 @@ public class Manage extends javax.swing.JInternalFrame {
             }
             }
             
-        LoadServiceUnitTable();
+        LoadServiceUnitTable("All");
         
         serUnitTitle.setText("Add Service Unit");
         addServiceUnitButton.setText("Add Unit");
@@ -1861,7 +1989,7 @@ public class Manage extends javax.swing.JInternalFrame {
             }
             }
             
-        LoadServicesTable();
+        LoadServicesTable("All");
         
         serTitle.setText("Add Service");
         addServiceButton.setText("Add Service");
@@ -1886,7 +2014,7 @@ public class Manage extends javax.swing.JInternalFrame {
             }
             }
             
-        LoadVehicalTypeTable();
+        LoadVehicalTypeTable("All");
     }//GEN-LAST:event_VehiclelTypeDeleteButtonActionPerformed
 
     private void serviceUnitTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_serviceUnitTableMouseClicked
@@ -1999,7 +2127,7 @@ public class Manage extends javax.swing.JInternalFrame {
             }
             }
             
-        LoademployeeTable();
+        LoademployeeTable("All");
         cancelButtonActionPerformed(null);
         allEmployeeButtonActionPerformed(null);
     }//GEN-LAST:event_employeeDeleteButtonActionPerformed
@@ -2056,7 +2184,7 @@ public class Manage extends javax.swing.JInternalFrame {
             Logger.getLogger(Manage.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        LoadProductTable();
+        LoadProductTable("All");
     }//GEN-LAST:event_productButtonActionPerformed
 
     private void productTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_productTableMouseClicked
@@ -2112,7 +2240,7 @@ public class Manage extends javax.swing.JInternalFrame {
                 productTitle.setText("Add Product");
                 addProductButton.setText("Add Product");
             }
-            LoadProductTable();
+            LoadProductTable("All");
             productClearButtonActionPerformed(null);
         } catch (SQLException ex) {
             Logger.getLogger(Manage.class.getName()).log(Level.SEVERE, null, ex);
@@ -2133,7 +2261,7 @@ public class Manage extends javax.swing.JInternalFrame {
             }
             }
             
-        LoadProductTable();
+        LoadProductTable("All");
         
         productTitle.setText("Add Product");
         addProductButton.setText("Add Product");
@@ -2147,6 +2275,111 @@ public class Manage extends javax.swing.JInternalFrame {
     private void selectServiceUnitComboboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectServiceUnitComboboxActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_selectServiceUnitComboboxActionPerformed
+
+    private void searchSerUnitsFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_searchSerUnitsFocusGained
+        // TODO add your handling code here:
+        if(searchSerUnits.getText().equals("Search service units")){
+            searchSerUnits.setText("");
+            searchSerUnits.setForeground(Color.BLACK);
+        }
+    }//GEN-LAST:event_searchSerUnitsFocusGained
+
+    private void searchSerUnitsFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_searchSerUnitsFocusLost
+        // TODO add your handling code here:
+        if(searchSerUnits.getText().equals("")){
+            searchSerUnits.setText("Search service units");
+            searchSerUnits.setForeground(new Color(153,153,153));
+        }
+    }//GEN-LAST:event_searchSerUnitsFocusLost
+
+    private void searchSerUnitsKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchSerUnitsKeyReleased
+        // TODO add your handling code here:
+        LoadServiceUnitTable(searchSerUnits.getText());
+    }//GEN-LAST:event_searchSerUnitsKeyReleased
+
+    private void searchServiceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_searchServiceFocusGained
+        // TODO add your handling code here:
+        if(searchService.getText().equals("Search service")){
+            searchService.setText("");
+            searchService.setForeground(Color.BLACK);
+        }
+    }//GEN-LAST:event_searchServiceFocusGained
+
+    private void searchServiceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_searchServiceFocusLost
+        // TODO add your handling code here:
+        if(searchService.getText().equals("")){
+            searchService.setText("Search service");
+            searchService.setForeground(new Color(153,153,153));
+        }
+    }//GEN-LAST:event_searchServiceFocusLost
+
+    private void searchServiceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchServiceKeyReleased
+        // TODO add your handling code here:
+        LoadServicesTable(searchService.getText());
+    }//GEN-LAST:event_searchServiceKeyReleased
+
+    private void searchEmployeesFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_searchEmployeesFocusGained
+        // TODO add your handling code here:
+        if(searchEmployees.getText().equals("Search employees")){
+            searchEmployees.setText("");
+            searchEmployees.setForeground(Color.BLACK);
+        }
+    }//GEN-LAST:event_searchEmployeesFocusGained
+
+    private void searchEmployeesFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_searchEmployeesFocusLost
+        // TODO add your handling code here:
+        if(searchEmployees.getText().equals("")){
+            searchEmployees.setText("Search employees");
+            searchEmployees.setForeground(new Color(153,153,153));
+        }
+    }//GEN-LAST:event_searchEmployeesFocusLost
+
+    private void searchEmployeesKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchEmployeesKeyReleased
+        // TODO add your handling code here:
+        LoademployeeTable(searchEmployees.getText());
+    }//GEN-LAST:event_searchEmployeesKeyReleased
+
+    private void searchVehicalTypeFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_searchVehicalTypeFocusGained
+        // TODO add your handling code here:
+        if(searchVehicalType.getText().equals("Search vehicle type")){
+            searchVehicalType.setText("");
+            searchVehicalType.setForeground(Color.BLACK);
+        }
+    }//GEN-LAST:event_searchVehicalTypeFocusGained
+
+    private void searchVehicalTypeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_searchVehicalTypeFocusLost
+        // TODO add your handling code here:
+        if(searchVehicalType.getText().equals("")){
+            searchVehicalType.setText("Search vehicle type");
+            searchVehicalType.setForeground(new Color(153,153,153));
+        }
+    }//GEN-LAST:event_searchVehicalTypeFocusLost
+
+    private void searchVehicalTypeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchVehicalTypeKeyReleased
+        // TODO add your handling code here:
+        LoadVehicalTypeTable(searchVehicalType.getText());
+    }//GEN-LAST:event_searchVehicalTypeKeyReleased
+
+    private void searchProductsFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_searchProductsFocusGained
+        // TODO add your handling code here:
+        if(searchProducts.getText().equals("Search products")){
+            searchProducts.setText("");
+            searchProducts.setForeground(Color.BLACK);
+        }
+    }//GEN-LAST:event_searchProductsFocusGained
+
+    private void searchProductsFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_searchProductsFocusLost
+        // TODO add your handling code here:
+        if(searchProducts.getText().equals("")){
+            searchProducts.setText("Search products");
+            searchProducts.setForeground(new Color(153,153,153));
+        }
+    }//GEN-LAST:event_searchProductsFocusLost
+
+    private void searchProductsKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchProductsKeyReleased
+        // TODO add your handling code here:
+        LoadProductTable(searchProducts.getText());
+    }//GEN-LAST:event_searchProductsKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -2232,6 +2465,11 @@ public class Manage extends javax.swing.JInternalFrame {
     private javax.swing.JTable productTable;
     private javax.swing.JLabel productTitle;
     private button.MyButton saveButton;
+    private fosalgo.FTextField searchEmployees;
+    private fosalgo.FTextField searchProducts;
+    private fosalgo.FTextField searchSerUnits;
+    private fosalgo.FTextField searchService;
+    private fosalgo.FTextField searchVehicalType;
     private CustomComponents.Combobox selectServiceUnitCombobox;
     private button.MyButton serButton;
     private fosalgo.FTextField serCharge;
