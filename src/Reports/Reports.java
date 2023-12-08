@@ -6,12 +6,10 @@ package Reports;
 
 import DBConnect.DBconnect;
 import Dashboard.Dashboard;
-import Home.Home;
 import Manage.Manage;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Font;
-import java.beans.PropertyVetoException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -29,29 +27,27 @@ import net.proteanit.sql.DbUtils;
  */
 public class Reports extends javax.swing.JInternalFrame {
 
-    
-
     /**
      * Creates new form Reports
      */
     CardLayout cardLayout;
-    
+
     JDesktopPane mainWindowPanel;
     Dashboard dashboard;
-    
+
     public Reports() {
         initComponents();
-        
-        BasicInternalFrameUI bi = (BasicInternalFrameUI)this.getUI();
+
+        BasicInternalFrameUI bi = (BasicInternalFrameUI) this.getUI();
         bi.setNorthPane(null);
-        
+
         cardLayout = (CardLayout) panelCards.getLayout();
-        
+
         LoadEnterdVehiclesTable("All");
-        
+
         DepSerEditButton.setVisible(false);
         DepSerCancelButton.setVisible(false);
-        
+
         EntSerEditButton.setVisible(false);
         EntSerCancelButton.setVisible(false);
     }
@@ -416,30 +412,30 @@ public class Reports extends javax.swing.JInternalFrame {
         this.mainWindowPanel = mainWindowPanel;
         this.dashboard = dashboard;
     }
-    
+
     private void showEnterdVehiclePaneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showEnterdVehiclePaneButtonActionPerformed
         // TODO add your handling code here:
         cardLayout.show(panelCards, "enterdVehiclesCard");
-        
+
         LoadEnterdVehiclesTable("All");
     }//GEN-LAST:event_showEnterdVehiclePaneButtonActionPerformed
 
     private void showDepartedVehiclePaneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showDepartedVehiclePaneButtonActionPerformed
         // TODO add your handling code here:
         cardLayout.show(panelCards, "departedVehiclesCard");
-        
+
         LoadDepartedVehiclesTable("All");
     }//GEN-LAST:event_showDepartedVehiclePaneButtonActionPerformed
 
     private void DepSerCancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DepSerCancelButtonActionPerformed
         // TODO add your handling code here:
-        int invoiceID = (int) departedVehiclesTable.getModel().getValueAt(departedVehiclesTable.getSelectedRow(),0);
+        int invoiceID = (int) departedVehiclesTable.getModel().getValueAt(departedVehiclesTable.getSelectedRow(), 0);
         CancelService(invoiceID);
     }//GEN-LAST:event_DepSerCancelButtonActionPerformed
 
     private void DepSerEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DepSerEditButtonActionPerformed
         // TODO add your handling code here:
-        int invoiceID = (int) departedVehiclesTable.getModel().getValueAt(departedVehiclesTable.getSelectedRow(),0);
+        int invoiceID = (int) departedVehiclesTable.getModel().getValueAt(departedVehiclesTable.getSelectedRow(), 0);
 //        CancelService(invoiceID, "Dep", null);
         dashboard.EditServiceAndProduct(invoiceID);
     }//GEN-LAST:event_DepSerEditButtonActionPerformed
@@ -452,16 +448,16 @@ public class Reports extends javax.swing.JInternalFrame {
 
     private void EntSerEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EntSerEditButtonActionPerformed
         // TODO add your handling code here:
-        int invoiceID = (int) enterdVehiclesTable.getModel().getValueAt(enterdVehiclesTable.getSelectedRow(),0);
+        int invoiceID = (int) enterdVehiclesTable.getModel().getValueAt(enterdVehiclesTable.getSelectedRow(), 0);
 //        CancelService(invoiceID, "Ent", null);
         dashboard.EditServiceAndProduct(invoiceID);
-        
-        
+
+
     }//GEN-LAST:event_EntSerEditButtonActionPerformed
 
     private void EntSerCancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EntSerCancelButtonActionPerformed
         // TODO add your handling code here:
-        int invoiceID = (int) enterdVehiclesTable.getModel().getValueAt(enterdVehiclesTable.getSelectedRow(),0);
+        int invoiceID = (int) enterdVehiclesTable.getModel().getValueAt(enterdVehiclesTable.getSelectedRow(), 0);
         CancelService(invoiceID);
     }//GEN-LAST:event_EntSerCancelButtonActionPerformed
 
@@ -473,15 +469,15 @@ public class Reports extends javax.swing.JInternalFrame {
 
     private void searchDepVehicleFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_searchDepVehicleFocusLost
         // TODO add your handling code here:
-        if(searchDepVehicle.getText().equals("")){
+        if (searchDepVehicle.getText().equals("")) {
             searchDepVehicle.setText("Search by invoice no or vehicle no");
-            searchDepVehicle.setForeground(new Color(153,153,153));
+            searchDepVehicle.setForeground(new Color(153, 153, 153));
         }
     }//GEN-LAST:event_searchDepVehicleFocusLost
 
     private void searchDepVehicleFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_searchDepVehicleFocusGained
         // TODO add your handling code here:
-        if(searchDepVehicle.getText().equals("Search by invoice no or vehicle no")){
+        if (searchDepVehicle.getText().equals("Search by invoice no or vehicle no")) {
             searchDepVehicle.setText("");
             searchDepVehicle.setForeground(Color.BLACK);
         }
@@ -489,7 +485,7 @@ public class Reports extends javax.swing.JInternalFrame {
 
     private void searchEntVehicleFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_searchEntVehicleFocusGained
         // TODO add your handling code here:
-        if(searchEntVehicle.getText().equals("Search by invoice no or vehicle no")){
+        if (searchEntVehicle.getText().equals("Search by invoice no or vehicle no")) {
             searchEntVehicle.setText("");
             searchEntVehicle.setForeground(Color.BLACK);
         }
@@ -497,9 +493,9 @@ public class Reports extends javax.swing.JInternalFrame {
 
     private void searchEntVehicleFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_searchEntVehicleFocusLost
         // TODO add your handling code here:
-        if(searchEntVehicle.getText().equals("")){
+        if (searchEntVehicle.getText().equals("")) {
             searchEntVehicle.setText("Search by invoice no or vehicle no");
-            searchEntVehicle.setForeground(new Color(153,153,153));
+            searchEntVehicle.setForeground(new Color(153, 153, 153));
         }
     }//GEN-LAST:event_searchEntVehicleFocusLost
 
@@ -513,53 +509,53 @@ public class Reports extends javax.swing.JInternalFrame {
         LoadDepartedVehiclesTable(searchDepVehicle.getText());
     }//GEN-LAST:event_searchDepVehicleKeyReleased
 
-    public void LoadEnterdVehiclesTable(String search){
+    public void LoadEnterdVehiclesTable(String search) {
         //serviceUnitTable data load
         JTableHeader header = enterdVehiclesTable.getTableHeader();
-        header.setFont(new Font("Segoe UI", Font.BOLD , 14));
+        header.setFont(new Font("Segoe UI", Font.BOLD, 14));
         try {
             Statement statement = DBconnect.connectToDB().createStatement();
-            if(search.equals("All")){
+            if (search.equals("All")) {
                 statement.execute("Select InvoiceNo, Date, VehicleNo, OwnerName, Phone, VehicleType, Description From VehicleDetails Where States = 'Processing'");
-            }else{
-                statement.execute("Select InvoiceNo, Date, VehicleNo, OwnerName, Phone, VehicleType, Description From VehicleDetails Where (InvoiceNo like '%"+ search +"%' OR VehicleNo like '%"+ search +"%') AND States = 'Processing'");
+            } else {
+                statement.execute("Select InvoiceNo, Date, VehicleNo, OwnerName, Phone, VehicleType, Description From VehicleDetails Where (InvoiceNo like '%" + search + "%' OR VehicleNo like '%" + search + "%') AND States = 'Processing'");
             }
-            
-            ResultSet resultSet = statement.getResultSet(); 
-            
+
+            ResultSet resultSet = statement.getResultSet();
+
             enterdVehiclesTable.setModel(DbUtils.resultSetToTableModel(resultSet));
- 
+
         } catch (SQLException ex) {
             Logger.getLogger(Manage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void LoadDepartedVehiclesTable(String search){
+
+    public void LoadDepartedVehiclesTable(String search) {
         //serviceUnitTable data load
         JTableHeader header = departedVehiclesTable.getTableHeader();
-        header.setFont(new Font("Segoe UI", Font.BOLD , 14));
+        header.setFont(new Font("Segoe UI", Font.BOLD, 14));
         try {
             Statement statement = DBconnect.connectToDB().createStatement();
-            if(search.equals("All")){
+            if (search.equals("All")) {
                 statement.execute("Select InvoiceNo, Date, VehicleNo, OwnerName, Phone, VehicleType, Description From VehicleDetails Where States = 'Done'");
-            }else{
-                statement.execute("Select InvoiceNo, Date, VehicleNo, OwnerName, Phone, VehicleType, Description From VehicleDetails Where (InvoiceNo like '%"+ search +"%' OR VehicleNo like '%"+ search +"%') AND States = 'Done'");
+            } else {
+                statement.execute("Select InvoiceNo, Date, VehicleNo, OwnerName, Phone, VehicleType, Description From VehicleDetails Where (InvoiceNo like '%" + search + "%' OR VehicleNo like '%" + search + "%') AND States = 'Done'");
             }
-            ResultSet resultSet = statement.getResultSet(); 
-            
+            ResultSet resultSet = statement.getResultSet();
+
             departedVehiclesTable.setModel(DbUtils.resultSetToTableModel(resultSet));
- 
+
         } catch (SQLException ex) {
             Logger.getLogger(Manage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void CancelService(int invoiceID){
+
+    public void CancelService(int invoiceID) {
         CancelService editAndCancelService = new CancelService(invoiceID);
         editAndCancelService.setObject(this);
-        editAndCancelService.setLocationRelativeTo(null); 
+        editAndCancelService.setLocationRelativeTo(null);
         editAndCancelService.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        editAndCancelService.setBackground(new Color(0,0,0,150));
+        editAndCancelService.setBackground(new Color(0, 0, 0, 150));
         editAndCancelService.setVisible(true);
     }
 

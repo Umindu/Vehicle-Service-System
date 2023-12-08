@@ -5,16 +5,12 @@
 package Reports;
 
 import DBConnect.DBconnect;
-import Login.Login;
-import Payments.Payments;
 import Reports.Templates.ProductItem;
 import Reports.Templates.ServiceChargeItem;
 import Vehicles.Vehicles;
-import java.awt.Color;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
@@ -33,8 +29,8 @@ public class CancelService extends javax.swing.JFrame {
      * Creates new form CancelService
      */
     
-    ArrayList<ArrayList<String> > allServicesList =  new ArrayList<ArrayList<String> >(); 
-    ArrayList<ArrayList<String> > allProductList =  new ArrayList<ArrayList<String> >();
+    ArrayList<ArrayList<String> > allServicesList =  new ArrayList< >(); 
+    ArrayList<ArrayList<String> > allProductList =  new ArrayList< >();
     
     private Reports reports;
     
@@ -70,7 +66,6 @@ public class CancelService extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(CancelService.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
         
         LoadVehicleServiceList(invoiceID);
     }
@@ -399,7 +394,7 @@ public class CancelService extends javax.swing.JFrame {
             statement.execute("SELECT * FROM ServiceCharges WHERE InvoiceID = '"+ invoiceID +"'");
             ResultSet resultSet = statement.getResultSet();
             while(resultSet.next()){
-                ArrayList<String> serviceList =  new ArrayList<String>();
+                ArrayList<String> serviceList =  new ArrayList<>();
                 serviceList.add(resultSet.getString("ServiceUnit"));
                 serviceList.add(resultSet.getString("ServiceCharge"));
                 allServicesList.add(serviceList);
@@ -410,7 +405,7 @@ public class CancelService extends javax.swing.JFrame {
                 statement2.execute("SELECT * FROM SoldProducts WHERE InvoiceID = '"+ invoiceID +"' AND ServiceUnit = '"+ serUnit +"'");
                 ResultSet resultSetProducts = statement2.getResultSet();
                 while(resultSetProducts.next()){
-                    ArrayList<String> productList =  new ArrayList<String>();
+                    ArrayList<String> productList =  new ArrayList<>();
                     productList.add(resultSetProducts.getString("ProductID"));
                     productList.add(resultSetProducts.getString("Name"));
                     productList.add(resultSetProducts.getString("Price"));

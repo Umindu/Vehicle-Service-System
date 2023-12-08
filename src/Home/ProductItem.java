@@ -18,7 +18,7 @@ public class ProductItem extends javax.swing.JPanel {
     /**
      * Creates new form ProductItem
      */
-    ArrayList<String> editProduct =  new ArrayList<String>();
+    ArrayList<String> editProduct =  new ArrayList<>();
     
     public ProductItem(Home home, String id, String name, float price, float qnt, float total) {
         initComponents();
@@ -119,11 +119,6 @@ public class ProductItem extends javax.swing.JPanel {
         removeButton.setColorOver(new java.awt.Color(204, 204, 204));
         removeButton.setFocusable(false);
         removeButton.setRadius(50);
-        removeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                removeButtonActionPerformed(evt);
-            }
-        });
 
         proQnt.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
         proQnt.setFocusTraversalPolicyProvider(true);
@@ -195,11 +190,6 @@ public class ProductItem extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
-        // TODO add your handling code here:
-        System.out.println();
-    }//GEN-LAST:event_removeButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

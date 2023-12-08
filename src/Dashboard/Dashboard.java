@@ -9,23 +9,12 @@ import Login.Login;
 import Manage.Manage;
 import Reports.Reports;
 import Vehicles.Vehicles;
-import com.github.sarxos.webcam.Webcam;
-import com.github.sarxos.webcam.WebcamPanel;
-import com.google.zxing.BinaryBitmap;
-import com.google.zxing.LuminanceSource;
-import com.google.zxing.MultiFormatReader;
-import com.google.zxing.Result;
-import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
-import com.google.zxing.common.HybridBinarizer;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.beans.PropertyVetoException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -37,21 +26,14 @@ public class Dashboard extends javax.swing.JFrame {
     /**
      * Creates new form Dashboard
      */
+    
+    public Home home;
+    public Vehicles vehicles;
+    
     public Dashboard() {
         initComponents();
         
-        homeButton.setBorderColor(new Color(13,180,185));
-        homeButton.setColor(new Color(184,248,250));
-        
-        Home home = new Home();
-        mainWindowPanel.removeAll();
-        mainWindowPanel.add(home).setVisible(true);
-        home.setObject(home);
-        try {
-            home.setMaximum(true);
-        } catch (PropertyVetoException ex) {
-            Logger.getLogger(Dashboard.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        homeButtonActionPerformed(null);
     }
     
     public void SetUserDetails(String jobRole, String name, String imgUrl){
@@ -93,7 +75,6 @@ public class Dashboard extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Auto Service");
-        setPreferredSize(new java.awt.Dimension(1024, 678));
 
         jPanel3.setBackground(new java.awt.Color(13, 180, 185));
 
@@ -103,12 +84,14 @@ public class Dashboard extends javax.swing.JFrame {
         jLabel1.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         usernameLable.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        usernameLable.setForeground(new java.awt.Color(255, 255, 255));
         usernameLable.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         usernameLable.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         usernameLable.setVerifyInputWhenFocusTarget(false);
         usernameLable.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
         jobroleLable.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jobroleLable.setForeground(new java.awt.Color(255, 255, 255));
         jobroleLable.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jobroleLable.setToolTipText("");
         jobroleLable.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
@@ -119,12 +102,8 @@ public class Dashboard extends javax.swing.JFrame {
         myButton1.setColor(new java.awt.Color(13, 180, 185));
         myButton1.setColorClick(new java.awt.Color(13, 180, 185));
         myButton1.setColorOver(new java.awt.Color(13, 180, 185));
+        myButton1.setFocusPainted(false);
         myButton1.setFocusable(false);
-        myButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                myButton1ActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -321,8 +300,7 @@ public class Dashboard extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(mainWindowPanel)
-                .addGap(0, 0, 0))
+                .addComponent(mainWindowPanel))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -364,44 +342,21 @@ public class Dashboard extends javax.swing.JFrame {
         logoutButton.setColor(Color.WHITE);
     }
     
-//    private void OpenWebCame(){
-//        Webcam webcam = Webcam.getDefault();   //Generate Webcam Object
-//        webcam.setViewSize(new Dimension(320,240));
-//        WebcamPanel webcamPanel = new WebcamPanel(webcam);
-//        webcamPanel.setMirrored(false);
-//        JFrame jFrame = new JFrame();
-//        jFrame.add(webcamPanel);
-//        jFrame.pack();
-//        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        jFrame.setLocationRelativeTo(null);
-//        jFrame.setVisible(true);
-//        
-//        do{
-//            try {
-//                BufferedImage image = webcam.getImage();
-//                LuminanceSource source = new BufferedImageLuminanceSource(image);
-//                BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
-//                Result result = new MultiFormatReader().decode(bitmap);
-//                if(result.getText() != null){
-//                    JOptionPane.showMessageDialog(null, result.getText(), "INFORMATION", JOptionPane.INFORMATION_MESSAGE);
-//                    jFrame.setVisible(false);
-//                    jFrame.dispose();
-//                    webcam.close();
-//                    break;
-//                }
-//                
-//            } catch (Exception e) {
-//            }
-//        }while(true);
-//    }
-    
     private void homeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeButtonActionPerformed
         // TODO add your handling code here:
+        if(vehicles != null){
+            try{
+                vehicles.CloseWebCam();
+            }catch (Exception ex){
+                ///
+            }
+        }
         resetButonStyles();
+//        home.OpennWebCam();
         homeButton.setBorderColor(new Color(13,180,185));
         homeButton.setColor(new Color(184,248,250));
         
-        Home home = new Home();
+        home = new Home();
         mainWindowPanel.removeAll();
         mainWindowPanel.add(home).setVisible(true);
         try {
@@ -425,11 +380,13 @@ public class Dashboard extends javax.swing.JFrame {
 
     private void VehicleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VehicleButtonActionPerformed
         // TODO add your handling code here:
+        home.CloseWebCam();
+            
         resetButonStyles();
         VehicleButton.setBorderColor(new Color(13,180,185));
         VehicleButton.setColor(new Color(184,248,250));
         
-        Vehicles vehicles = new Vehicles(jobroleLable.getText());
+        vehicles = new Vehicles(jobroleLable.getText());
         mainWindowPanel.removeAll();
         mainWindowPanel.add(vehicles).setVisible(true);
         vehicles.setObject(vehicles);
@@ -442,6 +399,8 @@ public class Dashboard extends javax.swing.JFrame {
 
     private void reportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reportButtonActionPerformed
         // TODO add your handling code here:
+        home.CloseWebCam();
+        
         resetButonStyles();
         reportButton.setBorderColor(new Color(13,180,185));
         reportButton.setColor(new Color(184,248,250));
@@ -466,6 +425,8 @@ public class Dashboard extends javax.swing.JFrame {
 
     private void manageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_manageButtonActionPerformed
         // TODO add your handling code here:
+        home.CloseWebCam();
+        
         resetButonStyles();
         manageButton.setBorderColor(new Color(13,180,185));
         manageButton.setColor(new Color(184,248,250));
@@ -479,10 +440,6 @@ public class Dashboard extends javax.swing.JFrame {
             Logger.getLogger(Dashboard.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_manageButtonActionPerformed
-
-    private void myButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_myButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_myButton1ActionPerformed
 
     public void EditServiceAndProduct(int InvoiceID){
         resetButonStyles();
@@ -532,6 +489,7 @@ public class Dashboard extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new Dashboard().setVisible(true);
             }

@@ -9,16 +9,31 @@ import Manage.Manage;
 import Payments.Payments;
 import Reports.CancelService;
 import Vehicles.Vehicles;
+import com.github.sarxos.webcam.Webcam;
+import com.github.sarxos.webcam.WebcamPanel;
+import com.github.sarxos.webcam.WebcamResolution;
 import com.google.zxing.BarcodeFormat;
+import com.google.zxing.BinaryBitmap;
 import com.google.zxing.EncodeHintType;
+import com.google.zxing.LuminanceSource;
+import com.google.zxing.MultiFormatReader;
 import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.NotFoundException;
+import com.google.zxing.Result;
 import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
+import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -29,15 +44,21 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.border.MatteBorder;
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import net.miginfocom.swing.MigLayout;
 
@@ -45,65 +66,70 @@ import net.miginfocom.swing.MigLayout;
  *
  * @author Umindu
  */
-public class Home extends javax.swing.JInternalFrame {
+public class Home extends javax.swing.JInternalFrame implements Runnable, ThreadFactory {
 
     /**
      * Creates new form Home
      */
-    
     private DefaultListModel ListModel;
-    
+
     private Home home;
-    
-    private ImageIcon qrImg; 
-    
+
+    private ImageIcon qrImg;
+
     private boolean discountPercentage = true;
-    
+
     private float subTotalCal = 0;
-    
+
     private float payableAmountCal = 0;
 
     private boolean edited = false;
+
+    ArrayList<ArrayList<String>> allServicesList = new ArrayList<>();
+    ArrayList<ArrayList<String>> allProductList = new ArrayList<>();
+    ArrayList<String> removeProductList = new ArrayList<>();
+    ArrayList<String> removeServiceList = new ArrayList<>();
     
-    ArrayList<ArrayList<String> > allServicesList =  new ArrayList<ArrayList<String> >(); 
-    ArrayList<ArrayList<String> > allProductList =  new ArrayList<ArrayList<String> >();
-    ArrayList<String> removeProductList =  new ArrayList<String>();
-    ArrayList<String> removeServiceList =  new ArrayList<String>();
-    
+    private WebcamPanel campanel = null;
+    private Webcam webcam = null;
+    private Executor executor = Executors.newSingleThreadExecutor(this);
+
     public Home() {
         initComponents();
-        
-        BasicInternalFrameUI bi = (BasicInternalFrameUI)this.getUI();
+
+        BasicInternalFrameUI bi = (BasicInternalFrameUI) this.getUI();
         bi.setNorthPane(null);
-        
-        sidePanel.setBorder(new MatteBorder(0, 10, 0, 0, new Color(242,242,242)));
-        
+
+        sidePanel.setBorder(new MatteBorder(0, 10, 0, 0, new Color(242, 242, 242)));
+
         // add data Vehical Type ComboBox
         try {
             VehicleTypeComboBox.removeAllItems();
             Statement statement = DBconnect.connectToDB().createStatement();
             statement.execute("Select Name From VehicleType");
-            ResultSet resultSet = statement.getResultSet(); 
-            while(resultSet.next()){
+            ResultSet resultSet = statement.getResultSet();
+            while (resultSet.next()) {
                 VehicleTypeComboBox.addItem(resultSet.getString("Name"));
             }
             VehicleTypeComboBox.addItem("Other");
         } catch (SQLException ex) {
             Logger.getLogger(Manage.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         //set invoice number
         setInvoiceNo();
-        
+
         //search menu
         searchMenu.add(searchPanel);
         ListModel = new DefaultListModel();
         searchPanelList.setModel(ListModel);
-        
+
         serAndProPanel.setLayout(new MigLayout("inset 0, fillx, wrap", "[fill]"));
-        
+
         showDate();
         showTime();
+        
+        initWebcam();
     }
 
     /**
@@ -112,7 +138,7 @@ public class Home extends javax.swing.JInternalFrame {
      * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
-    
+
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -154,6 +180,7 @@ public class Home extends javax.swing.JInternalFrame {
         timeLabel = new javax.swing.JLabel();
         cancelButton = new button.MyButton();
         qrCode = new javax.swing.JLabel();
+        webCamOpenWindow = new javax.swing.JPanel();
 
         searchPanelList.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         searchPanelList.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -177,6 +204,7 @@ public class Home extends javax.swing.JInternalFrame {
         searchMenu.setFocusable(false);
 
         setBorder(null);
+        setVisible(false);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(242, 242, 242), 10));
@@ -279,18 +307,13 @@ public class Home extends javax.swing.JInternalFrame {
         payableAmount.setText("Rs. 0.00");
 
         jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel11.setText("Payabel Amount :");
+        jLabel11.setText("Payable Amount :");
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel12.setText("Discount :");
 
         discount.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         discount.setRadius(15);
-        discount.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                discountActionPerformed(evt);
-            }
-        });
         discount.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 discountKeyReleased(evt);
@@ -374,7 +397,7 @@ public class Home extends javax.swing.JInternalFrame {
                     .addComponent(invoiceNoLable)
                     .addComponent(cancelButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 425, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 457, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(subTotal)
@@ -424,11 +447,6 @@ public class Home extends javax.swing.JInternalFrame {
         });
 
         VehicleTypeComboBox.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        VehicleTypeComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                VehicleTypeComboBoxActionPerformed(evt);
-            }
-        });
 
         timeLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         timeLabel.setText("Time : 12:45");
@@ -449,6 +467,8 @@ public class Home extends javax.swing.JInternalFrame {
             }
         });
 
+        webCamOpenWindow.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -458,14 +478,13 @@ public class Home extends javax.swing.JInternalFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(qrCode, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(progressButton, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(VehicleTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(jLabel3)
                                 .addComponent(jLabel4)
@@ -475,14 +494,16 @@ public class Home extends javax.swing.JInternalFrame {
                                 .addComponent(ownerName, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE)
                                 .addComponent(ownerPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(VehicleRegNo, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(18, 18, Short.MAX_VALUE)
-                        .addComponent(qrCode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(VehicleRegNo, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(VehicleTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(webCamOpenWindow, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(invoiceNo, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 113, Short.MAX_VALUE)
                         .addComponent(dateLable)
                         .addGap(27, 27, 27)
                         .addComponent(timeLabel)))
@@ -504,14 +525,14 @@ public class Home extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(VehicleRegNo, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(VehicleRegNo, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(ownerName, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel7)
@@ -520,17 +541,25 @@ public class Home extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(VehicleTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(qrCode, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(progressButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                        .addComponent(VehicleTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(141, 141, 141)
+                        .addComponent(webCamOpenWindow, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(progressButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap())
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(qrCode, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addComponent(sidePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -551,143 +580,197 @@ public class Home extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    public void setObject(Home home){
+    //Read QR ................
+    
+    public void CloseWebCam(){
+        webcam.close();  
+    }
+    
+    private void initWebcam(){
+        Dimension size = WebcamResolution.QVGA.getSize();
+        webcam = Webcam.getWebcams().get(0);
+        webcam.setViewSize(size);
+        
+        campanel = new WebcamPanel(webcam);
+        campanel.setPreferredSize(size);
+        campanel.setFPSDisplayed(true);
+        campanel.setMirrored(true);
+        
+        webCamOpenWindow.add(campanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0,0,250,250));
+        
+        executor.execute(this);  
+    }
+    
+    @Override
+    public void run() {
+        do {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            Result result = null;
+            BufferedImage image = null;
+
+            if (webcam.isOpen()) {
+                if ((image = webcam.getImage()) == null) {
+                    continue;
+                }
+
+                LuminanceSource source = new BufferedImageLuminanceSource(image);
+                BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
+
+                try {
+                    result = new MultiFormatReader().decode(bitmap);
+                } catch (NotFoundException ex) {
+//                    Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (result != null) {
+                Toolkit.getDefaultToolkit().beep();
+                String[] invoiceno = result.getText().split(",");
+                home.QRCodeRead(invoiceno[0]);
+            }
+        } while (true);
+    }
+   @Override
+    public Thread newThread(Runnable r) {
+        Thread t = new Thread(r, "My Thread");
+        t.setDaemon(true);
+        return t;
+    }
+    
+    //Read QR ................
+    
+    
+    
+    public void setObject(Home home) {
         this.home = home;
     }
-    
-    public void showDate(){
+
+    public void showDate() {
         SimpleDateFormat fdate = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
-        dateLable.setText("Date - "+fdate.format(date));
+        dateLable.setText("Date - " + fdate.format(date));
     }
-    
-    public void showTime(){
-        new Timer(0, new ActionListener(){
+
+    public void showTime() {
+        new Timer(0, new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e){
+            public void actionPerformed(ActionEvent e) {
                 SimpleDateFormat ftime = new SimpleDateFormat("hh:mm:ss a");
                 Date time = new Date();
                 timeLabel.setText(ftime.format(time));
             }
         }).start();
     }
-    
-    public void generateQRCode(){
+
+    public void generateQRCode() {
         OldQRimageDelete();
-        
+
         try {
             String qrText = invoiceNo.getText() + "," + VehicleRegNo.getText();
-            String imgPath = System.getProperty("user.dir")+"/QR/";
+            String imgPath = System.getProperty("user.dir") + "/QR/";
             String charset = "UTF-8";
-            Map<EncodeHintType, ErrorCorrectionLevel> hashMap = new HashMap<EncodeHintType, ErrorCorrectionLevel>();
+            Map<EncodeHintType, ErrorCorrectionLevel> hashMap = new HashMap<>();
             hashMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
-            generateQRcode(qrText, imgPath+qrText+".png", charset, hashMap, 250, 250);
-            qrImg = new ImageIcon("QR/"+qrText+".png");
+            generateQRcode(qrText, imgPath + qrText + ".png", charset, hashMap, 140, 140);
+            qrImg = new ImageIcon("QR/" + qrText + ".png");
             qrCode.setIcon(qrImg);
-        } catch (WriterException ex) {
-            Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
+        } catch (WriterException | IOException ex) {
             Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void OldQRimageDelete(){
-        File file =  new File(System.getProperty("user.dir")+"/QR/");
-        String[] S= file.list();
-        for(String ss : S){
+
+    public void OldQRimageDelete() {
+        File file = new File(System.getProperty("user.dir") + "/QR/");
+        String[] S = file.list();
+        for (String ss : S) {
             File f1 = new File(file, ss);
             f1.delete();
         }
     }
-    
+
     public void generateQRcode(String data, String path, String charset, Map map, int h, int w) throws WriterException, IOException {
         BitMatrix matrix = new MultiFormatWriter().encode(new String(data.getBytes(charset), charset), BarcodeFormat.QR_CODE, w, h);
         MatrixToImageWriter.writeToFile(matrix, path.substring(path.lastIndexOf('.') + 1), new File(path));
-    } 
-    
-    public void RefrashSerAndProPanel(){
+    }
+
+    public void RefrashSerAndProPanel() {
         serAndProPanel.removeAll();
         for (int i = 0; i < allServicesList.size(); i++) {
             String name = allServicesList.get(i).get(0);
             String charge = allServicesList.get(i).get(1);
-            serAndProPanel.add(new ServiceChargeItem(this, name, charge)); 
-            
+            serAndProPanel.add(new ServiceChargeItem(this, name, charge));
+
             for (int j = 0; j < allProductList.size(); j++) {
-                if(allProductList.get(j).get(5).equals(name)){
+                if (allProductList.get(j).get(5).equals(name)) {
                     String id = allProductList.get(j).get(0);
                     String proname = allProductList.get(j).get(1);
                     float price = Float.parseFloat(allProductList.get(j).get(2));
                     float qnt = Float.parseFloat(allProductList.get(j).get(3));
                     float total = Float.parseFloat(allProductList.get(j).get(4));
-                    serAndProPanel.add(new ProductItem(this, id, proname, price, qnt, total));  
+                    serAndProPanel.add(new ProductItem(this, id, proname, price, qnt, total));
                 }
-            } 
-        } 
-        
+            }
+        }
+
         //productListPanel refresh
         serAndProPanel.invalidate();
         serAndProPanel.validate();
         serAndProPanel.repaint();
-        
+
         CalculateSubTotalPayableAmount();
     }
-    
-    private void CalculateSubTotalPayableAmount(){
+
+    private void CalculateSubTotalPayableAmount() {
         subTotalCal = 0;
-        for(ArrayList Service : allServicesList){
+        for (ArrayList Service : allServicesList) {
             subTotalCal = subTotalCal + Float.parseFloat((String) Service.get(1));
         }
-        for(ArrayList Product : allProductList){
+        for (ArrayList Product : allProductList) {
             subTotalCal = subTotalCal + Float.parseFloat((String) Product.get(4));
         }
-        
-        subTotal.setText("Rs. "+String.valueOf(subTotalCal));
-        
-        if(!discount.getText().isEmpty()){
-            if(discountPercentage == true){
+
+        subTotal.setText("Rs. " + String.valueOf(subTotalCal));
+
+        if (!discount.getText().isEmpty()) {
+            if (discountPercentage == true) {
                 payableAmountCal = subTotalCal - ((subTotalCal * (Float.parseFloat(discount.getText()) / 100)));
-                payableAmount.setText("Rs. "+String.valueOf(payableAmountCal));
-            }else{
+                payableAmount.setText("Rs. " + String.valueOf(payableAmountCal));
+            } else {
                 payableAmountCal = subTotalCal - Float.parseFloat(discount.getText());
-                payableAmount.setText("Rs. "+String.valueOf(payableAmountCal));
+                payableAmount.setText("Rs. " + String.valueOf(payableAmountCal));
             }
-        }else{
+        } else {
             payableAmountCal = subTotalCal;
-            payableAmount.setText("Rs. "+String.valueOf(subTotalCal));
+            payableAmount.setText("Rs. " + String.valueOf(subTotalCal));
         }
     }
-    
 
-    private void setInvoiceNo(){
+    private void setInvoiceNo() {
         //set invoice number
         try {
             Statement statement = DBconnect.connectToDB().createStatement();
             statement.execute("SELECT MAX(COALESCE(InvoiceNo, 0)) AS largest_value FROM VehicleDetails");
             ResultSet resultSet = statement.getResultSet();
-                if (resultSet.next()) {
-                    int maxInvoiceID = resultSet.getInt(1);
-                    if (resultSet.wasNull()) {
-                        invoiceNo.setText("1");
-                    } else {
-                        invoiceNo.setText(String.valueOf(maxInvoiceID + 1));
-                    }
+            if (resultSet.next()) {
+                int maxInvoiceID = resultSet.getInt(1);
+                if (resultSet.wasNull()) {
+                    invoiceNo.setText("1");
+                } else {
+                    invoiceNo.setText(String.valueOf(maxInvoiceID + 1));
                 }
+            }
         } catch (SQLException ex) {
             Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    private void discountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discountActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_discountActionPerformed
-
-    private void VehicleTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VehicleTypeComboBoxActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_VehicleTypeComboBoxActionPerformed
 
     private void progressButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_progressButtonActionPerformed
         // TODO add your handling code here:
-        if(!VehicleRegNo.getText().isEmpty()){
+        if (!VehicleRegNo.getText().isEmpty()) {
             Date currentDate = new Date();
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String formattedDate = dateFormat.format(currentDate);
@@ -699,7 +782,7 @@ public class Home extends javax.swing.JInternalFrame {
             String descriptions = description.getText();
             try {
                 Statement statement = DBconnect.connectToDB().createStatement();
-                statement.execute("INSERT INTO VehicleDetails (Date, VehicleNo, OwnerName, Phone, VehicleType, States, Description) VALUES('" + formattedDate + "', '" + Vehicleregno + "', '" + ownername + "', '" + ownerphone + "', '" + Vehicletype + "', 'Processing', '"+ descriptions +"')");
+                statement.execute("INSERT INTO VehicleDetails (Date, VehicleNo, OwnerName, Phone, VehicleType, States, Description) VALUES('" + formattedDate + "', '" + Vehicleregno + "', '" + ownername + "', '" + ownerphone + "', '" + Vehicletype + "', 'Processing', '" + descriptions + "')");
                 System.out.println("Vehicle added successfully");
 
                 VehicleRegNo.setText("");
@@ -723,32 +806,32 @@ public class Home extends javax.swing.JInternalFrame {
         ownerPhone.setText("");
         description.setText("");
         VehicleTypeComboBox.setSelectedIndex(0);
-        
+
         setInvoiceNo();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void searchPanelListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchPanelListMouseClicked
         // TODO add your handling code here:
         ClearSidePane();
-        
-        invoiceNoLable.setText("#"+searchPanelList.getSelectedValue());
+
+        invoiceNoLable.setText("#" + searchPanelList.getSelectedValue());
         try {
             Statement statement = DBconnect.connectToDB().createStatement();
-            statement.execute("SELECT * FROM ServiceCharges WHERE InvoiceID = '"+ searchPanelList.getSelectedValue() +"'");
+            statement.execute("SELECT * FROM ServiceCharges WHERE InvoiceID = '" + searchPanelList.getSelectedValue() + "'");
             ResultSet resultSet = statement.getResultSet();
-            while(resultSet.next()){
-                ArrayList<String> serviceList =  new ArrayList<String>();
+            while (resultSet.next()) {
+                ArrayList<String> serviceList = new ArrayList<String>();
                 serviceList.add(resultSet.getString("ServiceUnit"));
                 serviceList.add(resultSet.getString("ServiceCharge"));
                 allServicesList.add(serviceList);
             }
-            for(int i=0; i < allServicesList.size(); i++){
+            for (int i = 0; i < allServicesList.size(); i++) {
                 String serUnit = allServicesList.get(i).get(0);
                 Statement statement2 = DBconnect.connectToDB().createStatement();
-                statement2.execute("SELECT * FROM SoldProducts WHERE InvoiceID = '"+ searchPanelList.getSelectedValue() +"' AND ServiceUnit = '"+ serUnit +"'");
+                statement2.execute("SELECT * FROM SoldProducts WHERE InvoiceID = '" + searchPanelList.getSelectedValue() + "' AND ServiceUnit = '" + serUnit + "'");
                 ResultSet resultSetProducts = statement2.getResultSet();
-                while(resultSetProducts.next()){
-                    ArrayList<String> productList =  new ArrayList<String>();
+                while (resultSetProducts.next()) {
+                    ArrayList<String> productList = new ArrayList<>();
                     productList.add(resultSetProducts.getString("ProductID"));
                     productList.add(resultSetProducts.getString("Name"));
                     productList.add(resultSetProducts.getString("Price"));
@@ -762,36 +845,76 @@ public class Home extends javax.swing.JInternalFrame {
         } catch (SQLException ex) {
             Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         searchMenu.setVisible(false);
         invoiceSearch.setText("");
     }//GEN-LAST:event_searchPanelListMouseClicked
 
+    public void QRCodeRead(String invoiceID) {
+        // TODO add your handling code here:
+        ClearSidePane();
+
+        invoiceNoLable.setText("#" + invoiceID);
+        try {
+            Statement statement = DBconnect.connectToDB().createStatement();
+            statement.execute("SELECT * FROM ServiceCharges WHERE InvoiceID = '" + invoiceID + "'");
+            ResultSet resultSet = statement.getResultSet();
+            while (resultSet.next()) {
+                ArrayList<String> serviceList = new ArrayList<String>();
+                serviceList.add(resultSet.getString("ServiceUnit"));
+                serviceList.add(resultSet.getString("ServiceCharge"));
+                allServicesList.add(serviceList);
+            }
+            for (int i = 0; i < allServicesList.size(); i++) {
+                String serUnit = allServicesList.get(i).get(0);
+                Statement statement2 = DBconnect.connectToDB().createStatement();
+                statement2.execute("SELECT * FROM SoldProducts WHERE InvoiceID = '" + invoiceID + "' AND ServiceUnit = '" + serUnit + "'");
+                ResultSet resultSetProducts = statement2.getResultSet();
+                while (resultSetProducts.next()) {
+                    ArrayList<String> productList = new ArrayList<>();
+                    productList.add(resultSetProducts.getString("ProductID"));
+                    productList.add(resultSetProducts.getString("Name"));
+                    productList.add(resultSetProducts.getString("Price"));
+                    productList.add(resultSetProducts.getString("Qnt"));
+                    productList.add(resultSetProducts.getString("Total"));
+                    productList.add(resultSetProducts.getString("ServiceUnit"));
+                    allProductList.add(productList);
+                }
+            }
+            RefrashSerAndProPanel();
+        } catch (SQLException ex) {
+            Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        searchMenu.setVisible(false);
+        invoiceSearch.setText("");
+    }
+
     private void invoiceSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_invoiceSearchKeyReleased
         // TODO add your handling code here:
         String search = invoiceSearch.getText().trim();
-        if(!search.equals("")){
+        if (!search.equals("")) {
             ListModel.removeAllElements();
             try {
                 Statement statement = DBconnect.connectToDB().createStatement();
-                statement.execute("SELECT InvoiceNo FROM VehicleDetails WHERE InvoiceNo LIKE '%"+search+"%' AND States = 'Processing'");
-                ResultSet resultSet = statement.getResultSet(); 
-                if(resultSet.next()){
+                statement.execute("SELECT InvoiceNo FROM VehicleDetails WHERE InvoiceNo LIKE '%" + search + "%' AND States = 'Processing'");
+                ResultSet resultSet = statement.getResultSet();
+                if (resultSet.next()) {
                     searchMenu.show(invoiceSearch, 0, invoiceSearch.getHeight());
                     searchMenu.setPopupSize(170, 170);
                     ListModel.addElement(resultSet.getString("InvoiceNo"));
-                }else{
+                } else {
                     searchMenu.setVisible(false);
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }else{
+        } else {
             searchMenu.setVisible(false);
         }
     }//GEN-LAST:event_invoiceSearchKeyReleased
 
-    public void ClearSidePane(){
+    public void ClearSidePane() {
         allServicesList.clear();
         allProductList.clear();
         serAndProPanel.removeAll();
@@ -800,41 +923,41 @@ public class Home extends javax.swing.JInternalFrame {
         discount.setText("");
         invoiceNoLable.setText("Invoice No");
         edited = false;
-        
+
         RefrashSerAndProPanel();
     }
-    
+
     private void progressButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_progressButton1ActionPerformed
         // TODO add your handling code here:
         String invoiceID = invoiceNoLable.getText().substring(1);
-        
-        if(edited == true){
-            int result = JOptionPane.showConfirmDialog(null,"Sure? Update this?", "Update", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-            if(result == JOptionPane.YES_OPTION){
+
+        if (edited == true) {
+            int result = JOptionPane.showConfirmDialog(null, "Sure? Update this?", "Update", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (result == JOptionPane.YES_OPTION) {
                 try {
                     Statement statement = DBconnect.connectToDB().createStatement();
                     //remove services
-                    if(!removeServiceList.isEmpty()){
-                        for(String index : removeServiceList){
-                            statement.execute("DELETE ServiceCharges WHERE InvoiceID = '"+ invoiceID +"' AND ServiceUnit = '"+ index +"'");
+                    if (!removeServiceList.isEmpty()) {
+                        for (String index : removeServiceList) {
+                            statement.execute("DELETE ServiceCharges WHERE InvoiceID = '" + invoiceID + "' AND ServiceUnit = '" + index + "'");
                         }
                     }
                     //update service
-                    if(!allServicesList.isEmpty()){
-                        for(ArrayList Service : allServicesList){
-                            statement.execute("UPDATE ServiceCharges SET ServiceCharge = '"+ Service.get(1) +"' WHERE InvoiceID = '"+ invoiceID +"' AND ServiceUnit = '"+ Service.get(0) +"'");
+                    if (!allServicesList.isEmpty()) {
+                        for (ArrayList Service : allServicesList) {
+                            statement.execute("UPDATE ServiceCharges SET ServiceCharge = '" + Service.get(1) + "' WHERE InvoiceID = '" + invoiceID + "' AND ServiceUnit = '" + Service.get(0) + "'");
                         }
                     }
                     //remove products
-                    if(!removeProductList.isEmpty()){
-                        for(String index : removeProductList){
-                            statement.execute("DELETE SoldProducts WHERE InvoiceID = '"+ invoiceID +"' AND ProductID = '"+ index +"'");
+                    if (!removeProductList.isEmpty()) {
+                        for (String index : removeProductList) {
+                            statement.execute("DELETE SoldProducts WHERE InvoiceID = '" + invoiceID + "' AND ProductID = '" + index + "'");
                         }
                     }
                     //update products
-                    if(!allProductList.isEmpty()){
-                        for(ArrayList Product : allProductList){
-                            statement.execute("UPDATE SoldProducts SET Qnt = '"+ Product.get(3) +"', Total = '"+ Product.get(4) +"' WHERE InvoiceID = '"+ invoiceID +"' AND ProductID = '"+ Product.get(0) +"'");
+                    if (!allProductList.isEmpty()) {
+                        for (ArrayList Product : allProductList) {
+                            statement.execute("UPDATE SoldProducts SET Qnt = '" + Product.get(3) + "', Total = '" + Product.get(4) + "' WHERE InvoiceID = '" + invoiceID + "' AND ProductID = '" + Product.get(0) + "'");
                         }
                     }
                 } catch (SQLException ex) {
@@ -843,17 +966,17 @@ public class Home extends javax.swing.JInternalFrame {
             }
         }
         edited = false;
-        if(!invoiceNoLable.getText().equals("Invoice No")){
-            Payments payments = new Payments(invoiceNoLable.getText().substring(1) , subTotalCal, discountPercentage, discount.getText().isEmpty() ? "0" : discount.getText(), payableAmountCal);
-            payments.setLocationRelativeTo(null); 
+        if (!invoiceNoLable.getText().equals("Invoice No")) {
+            Payments payments = new Payments(invoiceNoLable.getText().substring(1), subTotalCal, discountPercentage, discount.getText().isEmpty() ? "0" : discount.getText(), payableAmountCal);
+            payments.setLocationRelativeTo(null);
             payments.setExtendedState(JFrame.MAXIMIZED_BOTH);
-            payments.setBackground(new Color(0,0,0,150));
+            payments.setBackground(new Color(0, 0, 0, 150));
             payments.setVisible(true);
 
             payments.setObject(this);
         }
-        
-        
+
+
     }//GEN-LAST:event_progressButton1ActionPerformed
 
     private void VehicleRegNoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_VehicleRegNoKeyReleased
@@ -862,9 +985,9 @@ public class Home extends javax.swing.JInternalFrame {
 
         String text = VehicleRegNo.getText();
         char lastLetter = text.charAt(text.length() - 1);
-        if(lastLetter >= '0' && lastLetter <= '9'){
-            if(!VehicleRegNo.getText().contains("-")){
-                VehicleRegNo.setText(VehicleRegNo.getText().substring(0, VehicleRegNo.getText().length()-1) + '-' + lastLetter);
+        if (lastLetter >= '0' && lastLetter <= '9') {
+            if (!VehicleRegNo.getText().contains("-")) {
+                VehicleRegNo.setText(VehicleRegNo.getText().substring(0, VehicleRegNo.getText().length() - 1) + '-' + lastLetter);
             }
         }
 
@@ -872,41 +995,41 @@ public class Home extends javax.swing.JInternalFrame {
 
     private void discountToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discountToggleActionPerformed
         // TODO add your handling code here:
-        if(discountToggle.isSelected()){
+        if (discountToggle.isSelected()) {
             discountToggle.setText("Rs.");
             discountPercentage = false;
-        }else{
+        } else {
             discountToggle.setText("%");
             discountPercentage = true;
         }
-        
-        if(!discount.getText().isEmpty()){
-            if(discountPercentage == true){
+
+        if (!discount.getText().isEmpty()) {
+            if (discountPercentage == true) {
                 payableAmountCal = subTotalCal - ((subTotalCal * (Float.parseFloat(discount.getText()) / 100)));
-                payableAmount.setText("Rs. "+String.valueOf(payableAmountCal));
-            }else{
+                payableAmount.setText("Rs. " + String.valueOf(payableAmountCal));
+            } else {
                 payableAmountCal = subTotalCal - Float.parseFloat(discount.getText());
-                payableAmount.setText("Rs. "+String.valueOf(payableAmountCal));
+                payableAmount.setText("Rs. " + String.valueOf(payableAmountCal));
             }
-        }else{
+        } else {
             payableAmountCal = subTotalCal;
-            payableAmount.setText("Rs. "+String.valueOf(subTotalCal));
+            payableAmount.setText("Rs. " + String.valueOf(subTotalCal));
         }
     }//GEN-LAST:event_discountToggleActionPerformed
 
     private void discountKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_discountKeyReleased
         // TODO add your handling code here:
-        if(!discount.getText().isEmpty()){
-            if(discountPercentage == true){
+        if (!discount.getText().isEmpty()) {
+            if (discountPercentage == true) {
                 payableAmountCal = subTotalCal - ((subTotalCal * (Float.parseFloat(discount.getText()) / 100)));
-                payableAmount.setText("Rs. "+String.valueOf(payableAmountCal));
-            }else{
+                payableAmount.setText("Rs. " + String.valueOf(payableAmountCal));
+            } else {
                 payableAmountCal = subTotalCal - Float.parseFloat(discount.getText());
-                payableAmount.setText("Rs. "+String.valueOf(payableAmountCal));
+                payableAmount.setText("Rs. " + String.valueOf(payableAmountCal));
             }
-        }else{
+        } else {
             payableAmountCal = subTotalCal;
-            payableAmount.setText("Rs. "+String.valueOf(subTotalCal));
+            payableAmount.setText("Rs. " + String.valueOf(subTotalCal));
         }
     }//GEN-LAST:event_discountKeyReleased
 
@@ -915,27 +1038,27 @@ public class Home extends javax.swing.JInternalFrame {
         ClearSidePane();
     }//GEN-LAST:event_cancelButton1ActionPerformed
 
-    public void EditServiceAndProduct(int InvoiceID){
+    public void EditServiceAndProduct(int InvoiceID) {
         ClearSidePane();
-        
-        invoiceNoLable.setText("#"+InvoiceID);
+
+        invoiceNoLable.setText("#" + InvoiceID);
         try {
             Statement statement = DBconnect.connectToDB().createStatement();
-            statement.execute("SELECT * FROM ServiceCharges WHERE InvoiceID = '"+ InvoiceID +"'");
+            statement.execute("SELECT * FROM ServiceCharges WHERE InvoiceID = '" + InvoiceID + "'");
             ResultSet resultSet = statement.getResultSet();
-            while(resultSet.next()){
-                ArrayList<String> serviceList =  new ArrayList<String>();
+            while (resultSet.next()) {
+                ArrayList<String> serviceList = new ArrayList<>();
                 serviceList.add(resultSet.getString("ServiceUnit"));
                 serviceList.add(resultSet.getString("ServiceCharge"));
                 allServicesList.add(serviceList);
             }
-            for(int i=0; i < allServicesList.size(); i++){
+            for (int i = 0; i < allServicesList.size(); i++) {
                 String serUnit = allServicesList.get(i).get(0);
                 Statement statement2 = DBconnect.connectToDB().createStatement();
-                statement2.execute("SELECT * FROM SoldProducts WHERE InvoiceID = '"+ InvoiceID +"' AND ServiceUnit = '"+ serUnit +"'");
+                statement2.execute("SELECT * FROM SoldProducts WHERE InvoiceID = '" + InvoiceID + "' AND ServiceUnit = '" + serUnit + "'");
                 ResultSet resultSetProducts = statement2.getResultSet();
-                while(resultSetProducts.next()){
-                    ArrayList<String> productList =  new ArrayList<String>();
+                while (resultSetProducts.next()) {
+                    ArrayList<String> productList = new ArrayList<>();
                     productList.add(resultSetProducts.getString("ProductID"));
                     productList.add(resultSetProducts.getString("Name"));
                     productList.add(resultSetProducts.getString("Price"));
@@ -945,12 +1068,12 @@ public class Home extends javax.swing.JInternalFrame {
                     allProductList.add(productList);
                 }
             }
-            
+
             try {
                 Statement statement3 = DBconnect.connectToDB().createStatement();
-                statement3.execute("SELECT Discount, DiscountMethod FROM PaymentDetails WHERE InvoiceID = '"+InvoiceID+"'");
+                statement3.execute("SELECT Discount, DiscountMethod FROM PaymentDetails WHERE InvoiceID = '" + InvoiceID + "'");
                 ResultSet resultSet3 = statement3.getResultSet();
-                if(resultSet3.next()){
+                if (resultSet3.next()) {
                     discount.setText(resultSet3.getString("Discount"));
                     discountPercentage = resultSet3.getBoolean("DiscountMethod");
                     discountToggle.setSelected(!discountPercentage);
@@ -959,76 +1082,76 @@ public class Home extends javax.swing.JInternalFrame {
             } catch (SQLException ex) {
                 Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
             }
-        
+
             RefrashSerAndProPanel();
         } catch (SQLException ex) {
             Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         searchMenu.setVisible(false);
         invoiceSearch.setText("");
     }
-    
-    public void RemoveProduct(String id){
+
+    public void RemoveProduct(String id) {
         removeProductList.add(id);
-        for(int i=0; i < allProductList.size(); i++){
-            if(allProductList.get(i).get(0).equals(id)){
+        for (int i = 0; i < allProductList.size(); i++) {
+            if (allProductList.get(i).get(0).equals(id)) {
                 allProductList.remove(i);
             }
-        } 
+        }
         edited = true;
         RefrashSerAndProPanel();
         CalculateSubTotalPayableAmount();
     }
-    
-    public void UpdateProduct(ArrayList editProduct){
-        for(int i=0; i < allProductList.size(); i++){
-            if(allProductList.get(i).get(0).equals(editProduct.get(0))){
+
+    public void UpdateProduct(ArrayList editProduct) {
+        for (int i = 0; i < allProductList.size(); i++) {
+            if (allProductList.get(i).get(0).equals(editProduct.get(0))) {
                 allProductList.get(i).set(3, String.valueOf(editProduct.get(3)));
                 allProductList.get(i).set(4, String.valueOf(editProduct.get(4)));
             }
-        } 
+        }
         edited = true;
         CalculateSubTotalPayableAmount();
     }
-    
-    public void RemoveService(String name){
-        for(int i=0; i < allProductList.size(); i++){
-            if(allProductList.get(i).get(5).equals(name)){
+
+    public void RemoveService(String name) {
+        for (int i = 0; i < allProductList.size(); i++) {
+            if (allProductList.get(i).get(5).equals(name)) {
                 JOptionPane.showMessageDialog(null, "First, remove these unit products !", "Remove", JOptionPane.ERROR_MESSAGE);
                 break;
-            }else{
+            } else {
                 removeServiceList.add(name);
-                for(int j=0; j < allServicesList.size(); j++){
-                    if(allServicesList.get(j).get(0).equals(name)){
+                for (int j = 0; j < allServicesList.size(); j++) {
+                    if (allServicesList.get(j).get(0).equals(name)) {
                         allServicesList.remove(j);
                     }
-                } 
+                }
                 RefrashSerAndProPanel();
                 CalculateSubTotalPayableAmount();
             }
         }
-        
-        if(allProductList.isEmpty()){
+
+        if (allProductList.isEmpty()) {
             removeServiceList.add(name);
-            for(int j=0; j < allServicesList.size(); j++){
-                if(allServicesList.get(j).get(0).equals(name)){
+            for (int j = 0; j < allServicesList.size(); j++) {
+                if (allServicesList.get(j).get(0).equals(name)) {
                     allServicesList.remove(j);
                 }
-            } 
+            }
             RefrashSerAndProPanel();
             CalculateSubTotalPayableAmount();
         }
         edited = true;
     }
-    
-    public void UpdateService(String name, String charge){
+
+    public void UpdateService(String name, String charge) {
         System.out.println(charge);
-        for(int i=0; i < allServicesList.size(); i++){
-            if(allServicesList.get(i).get(0).equals(name)){
+        for (int i = 0; i < allServicesList.size(); i++) {
+            if (allServicesList.get(i).get(0).equals(name)) {
                 allServicesList.get(i).set(1, charge);
             }
-        } 
+        }
         edited = true;
         CalculateSubTotalPayableAmount();
     }
@@ -1072,5 +1195,6 @@ public class Home extends javax.swing.JInternalFrame {
     private javax.swing.JPanel sidePanel;
     private javax.swing.JLabel subTotal;
     private javax.swing.JLabel timeLabel;
+    private javax.swing.JPanel webCamOpenWindow;
     // End of variables declaration//GEN-END:variables
 }

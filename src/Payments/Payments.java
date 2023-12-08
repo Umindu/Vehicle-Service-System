@@ -6,8 +6,6 @@ package Payments;
 
 import DBConnect.DBconnect;
 import Home.Home;
-import java.awt.Color;
-import java.awt.Component;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;

@@ -12,10 +12,8 @@ public class DBconnect {
             connection = DriverManager.getConnection(url);
         } catch (ClassNotFoundException e) {
             System.err.println("JDBC driver not found");
-            e.printStackTrace();
         } catch (SQLException e) {
             System.err.println("Connection to SQL Server failed");
-            e.printStackTrace();
         }
         return connection;
     }

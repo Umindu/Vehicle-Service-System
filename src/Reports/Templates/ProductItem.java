@@ -3,11 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package Reports.Templates;
-import Reports.CancelService;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 /**
@@ -20,7 +15,7 @@ public class ProductItem extends javax.swing.JPanel {
      * Creates new form ProductItem
      */
     
-    ArrayList<String> editProduct =  new ArrayList<String>();
+    ArrayList<String> editProduct =  new ArrayList<>();
   
     public ProductItem(String id, String name, float price, float qnt, float total) {
         initComponents();
