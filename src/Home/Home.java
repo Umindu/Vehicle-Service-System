@@ -602,7 +602,7 @@ public class Home extends javax.swing.JInternalFrame implements Runnable, Thread
         campanel.setFPSDisplayed(true);
         campanel.setMirrored(true);
         
-        webCamOpenWindow.add(campanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0,0,250,250));
+        webCamOpenWindow.add(campanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(-40,0,330,250));
         
         executor.execute(this);  
     }
