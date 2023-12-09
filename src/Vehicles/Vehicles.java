@@ -42,51 +42,50 @@ import javax.swing.event.InternalFrameEvent;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import net.miginfocom.swing.MigLayout;
 
-
-
-public class Vehicles extends javax.swing.JInternalFrame implements Runnable, ThreadFactory{
+public class Vehicles extends javax.swing.JInternalFrame implements Runnable, ThreadFactory {
 
     private DefaultListModel ListModel;
     private Vehicles vehicles;
-    
+
     private WebcamPanel campanel = null;
     private Webcam webcam = null;
     private Executor executor = Executors.newSingleThreadExecutor(this);
-    
-    ArrayList<ArrayList<String> > cartProductList =  new ArrayList< >(); 
-    
+
+    ArrayList<ArrayList<String>> cartProductList = new ArrayList<>();
+    ArrayList<String> alreadyAddProducts = new ArrayList<>();
+
     public Vehicles(String jobroleLable) {
         initComponents();
-        
-        BasicInternalFrameUI bi = (BasicInternalFrameUI)this.getUI();
+
+        BasicInternalFrameUI bi = (BasicInternalFrameUI) this.getUI();
         bi.setNorthPane(null);
-        
-        sidePanel.setBorder(new MatteBorder(0, 10, 0, 0, new Color(242,242,242)));
-        
+
+        sidePanel.setBorder(new MatteBorder(0, 10, 0, 0, new Color(242, 242, 242)));
+
         //select Service Unit Combobox data set
         try {
             selectServiceUnitCombobox.removeAllItems();
             Statement statement = DBconnect.connectToDB().createStatement();
             statement.execute("Select Name From ServiceUnits");
-            ResultSet resultSet = statement.getResultSet(); 
-            while(resultSet.next()){
+            ResultSet resultSet = statement.getResultSet();
+            while (resultSet.next()) {
                 selectServiceUnitCombobox.addItem(resultSet.getString("Name"));
             }
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(Manage.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         //search menu
         searchMenu.add(searchPanel);
         ListModel = new DefaultListModel();
         searchPanelList.setModel(ListModel);
-        
+
         productListPanel.setLayout(new MigLayout("inset 0, fillx, wrap", "[fill]"));
-        
+
         showDate();
         showTime();
-        
+
         initWebcam();
     }
 
@@ -336,29 +335,11 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(invoiceSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(selectServiceUnitCombobox, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(dateLable)
-                                .addGap(27, 27, 27)
-                                .addComponent(timeLabel))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(14, 14, 14)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(VehicleRegNo, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jLabel3)
@@ -372,8 +353,29 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
                                     .addComponent(VehicleType, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(webCamOpenWindow, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, Short.MAX_VALUE)))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(invoiceSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 415, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(selectServiceUnitCombobox, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(dateLable)
+                                        .addGap(21, 21, 21)
+                                        .addComponent(timeLabel)))
+                                .addGap(6, 6, 6))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
                 .addComponent(sidePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -386,8 +388,8 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
                         .addComponent(dateLable)
                         .addComponent(timeLabel)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(6, 6, 6)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(invoiceSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -412,12 +414,10 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(webCamOpenWindow, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(webCamOpenWindow, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addComponent(sidePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -440,30 +440,30 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public void setObject(Vehicles vehicles){
+    public void setObject(Vehicles vehicles) {
         this.vehicles = vehicles;
     }
-    
+
     //Read QR ................
-     public void CloseWebCam(){
-        webcam.close();  
+    public void CloseWebCam() {
+        webcam.close();
     }
-     
-    private void initWebcam(){
+
+    private void initWebcam() {
         Dimension size = WebcamResolution.QVGA.getSize();
         webcam = Webcam.getWebcams().get(0);
         webcam.setViewSize(size);
-        
+
         campanel = new WebcamPanel(webcam);
         campanel.setPreferredSize(size);
         campanel.setFPSDisplayed(true);
         campanel.setMirrored(true);
-        
-        webCamOpenWindow.add(campanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0,0,250,250));
-        
-        executor.execute(this);  
+
+        webCamOpenWindow.add(campanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 250, 250));
+
+        executor.execute(this);
     }
-    
+
     @Override
     public void run() {
         do {
@@ -493,94 +493,96 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
 
             if (result != null) {
                 String[] invoiceno = result.getText().split(",");
-                try {
-                    Statement statement = DBconnect.connectToDB().createStatement();
-                    statement.execute("SELECT * FROM VehicleDetails WHERE InvoiceNo = '"+ invoiceno[0] +"'");
-                    ResultSet resultSet = statement.getResultSet();
-                    if(resultSet.next()){
-                        invoiceSearch.setText(invoiceno[0]);
-                        VehicleRegNo.setText(resultSet.getString("VehicleNo"));
-                        ownerName.setText(resultSet.getString("OwnerName"));
-                        ownerPhone.setText(resultSet.getString("Phone"));
-                        VehicleType.setText(resultSet.getString("VehicleType"));
-                        description.setText(resultSet.getString("Description"));
-                        
-                        Toolkit.getDefaultToolkit().beep();
-                        
-                        statement.execute("SELECT ID FROM SoldProducts WHERE InvoiceID = '"+ invoiceno[0] +"'");
-                        ResultSet resultSet2 = statement.getResultSet();
-                        if(resultSet2.next()){
-                            AlreadyProductLoad("1");
+                if((invoiceSearch.getText().isEmpty()) || (!invoiceno[0].equals(invoiceSearch.getText()))){
+                    cancelButtonActionPerformed(null);
+                    try {
+                        Statement statement = DBconnect.connectToDB().createStatement();
+                        statement.execute("SELECT * FROM VehicleDetails WHERE InvoiceNo = '" + invoiceno[0] + "'");
+                        ResultSet resultSet = statement.getResultSet();
+                        if (resultSet.next()) {
+                            invoiceSearch.setText(invoiceno[0]);
+                            VehicleRegNo.setText(resultSet.getString("VehicleNo"));
+                            ownerName.setText(resultSet.getString("OwnerName"));
+                            ownerPhone.setText(resultSet.getString("Phone"));
+                            VehicleType.setText(resultSet.getString("VehicleType"));
+                            description.setText(resultSet.getString("Description"));
+
+                            Toolkit.getDefaultToolkit().beep();
+
+                            statement.execute("SELECT ID FROM SoldProducts WHERE InvoiceID = '" + invoiceno[0] + "'");
+                            ResultSet resultSet2 = statement.getResultSet();
+                            if (resultSet2.next()) {
+                                AlreadyProductLoad(invoiceno[0]);
+                            }
                         }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } catch (SQLException ex) {
-                    Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         } while (true);
     }
-   @Override
+
+    @Override
     public Thread newThread(Runnable r) {
         Thread t = new Thread(r, "My Thread");
         t.setDaemon(true);
         return t;
     }
-    
+
     //Read QR ................
-    
-    public void showDate(){
+    public void showDate() {
         SimpleDateFormat fdate = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
-        dateLable.setText("Date - "+fdate.format(date));
+        dateLable.setText("Date - " + fdate.format(date));
     }
-    
-    public void showTime(){
-        new Timer(0, new ActionListener(){
+
+    public void showTime() {
+        new Timer(0, new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e){
+            public void actionPerformed(ActionEvent e) {
                 SimpleDateFormat ftime = new SimpleDateFormat("hh:mm:ss a");
                 Date time = new Date();
                 timeLabel.setText(ftime.format(time));
             }
         }).start();
     }
-    
-    public void RefrashProductListPanel(){
+
+    public void RefrashProductListPanel() {
         productListPanel.removeAll();
         for (int i = 0; i < cartProductList.size(); i++) {
             String id = cartProductList.get(i).get(0);
             String name = cartProductList.get(i).get(1);
             float price = Float.parseFloat(cartProductList.get(i).get(2));
             float qnt = Float.parseFloat(cartProductList.get(i).get(3));
-            productListPanel.add(new ProductItem(vehicles, id, name, price, qnt));  
-        } 
-        
+            productListPanel.add(new ProductItem(vehicles, id, name, price, qnt));
+        }
+
         //productListPanel refresh
         productListPanel.invalidate();
         productListPanel.validate();
         productListPanel.repaint();
     }
-    
-    public void RemoveProductListPanel(String id){
+
+    public void RemoveProductListPanel(String id) {
         productListPanel.removeAll();
         for (int i = 0; i < cartProductList.size(); i++) {
-            if(cartProductList.get(i).get(0) == id){
+            if (cartProductList.get(i).get(0) == id) {
                 cartProductList.remove(i);
-            } 
+            }
         }
         RefrashProductListPanel();
     }
-    
-    public void ChangeProductQnt(String id, float qnt, float total){
+
+    public void ChangeProductQnt(String id, float qnt, float total) {
         for (int i = 0; i < cartProductList.size(); i++) {
-            if(cartProductList.get(i).get(0) == id){
+            if (cartProductList.get(i).get(0) == id) {
                 cartProductList.get(i).set(3, String.valueOf(qnt));
                 cartProductList.get(i).set(4, String.valueOf(total));
-            } 
+            }
         }
-        System.out.println(cartProductList);
     }
-    
+
     private void selectServiceUnitComboboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectServiceUnitComboboxActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_selectServiceUnitComboboxActionPerformed
@@ -588,23 +590,23 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
     private void invoiceSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_invoiceSearchKeyReleased
         // TODO add your handling code here:
         String search = invoiceSearch.getText().trim();
-        if(!search.equals("")){
+        if (!search.equals("")) {
             ListModel.removeAllElements();
             try {
                 Statement statement = DBconnect.connectToDB().createStatement();
-                statement.execute("SELECT InvoiceNo FROM VehicleDetails WHERE InvoiceNo LIKE '%"+search+"%' AND States = 'Processing'");
-                ResultSet resultSet = statement.getResultSet(); 
-                if(resultSet.next()){
+                statement.execute("SELECT InvoiceNo FROM VehicleDetails WHERE InvoiceNo LIKE '%" + search + "%' AND States = 'Processing'");
+                ResultSet resultSet = statement.getResultSet();
+                if (resultSet.next()) {
                     searchMenu.show(invoiceSearch, 0, invoiceSearch.getHeight());
                     searchMenu.setPopupSize(170, 170);
                     ListModel.addElement(resultSet.getString("InvoiceNo"));
-                }else{
+                } else {
                     searchMenu.setVisible(false);
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }else{
+        } else {
             searchMenu.setVisible(false);
         }
     }//GEN-LAST:event_invoiceSearchKeyReleased
@@ -612,39 +614,37 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
     private void searchProductKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchProductKeyReleased
         // TODO add your handling code here:
         String search = searchProduct.getText().trim();
-        if(!search.equals("")){
+        if (!search.equals("")) {
             ListModel.removeAllElements();
-              searchMenu.show(searchProduct, 0, searchProduct.getHeight());
-              searchMenu.setPopupSize(240, 240);
-            
+            searchMenu.show(searchProduct, 0, searchProduct.getHeight());
+            searchMenu.setPopupSize(240, 240);
+
             try {
                 Statement statement = DBconnect.connectToDB().createStatement();
-                statement.execute("SELECT Name FROM Products WHERE Name LIKE '%"+search+"%'  AND (ServiceUnit = '"+ selectServiceUnitCombobox.getSelectedItem() +"' OR ServiceUnit = 'Both')");
-                ResultSet resultSet = statement.getResultSet(); 
-                if(resultSet.next()){
+                statement.execute("SELECT Name FROM Products WHERE Name LIKE '%" + search + "%'  AND (ServiceUnit = '" + selectServiceUnitCombobox.getSelectedItem() + "' OR ServiceUnit = 'Both')");
+                ResultSet resultSet = statement.getResultSet();
+                if (resultSet.next()) {
                     searchMenu.show(searchProduct, 0, searchProduct.getHeight());
                     ListModel.addElement(resultSet.getString("Name"));
-                }else{
+                } else {
                     searchMenu.setVisible(false);
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
             }
-                
-           
-        }else{
+
+        } else {
             searchMenu.setVisible(false);
         }
     }//GEN-LAST:event_searchProductKeyReleased
 
-    private void AlreadyProductLoad(String invoiceID){
-        cartProductList.clear();
+    private void AlreadyProductLoad(String invoiceID) {
         try {
             Statement statement = DBconnect.connectToDB().createStatement();
-            statement.execute("SELECT * FROM SoldProducts WHERE InvoiceID = '"+ invoiceID +"'");
+            statement.execute("SELECT * FROM SoldProducts WHERE InvoiceID = '" + invoiceID + "' AND ServiceUnit = '" + selectServiceUnitCombobox.getSelectedItem() + "'");
             ResultSet resultSet = statement.getResultSet();
-            if(resultSet.next()){
-                ArrayList<String> product =  new ArrayList<>();
+            while (resultSet.next()) {
+                ArrayList<String> product = new ArrayList<>();
                 product.add(resultSet.getString("ProductID"));
                 product.add(resultSet.getString("Name"));
                 product.add(resultSet.getString("Price"));
@@ -652,69 +652,77 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
                 product.add(resultSet.getString("Total"));
 
                 cartProductList.add(product);
-                RefrashProductListPanel();
+                alreadyAddProducts.add(resultSet.getString("ProductID"));
+            }
+            RefrashProductListPanel();
+            statement.execute("SELECT ServiceCharge FROM ServiceCharges WHERE InvoiceID = '" + invoiceID + "' AND ServiceUnit = '" + selectServiceUnitCombobox.getSelectedItem() + "'");
+            ResultSet resultSet2 = statement.getResultSet();
+            if (resultSet2.next()) {
+                serviceChargeTextField.setText(resultSet2.getString("ServiceCharge"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private void searchPanelListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchPanelListMouseClicked
         // TODO add your handling code here:
-        if(searchMenu.getWidth() == 170){
+        if (searchMenu.getWidth() == 170) {
+            cancelButtonActionPerformed(null);
+            invoiceSearch.setText(searchPanelList.getSelectedValue());
             try {
                 Statement statement = DBconnect.connectToDB().createStatement();
-                statement.execute("SELECT * FROM VehicleDetails WHERE InvoiceNo = '"+ searchPanelList.getSelectedValue() +"'");
+                statement.execute("SELECT * FROM VehicleDetails WHERE InvoiceNo = '" + searchPanelList.getSelectedValue() + "'");
                 ResultSet resultSet = statement.getResultSet();
-                if(resultSet.next()){
+                if (resultSet.next()) {
                     VehicleRegNo.setText(resultSet.getString("VehicleNo"));
                     ownerName.setText(resultSet.getString("OwnerName"));
                     ownerPhone.setText(resultSet.getString("Phone"));
                     VehicleType.setText(resultSet.getString("VehicleType"));
                     description.setText(resultSet.getString("Description"));
                 }
-                statement.execute("SELECT ID FROM SoldProducts WHERE InvoiceID = '"+ searchPanelList.getSelectedValue() +"'");
+                statement.execute("SELECT ID FROM SoldProducts WHERE InvoiceID = '" + searchPanelList.getSelectedValue() + "'");
                 ResultSet resultSet2 = statement.getResultSet();
-                if(resultSet2.next()){
+                if (resultSet2.next()) {
                     AlreadyProductLoad(searchPanelList.getSelectedValue());
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
-            } 
-        }else{
-            if(!VehicleRegNo.getText().isEmpty()){
+            }
+        } else {
+            if (!VehicleRegNo.getText().isEmpty()) {
                 try {
                     Statement statement = DBconnect.connectToDB().createStatement();
-                    statement.execute("SELECT * FROM Products WHERE name = '"+ searchPanelList.getSelectedValue() +"'");
+                    statement.execute("SELECT * FROM Products WHERE name = '" + searchPanelList.getSelectedValue() + "'");
                     ResultSet resultSet = statement.getResultSet();
-                    if(resultSet.next()){
-                        ArrayList<String> product =  new ArrayList<String>();
+                    if (resultSet.next()) {
+                        ArrayList<String> product = new ArrayList<>();
                         product.add(resultSet.getString("ID"));
                         product.add(resultSet.getString("Name"));
                         product.add(resultSet.getString("Price"));
                         product.add("1");
                         product.add(resultSet.getString("Price"));
-                        
-                        if(cartProductList.isEmpty()){
+
+                        if (cartProductList.isEmpty()) {
                             cartProductList.add(product);
-                        }else{
-                            for(int i=0; i<=cartProductList.size(); i++){
-                                if(cartProductList.get(i).get(0).equals(resultSet.getString("ID"))){
+                        } else {
+                            for (int i = 0; i <= cartProductList.size(); i++) {
+                                if (cartProductList.get(i).get(0).equals(resultSet.getString("ID"))) {
                                     cartProductList.get(i).set(3, String.valueOf(Float.parseFloat(cartProductList.get(i).get(3)) + 1));
                                     break;
                                 }
-                                if(cartProductList.size()-1 == i){
+                                if (cartProductList.size() - 1 == i) {
                                     cartProductList.add(product);
                                     break;
                                 }
-                            } 
+                            }
                         }
                         RefrashProductListPanel();
                     }
                 } catch (SQLException ex) {
                     Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            }else{
+            } else {
                 JOptionPane.showMessageDialog(null, "No invoice number selected !", "Empty", JOptionPane.WARNING_MESSAGE);
             }
         }
@@ -730,11 +738,12 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
         ownerPhone.setText("");
         VehicleType.setText("");
         description.setText("");
-        
+
         serviceChargeTextField.setText("");
-        cartProductList.removeAll(cartProductList);
+        cartProductList.clear();
+        alreadyAddProducts.clear();
         productListPanel.removeAll();
-        
+
         //productListPanel refresh
         productListPanel.invalidate();
         productListPanel.validate();
@@ -743,19 +752,41 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
 
     private void progressButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_progressButton1ActionPerformed
         // TODO add your handling code here:
-        
         try {
             Statement statement = DBconnect.connectToDB().createStatement();
-            statement.execute("INSERT INTO ServiceCharges (InvoiceID, ServiceUnit , ServiceCharge) "
-            + "VALUES('"+ invoiceSearch.getText() +"', '"+ selectServiceUnitCombobox.getSelectedItem() +"', '"+ serviceChargeTextField.getText() +"')");
+            if (alreadyAddProducts.isEmpty()) {
+                statement.execute("INSERT INTO ServiceCharges (InvoiceID, ServiceUnit , ServiceCharge) "
+                        + "VALUES('" + invoiceSearch.getText() + "', '" + selectServiceUnitCombobox.getSelectedItem() + "', '" + serviceChargeTextField.getText() + "')");
+            } else {
+                statement.execute("UPDATE ServiceCharges SET ServiceCharge = '" + serviceChargeTextField.getText() + "' WHERE InvoiceID = '" + invoiceSearch.getText() + "' AND ServiceUnit = '" + selectServiceUnitCombobox.getSelectedItem() + "'");
+            }
+
         } catch (SQLException ex) {
             Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
         }
-        for(int i=0; i < cartProductList.size(); i++){
+        for (int i = 0; i < cartProductList.size(); i++) {
             try {
                 Statement statement = DBconnect.connectToDB().createStatement();
-                statement.execute("INSERT INTO SoldProducts (InvoiceID, ProductID, Name, Price, Qnt, Total, ServiceUnit) "
-                    + "VALUES('" + invoiceSearch.getText() + "', '" + cartProductList.get(i).get(0) + "','" + cartProductList.get(i).get(1) + "','" + cartProductList.get(i).get(2) + "','" + cartProductList.get(i).get(3) + "','" + cartProductList.get(i).get(4) + "','" + selectServiceUnitCombobox.getSelectedItem() + "')");
+//                alreadyAddProducts
+                if (!alreadyAddProducts.contains(cartProductList.get(i).get(0))) {
+                    statement.execute("INSERT INTO SoldProducts (InvoiceID, ProductID, Name, Price, Qnt, Total, ServiceUnit) "
+                            + "VALUES('" + invoiceSearch.getText() + "', '" + cartProductList.get(i).get(0) + "','" + cartProductList.get(i).get(1) + "','" + cartProductList.get(i).get(2) + "','" + cartProductList.get(i).get(3) + "','" + cartProductList.get(i).get(4) + "','" + selectServiceUnitCombobox.getSelectedItem() + "')");
+                } else {
+                    statement.execute("UPDATE SoldProducts SET Qnt = '" + cartProductList.get(i).get(3) + "', Total = '" + cartProductList.get(i).get(4) + "' WHERE InvoiceID = '" + invoiceSearch.getText() + "' AND ProductID = '" + cartProductList.get(i).get(0) + "' AND ServiceUnit = '" + selectServiceUnitCombobox.getSelectedItem() + "'");
+                    alreadyAddProducts.remove(cartProductList.get(i).get(0));
+                }
+
+            } catch (SQLException ex) {
+                Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        if (!alreadyAddProducts.isEmpty()) {
+            try {
+                Statement statement = DBconnect.connectToDB().createStatement();
+                for (int i = 0; i < alreadyAddProducts.size(); i++) {
+                    statement.execute("DELETE FROM SoldProducts WHERE ProductID = '" + alreadyAddProducts.get(i) + "' AND InvoiceID = '" + invoiceSearch.getText() + "' AND ServiceUnit = '" + selectServiceUnitCombobox.getSelectedItem() + "'");
+                }
             } catch (SQLException ex) {
                 Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
             }
