@@ -4,6 +4,7 @@
  */
 package Dashboard;
 
+import Cashier.Cashier;
 import Home.Home;
 import Login.Login;
 import Manage.Manage;
@@ -71,6 +72,7 @@ public class Dashboard extends javax.swing.JFrame {
         settingButton = new button.MyButton();
         logoutButton = new button.MyButton();
         manageButton = new button.MyButton();
+        cashierButton = new button.MyButton();
         mainWindowPanel = new javax.swing.JDesktopPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -248,6 +250,24 @@ public class Dashboard extends javax.swing.JFrame {
             }
         });
 
+        cashierButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/user.png"))); // NOI18N
+        cashierButton.setText("Cashier");
+        cashierButton.setBorderColor(new java.awt.Color(255, 255, 255));
+        cashierButton.setBorderPainted(false);
+        cashierButton.setColorClick(new java.awt.Color(184, 248, 250));
+        cashierButton.setColorOver(new java.awt.Color(184, 248, 250));
+        cashierButton.setFocusPainted(false);
+        cashierButton.setFocusable(false);
+        cashierButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        cashierButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        cashierButton.setIconTextGap(10);
+        cashierButton.setRadius(20);
+        cashierButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cashierButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -260,7 +280,8 @@ public class Dashboard extends javax.swing.JFrame {
                     .addComponent(VehicleButton, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
                     .addComponent(reportButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(settingButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(manageButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(manageButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cashierButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -271,12 +292,14 @@ public class Dashboard extends javax.swing.JFrame {
                 .addGap(5, 5, 5)
                 .addComponent(VehicleButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5)
+                .addComponent(cashierButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5)
                 .addComponent(manageButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5)
                 .addComponent(reportButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5)
                 .addComponent(settingButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 287, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 232, Short.MAX_VALUE)
                 .addComponent(logoutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -334,6 +357,8 @@ public class Dashboard extends javax.swing.JFrame {
         VehicleButton.setColor(Color.WHITE);
         manageButton.setBorderColor(Color.WHITE);
         manageButton.setColor(Color.WHITE);
+        cashierButton.setBorderColor(Color.WHITE);
+        cashierButton.setColor(Color.WHITE);
         reportButton.setBorderColor(Color.WHITE);
         reportButton.setColor(Color.WHITE);
         settingButton.setBorderColor(Color.WHITE);
@@ -441,6 +466,24 @@ public class Dashboard extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_manageButtonActionPerformed
 
+    private void cashierButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cashierButtonActionPerformed
+        // TODO add your handling code here:
+        home.CloseWebCam();
+        
+        resetButonStyles();
+        cashierButton.setBorderColor(new Color(13,180,185));
+        cashierButton.setColor(new Color(184,248,250));
+        
+        Cashier cashier = new Cashier();
+        mainWindowPanel.removeAll();
+        mainWindowPanel.add(cashier).setVisible(true);
+        try {
+            cashier.setMaximum(true);
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(Dashboard.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_cashierButtonActionPerformed
+
     public void EditServiceAndProduct(int InvoiceID){
         resetButonStyles();
         homeButton.setBorderColor(new Color(13,180,185));
@@ -498,6 +541,7 @@ public class Dashboard extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private button.MyButton VehicleButton;
+    private button.MyButton cashierButton;
     private button.MyButton homeButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
