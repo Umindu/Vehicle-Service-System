@@ -37,6 +37,7 @@ public class Payments extends javax.swing.JFrame {
     public Payments() {
         setUndecorated(true);
         initComponents();
+        
     }
 
     public Payments(String invoiceNo, float subTotalCal, boolean discountPercentage, String discount, float payableAmountCal) {
@@ -70,6 +71,8 @@ public class Payments extends javax.swing.JFrame {
         }
         
         BalanceCalculate();
+        
+        cashAmount.requestFocusInWindow();
     }
 
     /**
@@ -134,7 +137,7 @@ public class Payments extends javax.swing.JFrame {
 
         cashAmount.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         cashAmount.setName("cashAmount"); // NOI18N
-        cashAmount.setRadius(10);
+        cashAmount.setRadius(20);
         cashAmount.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 cashAmountKeyReleased(evt);
@@ -152,7 +155,7 @@ public class Payments extends javax.swing.JFrame {
 
         cardAmount.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         cardAmount.setName("cardAmount"); // NOI18N
-        cardAmount.setRadius(10);
+        cardAmount.setRadius(20);
         cardAmount.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 cardAmountKeyReleased(evt);
@@ -161,14 +164,14 @@ public class Payments extends javax.swing.JFrame {
 
         cardBillNo.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         cardBillNo.setName("cardBillNo"); // NOI18N
-        cardBillNo.setRadius(10);
+        cardBillNo.setRadius(20);
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel8.setText("Card Bill No : ");
 
         qrAmount.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         qrAmount.setName("qrAmount"); // NOI18N
-        qrAmount.setRadius(10);
+        qrAmount.setRadius(20);
         qrAmount.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 qrAmountKeyReleased(evt);
