@@ -71,6 +71,8 @@ public class Home extends javax.swing.JInternalFrame implements Runnable, Thread
     /**
      * Creates new form Home
      */
+    private static String employeeID;
+    
     private DefaultListModel ListModel;
 
     private Home home;
@@ -132,6 +134,9 @@ public class Home extends javax.swing.JInternalFrame implements Runnable, Thread
         initWebcam();
     }
 
+    public static void SetEmployeeID(String employeeID1){
+        employeeID = employeeID1;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -479,8 +484,8 @@ public class Home extends javax.swing.JInternalFrame implements Runnable, Thread
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(qrCode, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(qrCode, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
+                                .addGap(183, 183, 183)
                                 .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(progressButton, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -564,8 +569,8 @@ public class Home extends javax.swing.JInternalFrame implements Runnable, Thread
                         .addContainerGap())
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(qrCode, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addComponent(qrCode, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
+                        .addGap(25, 25, 25))))
             .addComponent(sidePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -785,7 +790,7 @@ public class Home extends javax.swing.JInternalFrame implements Runnable, Thread
         // TODO add your handling code here:
         if (!VehicleRegNo.getText().isEmpty()) {
             Date currentDate = new Date();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
             String formattedDate = dateFormat.format(currentDate);
 
             String Vehicleregno = VehicleRegNo.getText();
@@ -980,7 +985,7 @@ public class Home extends javax.swing.JInternalFrame implements Runnable, Thread
         }
         edited = false;
         if (!invoiceNoLable.getText().equals("Invoice No")) {
-            Payments payments = new Payments(invoiceNoLable.getText().substring(1), subTotalCal, discountPercentage, discount.getText().isEmpty() ? "0" : discount.getText(), payableAmountCal);
+            Payments payments = new Payments(employeeID, invoiceNoLable.getText().substring(1), subTotalCal, discountPercentage, discount.getText().isEmpty() ? "0" : discount.getText(), payableAmountCal);
             payments.setLocationRelativeTo(null);
             payments.setExtendedState(JFrame.MAXIMIZED_BOTH);
             payments.setBackground(new Color(0, 0, 0, 150));

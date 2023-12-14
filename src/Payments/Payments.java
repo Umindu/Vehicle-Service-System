@@ -29,6 +29,7 @@ public class Payments extends javax.swing.JFrame {
     private float payableAmountCal = 0;
     private float balance = 0;
     private float PrepaidAmount = 0;
+    private String employeeID;
     
     private Home home;
     /**
@@ -40,7 +41,8 @@ public class Payments extends javax.swing.JFrame {
         
     }
 
-    public Payments(String invoiceNo, float subTotalCal, boolean discountPercentage, String discount, float payableAmountCal) {
+    public Payments(String employeeID, String invoiceNo, float subTotalCal, boolean discountPercentage, String discount, float payableAmountCal) {
+        this.employeeID = employeeID;
         setUndecorated(true);
         initComponents();
         invoiceID.setText("Invoice No: #"+invoiceNo);
@@ -900,17 +902,17 @@ public class Payments extends javax.swing.JFrame {
         // TODO add your handling code here:
         
         Date currentDate = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         String formattedDate = dateFormat.format(currentDate);
         
         float totalPayAmount = Float.parseFloat(cashAmount.getText().isEmpty() ? "0" : cashAmount.getText()) + Float.parseFloat(cardAmount.getText().isEmpty() ? "0" : cardAmount.getText()) + Float.parseFloat(qrAmount.getText().isEmpty() ? "0" : qrAmount.getText());
         try {
             Statement statement = DBconnect.connectToDB().createStatement();
             if(PrepaidAmount > 0){
-                statement.execute("UPDATE PaymentDetails SET Date = '"+formattedDate+"', SubTotal = '"+subTotalCal+"', Discount = '"+discount+"', DiscountMethod = '"+discountPercentage+"', PayableAmount = '"+payableAmountCal+"', TotalPayAmount = '"+totalPayAmount+"', CashPayAmount = '"+(cashAmount.getText().isEmpty() ? 0 : cashAmount.getText())+"', CardPayAmount = '"+(cardAmount.getText().isEmpty() ? 0 : cardAmount.getText())+"', CardBillNumber = '"+(cardBillNo.getText().isEmpty() ? null : cardBillNo.getText())+"', QRPayAmount = '"+(qrAmount.getText().isEmpty() ? 0 : qrAmount.getText())+"', Balance = '"+balance+"', Note = '' WHERE InvoiceID ='"+invoiceNo+"' "); 
+                statement.execute("UPDATE PaymentDetails SET CashierID = '"+employeeID+"', Date = '"+formattedDate+"', SubTotal = '"+subTotalCal+"', Discount = '"+discount+"', DiscountMethod = '"+discountPercentage+"', PayableAmount = '"+payableAmountCal+"', TotalPayAmount = '"+totalPayAmount+"', CashPayAmount = '"+(cashAmount.getText().isEmpty() ? 0 : cashAmount.getText())+"', CardPayAmount = '"+(cardAmount.getText().isEmpty() ? 0 : cardAmount.getText())+"', CardBillNumber = '"+(cardBillNo.getText().isEmpty() ? null : cardBillNo.getText())+"', QRPayAmount = '"+(qrAmount.getText().isEmpty() ? 0 : qrAmount.getText())+"', Balance = '"+balance+"', Note = '' WHERE InvoiceID ='"+invoiceNo+"' "); 
             }else{
-                statement.execute("INSERT INTO PaymentDetails (InvoiceID, Date, SubTotal, Discount, DiscountMethod, PayableAmount, TotalPayAmount, CashPayAmount, CardPayAmount, CardBillNumber, QRPayAmount, Balance, Note) "
-                    + "VALUES('"+invoiceNo+"', '"+formattedDate+"', '"+subTotalCal+"', '"+discount+"', '"+discountPercentage+"', '"+payableAmountCal+"', '"+totalPayAmount+"', '"+(cashAmount.getText().isEmpty() ? 0 : cashAmount.getText())+"', '"+(cardAmount.getText().isEmpty() ? 0 : cardAmount.getText())+"', '"+(cardBillNo.getText().isEmpty() ? null : cardBillNo.getText())+"', '"+(qrAmount.getText().isEmpty() ? 0 : qrAmount.getText())+"', '"+balance+"', '')");
+                statement.execute("INSERT INTO PaymentDetails (InvoiceID, CashierID, Date, SubTotal, Discount, DiscountMethod, PayableAmount, TotalPayAmount, CashPayAmount, CardPayAmount, CardBillNumber, QRPayAmount, Balance, Note) "
+                    + "VALUES('"+invoiceNo+"', '"+employeeID+"', '"+formattedDate+"', '"+subTotalCal+"', '"+discount+"', '"+discountPercentage+"', '"+payableAmountCal+"', '"+totalPayAmount+"', '"+(cashAmount.getText().isEmpty() ? 0 : cashAmount.getText())+"', '"+(cardAmount.getText().isEmpty() ? 0 : cardAmount.getText())+"', '"+(cardBillNo.getText().isEmpty() ? null : cardBillNo.getText())+"', '"+(qrAmount.getText().isEmpty() ? 0 : qrAmount.getText())+"', '"+balance+"', '')");
             
                 statement.execute("UPDATE VehicleDetails SET States = 'Done' WHERE InvoiceNo = '"+invoiceNo+"'");
             }

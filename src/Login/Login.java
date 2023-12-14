@@ -9,6 +9,8 @@ import Dashboard.Dashboard;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -182,13 +184,17 @@ public class Login extends javax.swing.JFrame {
     
     
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
+        Date currentDate = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        String formattedDate = dateFormat.format(currentDate);
+        
         try {
             // TODO add your handling code here:
             String username = usernameTextFeild.getText().trim();
             String password = passwordTextFeild.getText().trim();
             
             if(username.isEmpty() || password.isEmpty()){
-                errorMessage.setText("Username or Password  is empty");
+                errorMessage.setText("Username or Password is empty");
             }else{
                 Statement statement = DBconnect.connectToDB().createStatement();
                 statement.execute("Select ID, Name, JobRole, ImgUrl From Employees Where Username = '"+ username +"' And Password = '"+ password +"'");
@@ -200,7 +206,11 @@ public class Login extends javax.swing.JFrame {
                     dashboard.setLocationRelativeTo(null);
                     dashboard.setVisible(true);
                     
-                    dashboard.SetUserDetails(resultSet.getString("JobRole"), resultSet.getString("Name"), resultSet.getString("ImgUrl"));
+                    dashboard.SetUserDetails(resultSet.getString("ID"), resultSet.getString("JobRole"), resultSet.getString("Name"), resultSet.getString("ImgUrl"));
+                    
+                    Statement statement2 = DBconnect.connectToDB().createStatement();
+                    statement2.execute("INSERT INTO UserActive(EmployeeID, EmployeeName, LoginTime) VALUES('"+resultSet.getString("ID")+"', '"+resultSet.getString("Name")+"', '"+formattedDate+"')");
+                    
                     this.dispose();
                 }else{
                     errorMessage.setText("The user name or password is incorrect, try again!");

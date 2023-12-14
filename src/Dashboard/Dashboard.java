@@ -12,6 +12,7 @@ import Reports.Reports;
 import Vehicles.Vehicles;
 import java.awt.Color;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
 import java.beans.PropertyVetoException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,22 +31,24 @@ public class Dashboard extends javax.swing.JFrame {
     
     public Home home;
     public Vehicles vehicles;
+    public String employeeID;
     
     public Dashboard() {
         initComponents();
-        
-        homeButtonActionPerformed(null);
     }
     
-    public void SetUserDetails(String jobRole, String name, String imgUrl){
+    public void SetUserDetails(String ID, String jobRole, String name, String imgUrl){
         jobroleLable.setText(jobRole);
         usernameLable.setText(name);
+        employeeID = ID;
         
         ImageIcon icon = new ImageIcon(imgUrl);
         Image in = icon.getImage();
         Image modified = in.getScaledInstance(46, 46, java.awt.Image.SCALE_SMOOTH);
         icon = new ImageIcon(modified);
         myButton1.setIcon(icon);  
+        
+        homeButtonActionPerformed(null);
     }
 
     /**
@@ -382,6 +385,7 @@ public class Dashboard extends javax.swing.JFrame {
         homeButton.setColor(new Color(184,248,250));
         
         home = new Home();
+        home.SetEmployeeID(employeeID);
         mainWindowPanel.removeAll();
         mainWindowPanel.add(home).setVisible(true);
         try {
@@ -474,7 +478,7 @@ public class Dashboard extends javax.swing.JFrame {
         cashierButton.setBorderColor(new Color(13,180,185));
         cashierButton.setColor(new Color(184,248,250));
         
-        Cashier cashier = new Cashier();
+        Cashier cashier = new Cashier(employeeID);
         mainWindowPanel.removeAll();
         mainWindowPanel.add(cashier).setVisible(true);
         try {
@@ -483,7 +487,7 @@ public class Dashboard extends javax.swing.JFrame {
             Logger.getLogger(Dashboard.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_cashierButtonActionPerformed
-
+  
     public void EditServiceAndProduct(int InvoiceID){
         resetButonStyles();
         homeButton.setBorderColor(new Color(13,180,185));
