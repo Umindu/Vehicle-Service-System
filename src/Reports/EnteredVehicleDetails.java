@@ -5,6 +5,7 @@
 package Reports;
 
 import DBConnect.DBconnect;
+import Dashboard.Dashboard;
 import Reports.Templates.ProductItem;
 import Reports.Templates.ServiceChargeItem;
 import Vehicles.Vehicles;
@@ -23,7 +24,7 @@ import net.miginfocom.swing.MigLayout;
  *
  * @author Umindu
  */
-public class CancelService extends javax.swing.JFrame {
+public class EnteredVehicleDetails extends javax.swing.JFrame {
 
     /**
      * Creates new form CancelService
@@ -33,8 +34,9 @@ public class CancelService extends javax.swing.JFrame {
     ArrayList<ArrayList<String> > allProductList =  new ArrayList< >();
     
     private Reports reports;
+    private Dashboard dashboard;
     
-    public CancelService(int invoiceID) { 
+    public EnteredVehicleDetails(int invoiceID) { 
         setUndecorated(true);
         initComponents();
         
@@ -64,13 +66,13 @@ public class CancelService extends javax.swing.JFrame {
             }
             
         } catch (SQLException ex) {
-            Logger.getLogger(CancelService.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(EnteredVehicleDetails.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         LoadVehicleServiceList(invoiceID);
     }
 
-    private CancelService() {
+    private EnteredVehicleDetails() {
         setUndecorated(true);
         initComponents();
     }
@@ -96,7 +98,6 @@ public class CancelService extends javax.swing.JFrame {
         invoiceNo = new fosalgo.FTextField();
         jLabel6 = new javax.swing.JLabel();
         ownerPhone = new fosalgo.FTextField();
-        ActionButton = new button.MyButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         description = new CustomComponents.MyTextArea();
         jScrollPane6 = new javax.swing.JScrollPane();
@@ -105,6 +106,8 @@ public class CancelService extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         vehicleType = new fosalgo.FTextField();
+        ActionButton1 = new button.MyButton();
+        ActionButton2 = new button.MyButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(102, 204, 255));
@@ -158,23 +161,6 @@ public class CancelService extends javax.swing.JFrame {
         ownerPhone.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         ownerPhone.setRadius(20);
 
-        ActionButton.setText("Service Cancel");
-        ActionButton.setBorderColor(new java.awt.Color(13, 180, 185));
-        ActionButton.setBorderPainted(false);
-        ActionButton.setColor(new java.awt.Color(184, 248, 250));
-        ActionButton.setColorClick(new java.awt.Color(126, 240, 244));
-        ActionButton.setColorOver(new java.awt.Color(126, 240, 244));
-        ActionButton.setFocusPainted(false);
-        ActionButton.setFocusable(false);
-        ActionButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        ActionButton.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
-        ActionButton.setRadius(20);
-        ActionButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ActionButtonActionPerformed(evt);
-            }
-        });
-
         jScrollPane1.setBorder(null);
 
         description.setColumns(20);
@@ -217,6 +203,43 @@ public class CancelService extends javax.swing.JFrame {
         vehicleType.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         vehicleType.setRadius(20);
 
+        ActionButton1.setBackground(new java.awt.Color(250, 184, 184));
+        ActionButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/trash.png"))); // NOI18N
+        ActionButton1.setText("Cancel Service");
+        ActionButton1.setBorderColor(new java.awt.Color(185, 12, 12));
+        ActionButton1.setBorderPainted(false);
+        ActionButton1.setColor(new java.awt.Color(250, 184, 184));
+        ActionButton1.setColorClick(new java.awt.Color(244, 125, 125));
+        ActionButton1.setColorOver(new java.awt.Color(244, 126, 126));
+        ActionButton1.setFocusPainted(false);
+        ActionButton1.setFocusable(false);
+        ActionButton1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        ActionButton1.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        ActionButton1.setRadius(20);
+        ActionButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ActionButton1ActionPerformed(evt);
+            }
+        });
+
+        ActionButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/pencil.png"))); // NOI18N
+        ActionButton2.setText("Change Service");
+        ActionButton2.setBorderColor(new java.awt.Color(12, 185, 35));
+        ActionButton2.setBorderPainted(false);
+        ActionButton2.setColor(new java.awt.Color(184, 250, 203));
+        ActionButton2.setColorClick(new java.awt.Color(126, 244, 129));
+        ActionButton2.setColorOver(new java.awt.Color(126, 244, 172));
+        ActionButton2.setFocusPainted(false);
+        ActionButton2.setFocusable(false);
+        ActionButton2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        ActionButton2.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        ActionButton2.setRadius(20);
+        ActionButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ActionButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -232,11 +255,6 @@ public class CancelService extends javax.swing.JFrame {
                         .addComponent(dateLable)
                         .addGap(27, 27, 27)
                         .addComponent(timeLabel))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(DepSerCancelButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(ActionButton, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4)
@@ -254,7 +272,14 @@ public class CancelService extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
                             .addComponent(VehicleRegNo, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(DepSerCancelButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(ActionButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(ActionButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -290,10 +315,12 @@ public class CancelService extends javax.swing.JFrame {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 471, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(10, 10, 10)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ActionButton, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(DepSerCancelButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(DepSerCancelButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(ActionButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(ActionButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
@@ -334,7 +361,17 @@ public class CancelService extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void ActionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ActionButtonActionPerformed
+    public void setObject(Reports reports, Dashboard dashboard){
+        this.reports = reports;
+        this.dashboard = dashboard;
+    }
+    
+    private void DepSerCancelButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DepSerCancelButton1ActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_DepSerCancelButton1ActionPerformed
+
+    private void ActionButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ActionButton1ActionPerformed
         // TODO add your handling code here:
         int result = JOptionPane.showConfirmDialog(null,"Sure? Cancel this service?", "Cancel Service", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if(result == JOptionPane.YES_OPTION){
@@ -344,22 +381,19 @@ public class CancelService extends javax.swing.JFrame {
                 statement.execute("DELETE FROM SoldProducts WHERE InvoiceID = '"+ invoiceNo.getText() +"'");
                 statement.execute("DELETE FROM ServiceCharges WHERE InvoiceID = '"+ invoiceNo.getText() +"'");
             } catch (SQLException ex) {
-                Logger.getLogger(CancelService.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(EnteredVehicleDetails.class.getName()).log(Level.SEVERE, null, ex);
             }
             reports.LoadEnterdVehiclesTable("All");
             reports.LoadDepartedVehiclesTable("All");
             this.dispose();
         }
-    }//GEN-LAST:event_ActionButtonActionPerformed
+    }//GEN-LAST:event_ActionButton1ActionPerformed
 
-    private void DepSerCancelButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DepSerCancelButton1ActionPerformed
-        // TODO add your handling code here:
+    private void ActionButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ActionButton2ActionPerformed
+        dashboard.EditServiceAndProduct(Integer.parseInt(invoiceNo.getText()));
         this.dispose();
-    }//GEN-LAST:event_DepSerCancelButton1ActionPerformed
+    }//GEN-LAST:event_ActionButton2ActionPerformed
 
-    public void setObject(Reports reports){
-        this.reports = reports;
-    }
         
     public void RefrashSerAndProPanel(){
         serAndProPanel4.removeAll();
@@ -437,14 +471,26 @@ public class CancelService extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CancelService.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EnteredVehicleDetails.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CancelService.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EnteredVehicleDetails.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CancelService.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EnteredVehicleDetails.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CancelService.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EnteredVehicleDetails.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -453,13 +499,14 @@ public class CancelService extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new CancelService().setVisible(true);
+                new EnteredVehicleDetails().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private button.MyButton ActionButton;
+    private button.MyButton ActionButton1;
+    private button.MyButton ActionButton2;
     private button.MyButton DepSerCancelButton1;
     private fosalgo.FTextField VehicleRegNo;
     private javax.swing.JLabel dateLable;

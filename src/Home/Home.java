@@ -7,7 +7,7 @@ package Home;
 import DBConnect.DBconnect;
 import Manage.Manage;
 import Payments.Payments;
-import Reports.CancelService;
+import Reports.EnteredVehicleDetails;
 import Vehicles.Vehicles;
 import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamPanel;
@@ -979,7 +979,7 @@ public class Home extends javax.swing.JInternalFrame implements Runnable, Thread
                         }
                     }
                 } catch (SQLException ex) {
-                    Logger.getLogger(CancelService.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(EnteredVehicleDetails.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
