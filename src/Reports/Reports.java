@@ -13,6 +13,8 @@ import java.awt.Font;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
@@ -75,15 +77,13 @@ public class Reports extends javax.swing.JInternalFrame {
         dailyReport = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
+        openDrawerAmount = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
+        otherPayments = new javax.swing.JLabel();
         jPanel9 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        cashPayments = new javax.swing.JLabel();
         salesReport = new javax.swing.JPanel();
         searchSalesReport = new fosalgo.FTextField();
         jScrollPane6 = new javax.swing.JScrollPane();
@@ -208,10 +208,7 @@ public class Reports extends javax.swing.JInternalFrame {
             .addComponent(showEnterdVehiclePaneButton, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
             .addComponent(showDepartedVehiclePaneButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(dailyReportButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(salesReportButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+            .addComponent(salesReportButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -383,9 +380,9 @@ public class Reports extends javax.swing.JInternalFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setText("Opening  Drawer Amount ");
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
-        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel6.setText("Rs. 0.00");
+        openDrawerAmount.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        openDrawerAmount.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        openDrawerAmount.setText("Rs. 0.00");
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -395,11 +392,11 @@ public class Reports extends javax.swing.JInternalFrame {
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel7Layout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel6))
+                        .addComponent(openDrawerAmount))
                     .addGroup(jPanel7Layout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(10, 10, 10))
         );
         jPanel7Layout.setVerticalGroup(
@@ -408,16 +405,16 @@ public class Reports extends javax.swing.JInternalFrame {
                 .addGap(10, 10, 10)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(openDrawerAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(25, 25, 25))
         );
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel4.setText("Other Payment Sale");
+        jLabel4.setText("Other Payment Amount");
 
-        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
-        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel9.setText("Rs. 0.00");
+        otherPayments.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        otherPayments.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        otherPayments.setText("Rs. 0.00");
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
@@ -426,10 +423,10 @@ public class Reports extends javax.swing.JInternalFrame {
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addGap(10, 10, 10)
                 .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap(67, Short.MAX_VALUE))
+                .addContainerGap(30, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel9)
+                .addComponent(otherPayments)
                 .addGap(10, 10, 10))
         );
         jPanel8Layout.setVerticalGroup(
@@ -438,16 +435,16 @@ public class Reports extends javax.swing.JInternalFrame {
                 .addGap(10, 10, 10)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
-                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(otherPayments, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(25, 25, 25))
         );
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel3.setText("Cash Payment Sale");
+        jLabel3.setText("Cash Payment Amount");
 
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
-        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel7.setText("Rs. 0.00");
+        cashPayments.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        cashPayments.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        cashPayments.setText("Rs. 0.00");
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
@@ -456,10 +453,10 @@ public class Reports extends javax.swing.JInternalFrame {
             .addGroup(jPanel9Layout.createSequentialGroup()
                 .addGap(10, 10, 10)
                 .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap(78, Short.MAX_VALUE))
+                .addContainerGap(39, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel7)
+                .addComponent(cashPayments)
                 .addGap(10, 10, 10))
         );
         jPanel9Layout.setVerticalGroup(
@@ -468,24 +465,9 @@ public class Reports extends javax.swing.JInternalFrame {
                 .addGap(10, 10, 10)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cashPayments, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(25, 25, 25))
         );
-
-        jTable1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jTable1.setRowHeight(25);
-        jScrollPane5.setViewportView(jTable1);
 
         javax.swing.GroupLayout dailyReportLayout = new javax.swing.GroupLayout(dailyReport);
         dailyReport.setLayout(dailyReportLayout);
@@ -497,7 +479,6 @@ public class Reports extends javax.swing.JInternalFrame {
                 .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(14, 14, 14)
                 .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jScrollPane5)
         );
         dailyReportLayout.setVerticalGroup(
             dailyReportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -506,8 +487,7 @@ public class Reports extends javax.swing.JInternalFrame {
                     .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE))
+                .addContainerGap(445, Short.MAX_VALUE))
         );
 
         panelCards.add(dailyReport, "dailyReport");
@@ -1026,12 +1006,12 @@ public class Reports extends javax.swing.JInternalFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelCards1, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE))
+                .addComponent(panelCards1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(panelCards1, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(panelCards1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jInternalFrame1Layout = new javax.swing.GroupLayout(jInternalFrame1.getContentPane());
@@ -1075,14 +1055,12 @@ public class Reports extends javax.swing.JInternalFrame {
     }
 
     private void showEnterdVehiclePaneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showEnterdVehiclePaneButtonActionPerformed
-        // TODO add your handling code here:
         cardLayout.show(panelCards, "enterdVehiclesCard");
 
         LoadEnterdVehiclesTable("All");
     }//GEN-LAST:event_showEnterdVehiclePaneButtonActionPerformed
 
     private void showDepartedVehiclePaneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showDepartedVehiclePaneButtonActionPerformed
-        // TODO add your handling code here:
         cardLayout.show(panelCards, "departedVehiclesCard");
 
         LoadDepartedVehiclesTable("All");
@@ -1145,6 +1123,28 @@ public class Reports extends javax.swing.JInternalFrame {
     private void dailyReportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dailyReportButtonActionPerformed
         // TODO add your handling code here:
         cardLayout.show(panelCards, "dailyReport");
+        
+        Date currentDate = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedDate = dateFormat.format(currentDate);
+        
+        try {
+            Statement statement = DBconnect.connectToDB().createStatement();
+            statement.execute("SELECT OpeningDrawerAmount FROM DailySummary WHERE Date = '"+formattedDate+"'");
+            ResultSet resultSet = statement.getResultSet();
+            if(resultSet.next()){
+                openDrawerAmount.setText(resultSet.getString("OpeningDrawerAmount"));
+            }
+            
+            statement.execute("SELECT SUM(CashPayAmount) AS CashPaymentsAmount, SUM(CardPayAmount)+ SUM(QRPayAmount) AS OtherPaymentsAmount FROM PaymentDetails WHERE Date <= '"+formattedDate+" 23:59:59.000' AND Date > '"+formattedDate+" 00:00:00.000'");
+            ResultSet resultSet2 = statement.getResultSet();
+            if(resultSet2.next()){
+                cashPayments.setText(resultSet2.getString("CashPaymentsAmount"));
+                otherPayments.setText(resultSet2.getString("OtherPaymentsAmount"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Manage.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_dailyReportButtonActionPerformed
 
     private void showEnterdVehiclePaneButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showEnterdVehiclePaneButton1ActionPerformed
@@ -1326,6 +1326,7 @@ public class Reports extends javax.swing.JInternalFrame {
     private button.MyButton EntSerCancelButton1;
     private button.MyButton EntSerEditButton1;
     private button.MyButton VehicleTypesButton1;
+    private javax.swing.JLabel cashPayments;
     private javax.swing.JPanel dailyReport;
     private javax.swing.JPanel dailyReport1;
     private button.MyButton dailyReportButton;
@@ -1351,10 +1352,7 @@ public class Reports extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
@@ -1369,9 +1367,9 @@ public class Reports extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JLabel openDrawerAmount;
+    private javax.swing.JLabel otherPayments;
     private javax.swing.JPanel panelCards;
     private javax.swing.JPanel panelCards1;
     private javax.swing.JPanel salesReport;

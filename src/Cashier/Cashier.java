@@ -110,6 +110,11 @@ public class Cashier extends javax.swing.JInternalFrame {
         expectedDrawer.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
         expectedDrawer.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         expectedDrawer.setRadius(20);
+        expectedDrawer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                expectedDrawerActionPerformed(evt);
+            }
+        });
         expectedDrawer.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 expectedDrawerKeyReleased(evt);
@@ -359,9 +364,8 @@ public class Cashier extends javax.swing.JInternalFrame {
                 remark.setText(resultSet.getString("Remark"));
             }
             
-            Statement statement2 = DBconnect.connectToDB().createStatement();
-            statement2.execute("SELECT SUM(CashPayAmount) AS CashPaymentsAmount, SUM(CardPayAmount)+ SUM(QRPayAmount) AS OtherPaymentsAmount, SUM(CASE WHEN Balance < 0 THEN Balance ELSE 0 END) AS Credit FROM PaymentDetails AS Credit WHERE Date <= '"+formattedDate+" 23:59:59.000' AND Date > '"+formattedDate+" 00:00:00.000'");
-            ResultSet resultSet2 = statement2.getResultSet();
+            statement.execute("SELECT SUM(CashPayAmount) AS CashPaymentsAmount, SUM(CardPayAmount)+ SUM(QRPayAmount) AS OtherPaymentsAmount, SUM(CASE WHEN Balance < 0 THEN Balance ELSE 0 END) AS Credit FROM PaymentDetails WHERE Date <= '"+formattedDate+" 23:59:59.000' AND Date > '"+formattedDate+" 00:00:00.000'");
+            ResultSet resultSet2 = statement.getResultSet();
             if(resultSet2.next()){
                 cashPayment.setText(resultSet2.getString("CashPaymentsAmount")==null ? "Rs. 0.0" : "Rs. "+resultSet2.getString("CashPaymentsAmount"));
                 otherPayment.setText(resultSet2.getString("OtherPaymentsAmount")==null ? "Rs. 0.0" : "Rs. "+resultSet2.getString("OtherPaymentsAmount"));
@@ -413,6 +417,10 @@ public class Cashier extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         calculateDifference();
     }//GEN-LAST:event_expectedDrawerKeyReleased
+
+    private void expectedDrawerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_expectedDrawerActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_expectedDrawerActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
