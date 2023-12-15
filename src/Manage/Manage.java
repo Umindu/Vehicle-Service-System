@@ -14,11 +14,13 @@ import DBConnect.DBconnect;
 import Vehicles.Vehicles;
 import java.awt.Color;
 import java.awt.Font;
+import java.lang.reflect.Array;
 import java.sql.ResultSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import jnafilechooser.api.JnaFileChooser;
 import net.proteanit.sql.DbUtils;
@@ -306,7 +308,7 @@ public class Manage extends javax.swing.JInternalFrame {
         searchProduct = new fosalgo.FTextField();
         jLabel37 = new javax.swing.JLabel();
         jScrollPane8 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        grnTable = new javax.swing.JTable();
         addProductButton1 = new button.MyButton();
         jLabel38 = new javax.swing.JLabel();
         jLabel39 = new javax.swing.JLabel();
@@ -1726,8 +1728,8 @@ public class Manage extends javax.swing.JInternalFrame {
         jLabel37.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel37.setText("Search Product :");
 
-        jTable1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        grnTable.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        grnTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -1743,8 +1745,8 @@ public class Manage extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setRowHeight(25);
-        jScrollPane8.setViewportView(jTable1);
+        grnTable.setRowHeight(25);
+        jScrollPane8.setViewportView(grnTable);
 
         addProductButton1.setForeground(new java.awt.Color(255, 255, 255));
         addProductButton1.setText("Update GRN");
@@ -2637,45 +2639,13 @@ public class Manage extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_discountActionPerformed
 
     private void searchPanelListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchPanelListMouseClicked
-
-//            if (!VehicleRegNo.getText().isEmpty()) {
-//                try {
-//                    Statement statement = DBconnect.connectToDB().createStatement();
-//                    statement.execute("SELECT * FROM Products WHERE name = '" + searchPanelList.getSelectedValue() + "'");
-//                    ResultSet resultSet = statement.getResultSet();
-//                    if (resultSet.next()) {
-//                        ArrayList<String> product = new ArrayList<>();
-//                        product.add(resultSet.getString("ID"));
-//                        product.add(resultSet.getString("Name"));
-//                        product.add(resultSet.getString("Price"));
-//                        product.add("1");
-//                        product.add(resultSet.getString("Price"));
-//
-//                        if (cartProductList.isEmpty()) {
-//                            cartProductList.add(product);
-//                        } else {
-//                            for (int i = 0; i <= cartProductList.size(); i++) {
-//                                if (cartProductList.get(i).get(0).equals(resultSet.getString("ID"))) {
-//                                    cartProductList.get(i).set(3, String.valueOf(Float.parseFloat(cartProductList.get(i).get(3)) + 1));
-//                                    break;
-//                                }
-//                                if (cartProductList.size() - 1 == i) {
-//                                    cartProductList.add(product);
-//                                    break;
-//                                }
-//                            }
-//                        }
-//                        RefrashProductListPanel();
-//                    }
-//                } catch (SQLException ex) {
-//                    Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            } else {
-//                JOptionPane.showMessageDialog(null, "No invoice number selected !", "Empty", JOptionPane.WARNING_MESSAGE);
-//            }
-
-//        searchMenu.setVisible(false);
-//        searchProduct.setText("");
+        DefaultTableModel model = (DefaultTableModel)grnTable.getModel();
+        String[] productDatails = searchPanelList.getSelectedValue().split(".  ");
+        System.out.println(productDatails[0]);
+        model.addRow(new Object[]{productDatails[0],productDatails[1],"0.00","0","nn"});
+        
+        searchMenu.setVisible(false);
+        searchProduct.setText("");
     }//GEN-LAST:event_searchPanelListMouseClicked
 
     private void searchProductKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchProductKeyReleased
@@ -2691,7 +2661,7 @@ public class Manage extends javax.swing.JInternalFrame {
                 ResultSet resultSet = statement.getResultSet();
                 while(resultSet.next()){
                     searchMenu.show(searchProduct, 0, searchProduct.getHeight());
-                    ListModel.addElement(resultSet.getString("ID")+"  "+resultSet.getString("Name"));
+                    ListModel.addElement(resultSet.getString("ID")+".  "+resultSet.getString("Name"));
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
@@ -2741,6 +2711,7 @@ public class Manage extends javax.swing.JInternalFrame {
     private fosalgo.FTextField grandTotal;
     private javax.swing.JPanel grnCard;
     private fosalgo.FTextField grnNO;
+    private javax.swing.JTable grnTable;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
@@ -2789,7 +2760,6 @@ public class Manage extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JScrollPane jScrollPane9;
-    private javax.swing.JTable jTable1;
     private CustomComponents.Combobox jobRoleComboBox;
     private javax.swing.JPanel panelCards;
     private button.MyButton productButton;
