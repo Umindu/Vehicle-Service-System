@@ -917,12 +917,10 @@ public class Home extends javax.swing.JInternalFrame implements Runnable, Thread
                 Statement statement = DBconnect.connectToDB().createStatement();
                 statement.execute("SELECT InvoiceNo FROM VehicleDetails WHERE InvoiceNo LIKE '%" + search + "%' AND States = 'Processing'");
                 ResultSet resultSet = statement.getResultSet();
-                if (resultSet.next()) {
+                while (resultSet.next()) {
                     searchMenu.show(invoiceSearch, 0, invoiceSearch.getHeight());
                     searchMenu.setPopupSize(170, 170);
                     ListModel.addElement(resultSet.getString("InvoiceNo"));
-                } else {
-                    searchMenu.setVisible(false);
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);

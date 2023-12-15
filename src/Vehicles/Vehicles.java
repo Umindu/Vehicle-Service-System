@@ -21,6 +21,8 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -34,7 +36,9 @@ import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.ListModel;
 import javax.swing.Timer;
 import javax.swing.border.MatteBorder;
 import javax.swing.event.InternalFrameAdapter;
@@ -87,6 +91,24 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
         showTime();
 
         initWebcam();
+        
+        //tip text set 
+//        searchPanelList.addMouseMotionListener(new MouseMotionListener() {
+//            @Override
+//            public void mouseMoved(MouseEvent e) {
+//                JList l = (JList) e.getSource();
+//                ListModel m = l.getModel();
+//                int index = l.locationToIndex(e.getPoint());
+//                if (index > -1) {
+//                    l.setToolTipText(m.getElementAt(index).toString());
+//                }
+//            }
+//
+//            @Override
+//            public void mouseDragged(MouseEvent e) {
+//                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+//            }
+//        });
     }
 
     @SuppressWarnings("unchecked")
@@ -142,7 +164,7 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
         );
         searchPanelLayout.setVerticalGroup(
             searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
+            .addComponent(jScrollPane3)
         );
 
         searchMenu.setFocusable(false);
@@ -459,7 +481,7 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
         campanel.setFPSDisplayed(true);
         campanel.setMirrored(true);
 
-        webCamOpenWindow.add(campanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(-40,0,330,250));
+        webCamOpenWindow.add(campanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(-40, 0, 330, 250));
 
         executor.execute(this);
     }
@@ -493,7 +515,7 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
 
             if (result != null) {
                 String[] invoiceno = result.getText().split(",");
-                if((invoiceSearch.getText().isEmpty()) || (!invoiceno[0].equals(invoiceSearch.getText()))){
+                if ((invoiceSearch.getText().isEmpty()) || (!invoiceno[0].equals(invoiceSearch.getText()))) {
                     cancelButtonActionPerformed(null);
                     try {
                         Statement statement = DBconnect.connectToDB().createStatement();
@@ -584,7 +606,17 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
     }
 
     private void selectServiceUnitComboboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectServiceUnitComboboxActionPerformed
-        // TODO add your handling code here:
+        if(!invoiceSearch.getText().isEmpty()){
+            cartProductList.clear();
+            alreadyAddProducts.clear();
+            productListPanel.removeAll();
+
+            //productListPanel refresh
+            productListPanel.invalidate();
+            productListPanel.validate();
+            productListPanel.repaint();
+            AlreadyProductLoad(invoiceSearch.getText());
+        }
     }//GEN-LAST:event_selectServiceUnitComboboxActionPerformed
 
     private void invoiceSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_invoiceSearchKeyReleased
@@ -596,12 +628,10 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
                 Statement statement = DBconnect.connectToDB().createStatement();
                 statement.execute("SELECT InvoiceNo FROM VehicleDetails WHERE InvoiceNo LIKE '%" + search + "%' AND States = 'Processing'");
                 ResultSet resultSet = statement.getResultSet();
-                if (resultSet.next()) {
+                while (resultSet.next()) {
                     searchMenu.show(invoiceSearch, 0, invoiceSearch.getHeight());
                     searchMenu.setPopupSize(170, 170);
                     ListModel.addElement(resultSet.getString("InvoiceNo"));
-                } else {
-                    searchMenu.setVisible(false);
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
@@ -612,7 +642,7 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
     }//GEN-LAST:event_invoiceSearchKeyReleased
 
     private void searchProductKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchProductKeyReleased
-        // TODO add your handling code here:
+        // TODO add your handling code here:            
         String search = searchProduct.getText().trim();
         if (!search.equals("")) {
             ListModel.removeAllElements();
@@ -621,13 +651,11 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
 
             try {
                 Statement statement = DBconnect.connectToDB().createStatement();
-                statement.execute("SELECT Name FROM Products WHERE Name LIKE '%" + search + "%'  AND (ServiceUnit = '" + selectServiceUnitCombobox.getSelectedItem() + "' OR ServiceUnit = 'Both')");
+                statement.execute("SELECT ID, Name FROM Products WHERE (ID LIKE '%" + search + "%' OR Name LIKE '%" + search + "%') AND (ServiceUnit = '" + selectServiceUnitCombobox.getSelectedItem() + "' OR ServiceUnit = 'Both')");
                 ResultSet resultSet = statement.getResultSet();
-                if (resultSet.next()) {
+                while(resultSet.next()){
                     searchMenu.show(searchProduct, 0, searchProduct.getHeight());
-                    ListModel.addElement(resultSet.getString("Name"));
-                } else {
-                    searchMenu.setVisible(false);
+                    ListModel.addElement(resultSet.getString("ID")+"  "+resultSet.getString("Name"));
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
@@ -729,7 +757,7 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
         searchMenu.setVisible(false);
         searchProduct.setText("");
     }//GEN-LAST:event_searchPanelListMouseClicked
-
+    
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         // TODO add your handling code here:                
         invoiceSearch.setText("");
@@ -751,7 +779,6 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void progressButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_progressButton1ActionPerformed
-        // TODO add your handling code here:
         try {
             Statement statement = DBconnect.connectToDB().createStatement();
             if (alreadyAddProducts.isEmpty()) {
@@ -760,14 +787,13 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
             } else {
                 statement.execute("UPDATE ServiceCharges SET ServiceCharge = '" + serviceChargeTextField.getText() + "' WHERE InvoiceID = '" + invoiceSearch.getText() + "' AND ServiceUnit = '" + selectServiceUnitCombobox.getSelectedItem() + "'");
             }
-
         } catch (SQLException ex) {
             Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         for (int i = 0; i < cartProductList.size(); i++) {
             try {
                 Statement statement = DBconnect.connectToDB().createStatement();
-//                alreadyAddProducts
                 if (!alreadyAddProducts.contains(cartProductList.get(i).get(0))) {
                     statement.execute("INSERT INTO SoldProducts (InvoiceID, ProductID, Name, Price, Qnt, Total, ServiceUnit) "
                             + "VALUES('" + invoiceSearch.getText() + "', '" + cartProductList.get(i).get(0) + "','" + cartProductList.get(i).get(1) + "','" + cartProductList.get(i).get(2) + "','" + cartProductList.get(i).get(3) + "','" + cartProductList.get(i).get(4) + "','" + selectServiceUnitCombobox.getSelectedItem() + "')");
@@ -775,7 +801,6 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
                     statement.execute("UPDATE SoldProducts SET Qnt = '" + cartProductList.get(i).get(3) + "', Total = '" + cartProductList.get(i).get(4) + "' WHERE InvoiceID = '" + invoiceSearch.getText() + "' AND ProductID = '" + cartProductList.get(i).get(0) + "' AND ServiceUnit = '" + selectServiceUnitCombobox.getSelectedItem() + "'");
                     alreadyAddProducts.remove(cartProductList.get(i).get(0));
                 }
-
             } catch (SQLException ex) {
                 Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
             }

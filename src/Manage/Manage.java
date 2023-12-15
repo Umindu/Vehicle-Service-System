@@ -11,11 +11,13 @@ import javax.swing.plaf.basic.BasicInternalFrameUI;
 import java.sql.Statement;
 import java.sql.SQLException;
 import DBConnect.DBconnect;
+import Vehicles.Vehicles;
 import java.awt.Color;
 import java.awt.Font;
 import java.sql.ResultSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.JTableHeader;
 import jnafilechooser.api.JnaFileChooser;
@@ -28,6 +30,7 @@ import net.proteanit.sql.DbUtils;
 public class Manage extends javax.swing.JInternalFrame {
     
     CardLayout cardLayout;
+    private DefaultListModel ListModel;
     
     String imagePath = null;
     public Manage() {
@@ -54,6 +57,11 @@ public class Manage extends javax.swing.JInternalFrame {
         LoadServiceUnitTable("All");
         
         employeeDeleteButton.setVisible(false);
+        
+        //search menu
+        searchMenu.add(searchPanel);
+        ListModel = new DefaultListModel();
+        searchPanelList.setModel(ListModel);
     }
     
     private void LoadServiceUnitTable(String search){
@@ -167,10 +175,15 @@ public class Manage extends javax.swing.JInternalFrame {
         addEmployeeButton.setColor(Color.WHITE);
         VehicleTypesButton.setColor(Color.WHITE);
         productButton.setColor(Color.WHITE);
+        GRNButton.setColor(Color.WHITE);
     }
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        searchPanel = new javax.swing.JPanel();
+        jScrollPane9 = new javax.swing.JScrollPane();
+        searchPanelList = new javax.swing.JList<>();
+        searchMenu = new javax.swing.JPopupMenu();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         serviceButtonPane = new javax.swing.JPanel();
@@ -183,6 +196,7 @@ public class Manage extends javax.swing.JInternalFrame {
         showEmpPaneButton = new button.MyButton();
         VehicleTypesButton = new button.MyButton();
         productButton = new button.MyButton();
+        GRNButton = new button.MyButton();
         panelCards = new javax.swing.JPanel();
         serviesUnitCard = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -284,6 +298,45 @@ public class Manage extends javax.swing.JInternalFrame {
         jLabel34 = new javax.swing.JLabel();
         selectServiceUnitCombobox = new CustomComponents.Combobox();
         searchProducts = new fosalgo.FTextField();
+        grnCard = new javax.swing.JPanel();
+        grnNO = new fosalgo.FTextField();
+        jLabel35 = new javax.swing.JLabel();
+        jLabel36 = new javax.swing.JLabel();
+        date = new fosalgo.FTextField();
+        searchProduct = new fosalgo.FTextField();
+        jLabel37 = new javax.swing.JLabel();
+        jScrollPane8 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        addProductButton1 = new button.MyButton();
+        jLabel38 = new javax.swing.JLabel();
+        jLabel39 = new javax.swing.JLabel();
+        jLabel40 = new javax.swing.JLabel();
+        jLabel41 = new javax.swing.JLabel();
+        subTotal = new fosalgo.FTextField();
+        discount = new fosalgo.FTextField();
+        vat = new fosalgo.FTextField();
+        grandTotal = new fosalgo.FTextField();
+
+        searchPanelList.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        searchPanelList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                searchPanelListMouseClicked(evt);
+            }
+        });
+        jScrollPane9.setViewportView(searchPanelList);
+
+        javax.swing.GroupLayout searchPanelLayout = new javax.swing.GroupLayout(searchPanel);
+        searchPanel.setLayout(searchPanelLayout);
+        searchPanelLayout.setHorizontalGroup(
+            searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane9, javax.swing.GroupLayout.DEFAULT_SIZE, 590, Short.MAX_VALUE)
+        );
+        searchPanelLayout.setVerticalGroup(
+            searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane9)
+        );
+
+        searchMenu.setFocusable(false);
 
         setBorder(null);
 
@@ -401,7 +454,7 @@ public class Manage extends javax.swing.JInternalFrame {
         showSerPaneButton.setFocusable(false);
         showSerPaneButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         showSerPaneButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        showSerPaneButton.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        showSerPaneButton.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
         showSerPaneButton.setIconTextGap(10);
         showSerPaneButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -420,7 +473,7 @@ public class Manage extends javax.swing.JInternalFrame {
         showEmpPaneButton.setFocusable(false);
         showEmpPaneButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         showEmpPaneButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        showEmpPaneButton.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        showEmpPaneButton.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
         showEmpPaneButton.setIconTextGap(10);
         showEmpPaneButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -439,7 +492,7 @@ public class Manage extends javax.swing.JInternalFrame {
         VehicleTypesButton.setFocusable(false);
         VehicleTypesButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         VehicleTypesButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        VehicleTypesButton.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        VehicleTypesButton.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
         VehicleTypesButton.setIconTextGap(10);
         VehicleTypesButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -458,11 +511,30 @@ public class Manage extends javax.swing.JInternalFrame {
         productButton.setFocusable(false);
         productButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         productButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        productButton.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        productButton.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
         productButton.setIconTextGap(10);
         productButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 productButtonActionPerformed(evt);
+            }
+        });
+
+        GRNButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 20, 1, 1));
+        GRNButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/angle-small-down.png"))); // NOI18N
+        GRNButton.setText("GRN Update");
+        GRNButton.setBorderColor(new java.awt.Color(255, 255, 255));
+        GRNButton.setBorderPainted(false);
+        GRNButton.setColorClick(new java.awt.Color(126, 240, 244));
+        GRNButton.setColorOver(new java.awt.Color(126, 240, 244));
+        GRNButton.setFocusPainted(false);
+        GRNButton.setFocusable(false);
+        GRNButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        GRNButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        GRNButton.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
+        GRNButton.setIconTextGap(10);
+        GRNButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                GRNButtonActionPerformed(evt);
             }
         });
 
@@ -476,6 +548,7 @@ public class Manage extends javax.swing.JInternalFrame {
             .addComponent(employeeButtonPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(VehicleTypesButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(productButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(GRNButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -491,6 +564,8 @@ public class Manage extends javax.swing.JInternalFrame {
                 .addComponent(VehicleTypesButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(productButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(GRNButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -627,7 +702,9 @@ public class Manage extends javax.swing.JInternalFrame {
                     .addGroup(serviesUnitCardLayout.createSequentialGroup()
                         .addGap(0, 556, Short.MAX_VALUE)
                         .addComponent(servicesUnitDeleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1))
+                    .addGroup(serviesUnitCardLayout.createSequentialGroup()
+                        .addGap(106, 106, 106)
+                        .addComponent(jScrollPane1)))
                 .addGap(18, 18, 18)
                 .addGroup(serviesUnitCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel3)
@@ -1364,7 +1441,7 @@ public class Manage extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(vehicleTypesCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(vehicleTypesCardLayout.createSequentialGroup()
-                        .addGap(0, 556, Short.MAX_VALUE)
+                        .addGap(0, 568, Short.MAX_VALUE)
                         .addComponent(VehiclelTypeDeleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 727, Short.MAX_VALUE)
                     .addGroup(vehicleTypesCardLayout.createSequentialGroup()
@@ -1623,6 +1700,178 @@ public class Manage extends javax.swing.JInternalFrame {
         );
 
         panelCards.add(productCard, "productCard");
+
+        grnCard.setBackground(new java.awt.Color(255, 255, 255));
+
+        grnNO.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        grnNO.setRadius(20);
+
+        jLabel35.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        jLabel35.setText("GRN NO :");
+
+        jLabel36.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        jLabel36.setText("Date :");
+
+        date.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        date.setRadius(20);
+
+        searchProduct.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        searchProduct.setRadius(20);
+        searchProduct.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                searchProductKeyReleased(evt);
+            }
+        });
+
+        jLabel37.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        jLabel37.setText("Search Product :");
+
+        jTable1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Name", "Price", "Qnt", "Lot No"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, true, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTable1.setRowHeight(25);
+        jScrollPane8.setViewportView(jTable1);
+
+        addProductButton1.setForeground(new java.awt.Color(255, 255, 255));
+        addProductButton1.setText("Update GRN");
+        addProductButton1.setBorderColor(new java.awt.Color(13, 180, 185));
+        addProductButton1.setBorderPainted(false);
+        addProductButton1.setColor(new java.awt.Color(13, 180, 185));
+        addProductButton1.setColorClick(new java.awt.Color(11, 140, 144));
+        addProductButton1.setColorOver(new java.awt.Color(11, 140, 144));
+        addProductButton1.setFocusPainted(false);
+        addProductButton1.setFocusable(false);
+        addProductButton1.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        addProductButton1.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
+        addProductButton1.setIconTextGap(30);
+        addProductButton1.setRadius(20);
+
+        jLabel38.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jLabel38.setText("Sub Total : Rs.");
+
+        jLabel39.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jLabel39.setText("Discount :  Rs.");
+
+        jLabel40.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jLabel40.setText("VAT :             Rs.");
+
+        jLabel41.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jLabel41.setText("Grand Total : Rs.");
+
+        subTotal.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        subTotal.setRadius(20);
+
+        discount.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        discount.setRadius(20);
+        discount.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                discountActionPerformed(evt);
+            }
+        });
+
+        vat.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        vat.setRadius(20);
+
+        grandTotal.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        grandTotal.setRadius(20);
+
+        javax.swing.GroupLayout grnCardLayout = new javax.swing.GroupLayout(grnCard);
+        grnCard.setLayout(grnCardLayout);
+        grnCardLayout.setHorizontalGroup(
+            grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(grnCardLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane8)
+                    .addGroup(grnCardLayout.createSequentialGroup()
+                        .addComponent(jLabel35)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(grnNO, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel36)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(date, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, grnCardLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(addProductButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(grnCardLayout.createSequentialGroup()
+                        .addGroup(grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(grnCardLayout.createSequentialGroup()
+                                .addGroup(grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel38)
+                                    .addComponent(jLabel39))
+                                .addGap(6, 6, 6)
+                                .addGroup(grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(subTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(discount, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel40)
+                                    .addComponent(jLabel41))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(grandTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(vat, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(grnCardLayout.createSequentialGroup()
+                                .addComponent(jLabel37)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(searchProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 583, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 318, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        grnCardLayout.setVerticalGroup(
+            grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(grnCardLayout.createSequentialGroup()
+                .addGap(9, 9, 9)
+                .addGroup(grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel35)
+                    .addComponent(grnNO, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel36)
+                    .addComponent(date, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel37)
+                    .addComponent(searchProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(12, 12, 12)
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 393, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(grnCardLayout.createSequentialGroup()
+                        .addGroup(grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel38)
+                            .addComponent(subTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(discount, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel39)))
+                    .addGroup(grnCardLayout.createSequentialGroup()
+                        .addGroup(grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(vat, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel40))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(grandTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel41))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(addProductButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        panelCards.add(grnCard, "grnCard");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -2377,8 +2626,85 @@ public class Manage extends javax.swing.JInternalFrame {
         LoadProductTable(searchProducts.getText());
     }//GEN-LAST:event_searchProductsKeyReleased
 
+    private void GRNButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GRNButtonActionPerformed
+        cardLayout.show(panelCards, "grnCard");
+        resetButtonStyle();
+        GRNButton.setColor(new Color(184,248,250));
+    }//GEN-LAST:event_GRNButtonActionPerformed
+
+    private void discountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discountActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_discountActionPerformed
+
+    private void searchPanelListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchPanelListMouseClicked
+
+//            if (!VehicleRegNo.getText().isEmpty()) {
+//                try {
+//                    Statement statement = DBconnect.connectToDB().createStatement();
+//                    statement.execute("SELECT * FROM Products WHERE name = '" + searchPanelList.getSelectedValue() + "'");
+//                    ResultSet resultSet = statement.getResultSet();
+//                    if (resultSet.next()) {
+//                        ArrayList<String> product = new ArrayList<>();
+//                        product.add(resultSet.getString("ID"));
+//                        product.add(resultSet.getString("Name"));
+//                        product.add(resultSet.getString("Price"));
+//                        product.add("1");
+//                        product.add(resultSet.getString("Price"));
+//
+//                        if (cartProductList.isEmpty()) {
+//                            cartProductList.add(product);
+//                        } else {
+//                            for (int i = 0; i <= cartProductList.size(); i++) {
+//                                if (cartProductList.get(i).get(0).equals(resultSet.getString("ID"))) {
+//                                    cartProductList.get(i).set(3, String.valueOf(Float.parseFloat(cartProductList.get(i).get(3)) + 1));
+//                                    break;
+//                                }
+//                                if (cartProductList.size() - 1 == i) {
+//                                    cartProductList.add(product);
+//                                    break;
+//                                }
+//                            }
+//                        }
+//                        RefrashProductListPanel();
+//                    }
+//                } catch (SQLException ex) {
+//                    Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            } else {
+//                JOptionPane.showMessageDialog(null, "No invoice number selected !", "Empty", JOptionPane.WARNING_MESSAGE);
+//            }
+
+//        searchMenu.setVisible(false);
+//        searchProduct.setText("");
+    }//GEN-LAST:event_searchPanelListMouseClicked
+
+    private void searchProductKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchProductKeyReleased
+        String search = searchProduct.getText().trim();
+        if (!search.equals("")) {
+            ListModel.removeAllElements();
+            searchMenu.show(searchProduct, 0, searchProduct.getHeight());
+            searchMenu.setPopupSize(240, 240);
+
+            try {
+                Statement statement = DBconnect.connectToDB().createStatement();
+                statement.execute("SELECT ID, Name FROM Products WHERE ID LIKE '%" + search + "%' OR Name LIKE '%" + search + "%'");
+                ResultSet resultSet = statement.getResultSet();
+                while(resultSet.next()){
+                    searchMenu.show(searchProduct, 0, searchProduct.getHeight());
+                    ListModel.addElement(resultSet.getString("ID")+"  "+resultSet.getString("Name"));
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        } else {
+            searchMenu.setVisible(false);
+        }
+    }//GEN-LAST:event_searchProductKeyReleased
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private button.MyButton GRNButton;
     private fosalgo.FTextField VehicleTypeID;
     private fosalgo.FTextField VehicleTypeName;
     private javax.swing.JTable VehicleTypeTable;
@@ -2389,6 +2715,7 @@ public class Manage extends javax.swing.JInternalFrame {
     private javax.swing.JPanel addEmployeeCard;
     private javax.swing.JLabel addEmployeeTitle;
     private button.MyButton addProductButton;
+    private button.MyButton addProductButton1;
     private button.MyButton addServiceButton;
     private button.MyButton addServiceUnitButton;
     private button.MyButton addVehicleTypeButton;
@@ -2396,6 +2723,8 @@ public class Manage extends javax.swing.JInternalFrame {
     private javax.swing.JPanel allEmployeeCard;
     private button.MyButton cancelButton;
     private button.MyButton choosFileButton;
+    private fosalgo.FTextField date;
+    private fosalgo.FTextField discount;
     private fosalgo.FTextField empAddress;
     private CustomComponents.MyTextArea empDescription;
     private fosalgo.FTextField empEmail;
@@ -2409,6 +2738,9 @@ public class Manage extends javax.swing.JInternalFrame {
     private javax.swing.JPanel employeeButtonPane;
     private button.MyButton employeeDeleteButton;
     private javax.swing.JTable employeeTable;
+    private fosalgo.FTextField grandTotal;
+    private javax.swing.JPanel grnCard;
+    private fosalgo.FTextField grnNO;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
@@ -2434,7 +2766,14 @@ public class Manage extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel32;
     private javax.swing.JLabel jLabel33;
     private javax.swing.JLabel jLabel34;
+    private javax.swing.JLabel jLabel35;
+    private javax.swing.JLabel jLabel36;
+    private javax.swing.JLabel jLabel37;
+    private javax.swing.JLabel jLabel38;
+    private javax.swing.JLabel jLabel39;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel40;
+    private javax.swing.JLabel jLabel41;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel8;
@@ -2448,6 +2787,9 @@ public class Manage extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JScrollPane jScrollPane8;
+    private javax.swing.JScrollPane jScrollPane9;
+    private javax.swing.JTable jTable1;
     private CustomComponents.Combobox jobRoleComboBox;
     private javax.swing.JPanel panelCards;
     private button.MyButton productButton;
@@ -2462,6 +2804,10 @@ public class Manage extends javax.swing.JInternalFrame {
     private javax.swing.JLabel productTitle;
     private button.MyButton saveButton;
     private fosalgo.FTextField searchEmployees;
+    private javax.swing.JPopupMenu searchMenu;
+    private javax.swing.JPanel searchPanel;
+    private javax.swing.JList<String> searchPanelList;
+    private fosalgo.FTextField searchProduct;
     private fosalgo.FTextField searchProducts;
     private fosalgo.FTextField searchSerUnits;
     private fosalgo.FTextField searchService;
@@ -2489,6 +2835,8 @@ public class Manage extends javax.swing.JInternalFrame {
     private javax.swing.JPanel serviesUnitCard;
     private button.MyButton showEmpPaneButton;
     private button.MyButton showSerPaneButton;
+    private fosalgo.FTextField subTotal;
+    private fosalgo.FTextField vat;
     private button.MyButton vehicalTypeClearButton1;
     private CustomComponents.Combobox vehicalTypeComboBox;
     private javax.swing.JPanel vehicleTypesCard;
