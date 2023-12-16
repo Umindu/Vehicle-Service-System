@@ -14,11 +14,16 @@ import DBConnect.DBconnect;
 import Vehicles.Vehicles;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.lang.reflect.Array;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -301,15 +306,15 @@ public class Manage extends javax.swing.JInternalFrame {
         selectServiceUnitCombobox = new CustomComponents.Combobox();
         searchProducts = new fosalgo.FTextField();
         grnCard = new javax.swing.JPanel();
-        grnNO = new fosalgo.FTextField();
+        grnID = new fosalgo.FTextField();
         jLabel35 = new javax.swing.JLabel();
         jLabel36 = new javax.swing.JLabel();
-        date = new fosalgo.FTextField();
+        dateField = new fosalgo.FTextField();
         searchProduct = new fosalgo.FTextField();
         jLabel37 = new javax.swing.JLabel();
         jScrollPane8 = new javax.swing.JScrollPane();
         grnTable = new javax.swing.JTable();
-        addProductButton1 = new button.MyButton();
+        updateGRNButton = new button.MyButton();
         jLabel38 = new javax.swing.JLabel();
         jLabel39 = new javax.swing.JLabel();
         jLabel40 = new javax.swing.JLabel();
@@ -318,6 +323,7 @@ public class Manage extends javax.swing.JInternalFrame {
         discount = new fosalgo.FTextField();
         vat = new fosalgo.FTextField();
         grandTotal = new fosalgo.FTextField();
+        deleteButton = new button.MyButton();
 
         searchPanelList.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         searchPanelList.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -699,14 +705,12 @@ public class Manage extends javax.swing.JInternalFrame {
                 .addGroup(serviesUnitCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(serviesUnitCardLayout.createSequentialGroup()
                         .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 332, Short.MAX_VALUE)
                         .addComponent(searchSerUnits, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(serviesUnitCardLayout.createSequentialGroup()
-                        .addGap(0, 556, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, serviesUnitCardLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(servicesUnitDeleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(serviesUnitCardLayout.createSequentialGroup()
-                        .addGap(106, 106, 106)
-                        .addComponent(jScrollPane1)))
+                    .addComponent(jScrollPane1))
                 .addGap(18, 18, 18)
                 .addGroup(serviesUnitCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel3)
@@ -1705,8 +1709,8 @@ public class Manage extends javax.swing.JInternalFrame {
 
         grnCard.setBackground(new java.awt.Color(255, 255, 255));
 
-        grnNO.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        grnNO.setRadius(20);
+        grnID.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        grnID.setRadius(20);
 
         jLabel35.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel35.setText("GRN NO :");
@@ -1714,8 +1718,8 @@ public class Manage extends javax.swing.JInternalFrame {
         jLabel36.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel36.setText("Date :");
 
-        date.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        date.setRadius(20);
+        dateField.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        dateField.setRadius(20);
 
         searchProduct.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         searchProduct.setRadius(20);
@@ -1734,11 +1738,11 @@ public class Manage extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "ID", "Name", "Price", "Qnt", "Lot No"
+                "ID", "Name", "Unit Cost", "Price", "Qnt", "Lot No", "Service Unit"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, true, true, true
+                false, false, true, true, true, true, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -1747,20 +1751,38 @@ public class Manage extends javax.swing.JInternalFrame {
         });
         grnTable.setRowHeight(25);
         jScrollPane8.setViewportView(grnTable);
+        if (grnTable.getColumnModel().getColumnCount() > 0) {
+            grnTable.getColumnModel().getColumn(0).setMaxWidth(100);
+            grnTable.getColumnModel().getColumn(2).setPreferredWidth(150);
+            grnTable.getColumnModel().getColumn(2).setMaxWidth(150);
+            grnTable.getColumnModel().getColumn(3).setPreferredWidth(150);
+            grnTable.getColumnModel().getColumn(3).setMaxWidth(150);
+            grnTable.getColumnModel().getColumn(4).setPreferredWidth(150);
+            grnTable.getColumnModel().getColumn(4).setMaxWidth(150);
+            grnTable.getColumnModel().getColumn(5).setPreferredWidth(150);
+            grnTable.getColumnModel().getColumn(5).setMaxWidth(150);
+            grnTable.getColumnModel().getColumn(6).setPreferredWidth(0);
+            grnTable.getColumnModel().getColumn(6).setMaxWidth(0);
+        }
 
-        addProductButton1.setForeground(new java.awt.Color(255, 255, 255));
-        addProductButton1.setText("Update GRN");
-        addProductButton1.setBorderColor(new java.awt.Color(13, 180, 185));
-        addProductButton1.setBorderPainted(false);
-        addProductButton1.setColor(new java.awt.Color(13, 180, 185));
-        addProductButton1.setColorClick(new java.awt.Color(11, 140, 144));
-        addProductButton1.setColorOver(new java.awt.Color(11, 140, 144));
-        addProductButton1.setFocusPainted(false);
-        addProductButton1.setFocusable(false);
-        addProductButton1.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        addProductButton1.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
-        addProductButton1.setIconTextGap(30);
-        addProductButton1.setRadius(20);
+        updateGRNButton.setForeground(new java.awt.Color(255, 255, 255));
+        updateGRNButton.setText("Update GRN");
+        updateGRNButton.setBorderColor(new java.awt.Color(13, 180, 185));
+        updateGRNButton.setBorderPainted(false);
+        updateGRNButton.setColor(new java.awt.Color(13, 180, 185));
+        updateGRNButton.setColorClick(new java.awt.Color(11, 140, 144));
+        updateGRNButton.setColorOver(new java.awt.Color(11, 140, 144));
+        updateGRNButton.setFocusPainted(false);
+        updateGRNButton.setFocusable(false);
+        updateGRNButton.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        updateGRNButton.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
+        updateGRNButton.setIconTextGap(30);
+        updateGRNButton.setRadius(20);
+        updateGRNButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateGRNButtonActionPerformed(evt);
+            }
+        });
 
         jLabel38.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel38.setText("Sub Total : Rs.");
@@ -1791,6 +1813,23 @@ public class Manage extends javax.swing.JInternalFrame {
         grandTotal.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         grandTotal.setRadius(20);
 
+        deleteButton.setText("Delete");
+        deleteButton.setBorderColor(new java.awt.Color(185, 12, 12));
+        deleteButton.setBorderPainted(false);
+        deleteButton.setColor(new java.awt.Color(252, 212, 212));
+        deleteButton.setColorClick(new java.awt.Color(244, 126, 126));
+        deleteButton.setColorOver(new java.awt.Color(244, 126, 126));
+        deleteButton.setFocusPainted(false);
+        deleteButton.setFocusable(false);
+        deleteButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        deleteButton.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        deleteButton.setRadius(20);
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout grnCardLayout = new javax.swing.GroupLayout(grnCard);
         grnCard.setLayout(grnCardLayout);
         grnCardLayout.setHorizontalGroup(
@@ -1802,14 +1841,14 @@ public class Manage extends javax.swing.JInternalFrame {
                     .addGroup(grnCardLayout.createSequentialGroup()
                         .addComponent(jLabel35)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(grnNO, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(grnID, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel36)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(date, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(dateField, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, grnCardLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(addProductButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(updateGRNButton, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(grnCardLayout.createSequentialGroup()
                         .addGroup(grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(grnCardLayout.createSequentialGroup()
@@ -1832,7 +1871,8 @@ public class Manage extends javax.swing.JInternalFrame {
                                 .addComponent(jLabel37)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(searchProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 583, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 318, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 246, Short.MAX_VALUE)
+                        .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         grnCardLayout.setVerticalGroup(
@@ -1841,15 +1881,20 @@ public class Manage extends javax.swing.JInternalFrame {
                 .addGap(9, 9, 9)
                 .addGroup(grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel35)
-                    .addComponent(grnNO, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(grnID, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel36)
-                    .addComponent(date, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(dateField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel37)
-                    .addComponent(searchProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(12, 12, 12)
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 393, Short.MAX_VALUE)
+                .addGroup(grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(grnCardLayout.createSequentialGroup()
+                        .addGroup(grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel37)
+                            .addComponent(searchProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(12, 12, 12))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, grnCardLayout.createSequentialGroup()
+                        .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 334, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(grnCardLayout.createSequentialGroup()
@@ -1869,7 +1914,7 @@ public class Manage extends javax.swing.JInternalFrame {
                             .addComponent(grandTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel41))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(addProductButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(updateGRNButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -2630,8 +2675,16 @@ public class Manage extends javax.swing.JInternalFrame {
 
     private void GRNButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GRNButtonActionPerformed
         cardLayout.show(panelCards, "grnCard");
+        
         resetButtonStyle();
         GRNButton.setColor(new Color(184,248,250));
+        
+        JTableHeader header = grnTable.getTableHeader();
+        header.setFont(new Font("Segoe UI", Font.BOLD , 14));
+        
+        SimpleDateFormat fdate = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        dateField.setText(fdate.format(date));
     }//GEN-LAST:event_GRNButtonActionPerformed
 
     private void discountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discountActionPerformed
@@ -2641,8 +2694,8 @@ public class Manage extends javax.swing.JInternalFrame {
     private void searchPanelListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchPanelListMouseClicked
         DefaultTableModel model = (DefaultTableModel)grnTable.getModel();
         String[] productDatails = searchPanelList.getSelectedValue().split(".  ");
-        System.out.println(productDatails[0]);
-        model.addRow(new Object[]{productDatails[0],productDatails[1],"0.00","0","nn"});
+        
+        model.addRow(new Object[]{productDatails[0], productDatails[1], "", "", "", "", productDatails[2]});
         
         searchMenu.setVisible(false);
         searchProduct.setText("");
@@ -2657,11 +2710,11 @@ public class Manage extends javax.swing.JInternalFrame {
 
             try {
                 Statement statement = DBconnect.connectToDB().createStatement();
-                statement.execute("SELECT ID, Name FROM Products WHERE ID LIKE '%" + search + "%' OR Name LIKE '%" + search + "%'");
+                statement.execute("SELECT ID, Name, ServiceUnit FROM Products WHERE ID LIKE '%" + search + "%' OR Name LIKE '%" + search + "%'");
                 ResultSet resultSet = statement.getResultSet();
                 while(resultSet.next()){
                     searchMenu.show(searchProduct, 0, searchProduct.getHeight());
-                    ListModel.addElement(resultSet.getString("ID")+".  "+resultSet.getString("Name"));
+                    ListModel.addElement(resultSet.getString("ID")+".  "+resultSet.getString("Name")+".  "+resultSet.getString("ServiceUnit"));
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
@@ -2671,6 +2724,44 @@ public class Manage extends javax.swing.JInternalFrame {
             searchMenu.setVisible(false);
         }
     }//GEN-LAST:event_searchProductKeyReleased
+
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
+        DefaultTableModel model = (DefaultTableModel) this.grnTable.getModel();
+        int[] rows = grnTable.getSelectedRows();
+        for(int i=0;i<rows.length;i++){
+          model.removeRow(rows[i]-i);
+        }
+    }//GEN-LAST:event_deleteButtonActionPerformed
+
+    private void updateGRNButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateGRNButtonActionPerformed
+        SimpleDateFormat fdate = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        
+        try {                                                
+            DefaultTableModel model = (DefaultTableModel) this.grnTable.getModel();
+            
+            Statement statement = DBconnect.connectToDB().createStatement();
+            for(int i=0; i < grnTable.getRowCount(); i++){
+                statement.execute("INSERT INTO Stock (GRNID, ID, Name, UnitCost, Price, Qnt, ServiceUnit, LotNo) "
+                + "VALUES('" + grnID.getText() + "', '" + grnTable.getValueAt(i, 0) + "', '" + grnTable.getValueAt(i, 1) + "', '" + grnTable.getValueAt(i, 2) + "', '" + grnTable.getValueAt(i, 3) + "' , '" + grnTable.getValueAt(i, 4) + "', '" + grnTable.getValueAt(i, 6) + "' , '" + grnTable.getValueAt(i, 5) + "')"); 
+            }
+            statement.execute("INSERT INTO GRNDetails (ID, Date, SubTotal, Discount, VAT, GrandTotal) "
+            + "VALUES('" + grnID.getText() + "', '" + dateField.getText() + "', '" + subTotal.getText() + "', '" + discount.getText() + "' , '" + vat.getText() + "', '" + grandTotal.getText() + "')");
+            
+            JOptionPane.showMessageDialog (null, "GRN update successful !", "Successful", JOptionPane.INFORMATION_MESSAGE);
+            
+            grnID.setText("");
+            dateField.setText(fdate.format(date));
+            subTotal.setText("");
+            discount.setText("");
+            vat.setText("");
+            grandTotal.setText("");
+            model.setRowCount(0);
+                    
+        } catch (SQLException ex) {
+            Logger.getLogger(Manage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_updateGRNButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -2685,7 +2776,6 @@ public class Manage extends javax.swing.JInternalFrame {
     private javax.swing.JPanel addEmployeeCard;
     private javax.swing.JLabel addEmployeeTitle;
     private button.MyButton addProductButton;
-    private button.MyButton addProductButton1;
     private button.MyButton addServiceButton;
     private button.MyButton addServiceUnitButton;
     private button.MyButton addVehicleTypeButton;
@@ -2693,7 +2783,8 @@ public class Manage extends javax.swing.JInternalFrame {
     private javax.swing.JPanel allEmployeeCard;
     private button.MyButton cancelButton;
     private button.MyButton choosFileButton;
-    private fosalgo.FTextField date;
+    private fosalgo.FTextField dateField;
+    private button.MyButton deleteButton;
     private fosalgo.FTextField discount;
     private fosalgo.FTextField empAddress;
     private CustomComponents.MyTextArea empDescription;
@@ -2710,7 +2801,7 @@ public class Manage extends javax.swing.JInternalFrame {
     private javax.swing.JTable employeeTable;
     private fosalgo.FTextField grandTotal;
     private javax.swing.JPanel grnCard;
-    private fosalgo.FTextField grnNO;
+    private fosalgo.FTextField grnID;
     private javax.swing.JTable grnTable;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -2806,6 +2897,7 @@ public class Manage extends javax.swing.JInternalFrame {
     private button.MyButton showEmpPaneButton;
     private button.MyButton showSerPaneButton;
     private fosalgo.FTextField subTotal;
+    private button.MyButton updateGRNButton;
     private fosalgo.FTextField vat;
     private button.MyButton vehicalTypeClearButton1;
     private CustomComponents.Combobox vehicalTypeComboBox;

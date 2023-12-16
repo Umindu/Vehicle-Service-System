@@ -36,8 +36,12 @@ import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.ListModel;
 import javax.swing.Timer;
 import javax.swing.border.MatteBorder;
@@ -119,6 +123,9 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
         jScrollPane3 = new javax.swing.JScrollPane();
         searchPanelList = new javax.swing.JList<>();
         searchMenu = new javax.swing.JPopupMenu();
+        priceDialogBox = new javax.swing.JDialog();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        priceList = new javax.swing.JList<>();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         dateLable = new javax.swing.JLabel();
@@ -168,6 +175,33 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
         );
 
         searchMenu.setFocusable(false);
+
+        priceDialogBox.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        priceDialogBox.setTitle("Select Price");
+        priceDialogBox.setAlwaysOnTop(true);
+        priceDialogBox.setResizable(false);
+        priceDialogBox.setType(java.awt.Window.Type.POPUP);
+
+        priceList.setBackground(new java.awt.Color(184, 248, 250));
+        priceList.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        priceList.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        priceList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                priceListMouseClicked(evt);
+            }
+        });
+        jScrollPane4.setViewportView(priceList);
+
+        javax.swing.GroupLayout priceDialogBoxLayout = new javax.swing.GroupLayout(priceDialogBox.getContentPane());
+        priceDialogBox.getContentPane().setLayout(priceDialogBoxLayout);
+        priceDialogBoxLayout.setHorizontalGroup(
+            priceDialogBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
+        );
+        priceDialogBoxLayout.setVerticalGroup(
+            priceDialogBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+        );
 
         setBorder(null);
 
@@ -655,7 +689,7 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
                 ResultSet resultSet = statement.getResultSet();
                 while(resultSet.next()){
                     searchMenu.show(searchProduct, 0, searchProduct.getHeight());
-                    ListModel.addElement(resultSet.getString("ID")+"  "+resultSet.getString("Name"));
+                    ListModel.addElement(resultSet.getString("ID")+". "+resultSet.getString("Name"));
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
@@ -719,34 +753,57 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
             }
         } else {
             if (!VehicleRegNo.getText().isEmpty()) {
+                DefaultListModel ListModels = new DefaultListModel();
+                priceList.setModel(ListModels);
+                
+                String[] productDetails = searchPanelList.getSelectedValue().split(". ");
                 try {
                     Statement statement = DBconnect.connectToDB().createStatement();
-                    statement.execute("SELECT * FROM Products WHERE name = '" + searchPanelList.getSelectedValue() + "'");
+                    statement.execute("SELECT * FROM Stock WHERE ID = '" + productDetails[0] + "'");
                     ResultSet resultSet = statement.getResultSet();
-                    if (resultSet.next()) {
-                        ArrayList<String> product = new ArrayList<>();
-                        product.add(resultSet.getString("ID"));
-                        product.add(resultSet.getString("Name"));
-                        product.add(resultSet.getString("Price"));
-                        product.add("1");
-                        product.add(resultSet.getString("Price"));
+                    //get row count
+                    int rowCount = 0;
+                    while (resultSet.next()) {
+                        rowCount++;
+                        ListModels.addElement("Rs. "+resultSet.getString("Price"));
+                        priceDialogBox.setTitle(resultSet.getString("ID")+"  "+resultSet.getString("Name"));
+                    }
+                    //
+                    if(rowCount > 1){
+                        priceDialogBox.setVisible(true);
+                        priceDialogBox.setLocationRelativeTo(productListPanel);
+                        priceDialogBox.setSize(300, rowCount*55);
+                    }else{
+                        Statement statement2 = DBconnect.connectToDB().createStatement();
+                        statement2.execute("SELECT * FROM Stock WHERE ID = '" + productDetails[0] + "'");
+                        ResultSet resultSet2 = statement2.getResultSet();
+                        
+                        if (resultSet2.next()) {
+                            ArrayList<String> product = new ArrayList<>();
+                            product.add(resultSet2.getString("ID"));
+                            product.add(resultSet2.getString("Name"));
+                            product.add(resultSet2.getString("Price"));
+                            product.add("1");
+                            product.add(resultSet2.getString("Price"));
 
-                        if (cartProductList.isEmpty()) {
-                            cartProductList.add(product);
-                        } else {
-                            for (int i = 0; i <= cartProductList.size(); i++) {
-                                if (cartProductList.get(i).get(0).equals(resultSet.getString("ID"))) {
-                                    cartProductList.get(i).set(3, String.valueOf(Float.parseFloat(cartProductList.get(i).get(3)) + 1));
-                                    break;
-                                }
-                                if (cartProductList.size() - 1 == i) {
-                                    cartProductList.add(product);
-                                    break;
+                            if (cartProductList.isEmpty()) {
+                                cartProductList.add(product);
+                            } else {
+                                for (int i = 0; i <= cartProductList.size(); i++) {
+                                    if (cartProductList.get(i).get(0).equals(resultSet2.getString("ID"))) {
+                                        cartProductList.get(i).set(3, String.valueOf(Float.parseFloat(cartProductList.get(i).get(3)) + 1));
+                                        break;
+                                    }
+                                    if (cartProductList.size() - 1 == i) {
+                                        cartProductList.add(product);
+                                        break;
+                                    }
                                 }
                             }
+                            RefrashProductListPanel();
                         }
-                        RefrashProductListPanel();
                     }
+                    
                 } catch (SQLException ex) {
                     Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -820,6 +877,44 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
         cancelButtonActionPerformed(null);
     }//GEN-LAST:event_progressButton1ActionPerformed
 
+    private void priceListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_priceListMouseClicked
+        String[] productDetails = searchPanelList.getSelectedValue().split(". ");
+        
+        try {
+            Statement statement = DBconnect.connectToDB().createStatement();
+            statement.execute("SELECT * FROM Stock WHERE ID = '" + productDetails[0] + "' AND Price = '"+priceList.getSelectedValue().substring(4)+"'");
+            ResultSet resultSet = statement.getResultSet();
+            
+            if (resultSet.next()) {
+                ArrayList<String> product = new ArrayList<>();
+                product.add(resultSet.getString("ID"));
+                product.add(resultSet.getString("Name"));
+                product.add(resultSet.getString("Price"));
+                product.add("1");
+                product.add(resultSet.getString("Price"));
+                
+                if (cartProductList.isEmpty()) {
+                    cartProductList.add(product);
+                } else {
+                    for (int i = 0; i <= cartProductList.size(); i++) {
+                        if (cartProductList.get(i).get(0).equals(resultSet.getString("ID")) && cartProductList.get(i).get(2).equals(resultSet.getString("Price"))) {
+                            cartProductList.get(i).set(3, String.valueOf(Float.parseFloat(cartProductList.get(i).get(3)) + 1));
+                            break;
+                        }
+                        if (cartProductList.size() - 1 == i) {
+                            cartProductList.add(product);
+                            break;
+                        }
+                    }
+                }
+                RefrashProductListPanel();
+            }
+            priceDialogBox.dispose();
+        } catch (SQLException ex) {
+            Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_priceListMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private fosalgo.FTextField VehicleRegNo;
@@ -840,9 +935,12 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSeparator jSeparator1;
     private fosalgo.FTextField ownerName;
     private fosalgo.FTextField ownerPhone;
+    private javax.swing.JDialog priceDialogBox;
+    private javax.swing.JList<String> priceList;
     private javax.swing.JPanel productListPanel;
     private button.MyButton progressButton1;
     private javax.swing.JPopupMenu searchMenu;
