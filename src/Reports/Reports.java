@@ -85,6 +85,10 @@ public class Reports extends javax.swing.JInternalFrame {
         jPanel9 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         cashPayments = new javax.swing.JLabel();
+        searchDailySalesReport = new fosalgo.FTextField();
+        jScrollPane8 = new javax.swing.JScrollPane();
+        dailySalesReportTable = new javax.swing.JTable();
+        jLabel19 = new javax.swing.JLabel();
         salesReport = new javax.swing.JPanel();
         searchSalesReport = new fosalgo.FTextField();
         jScrollPane6 = new javax.swing.JScrollPane();
@@ -203,10 +207,7 @@ public class Reports extends javax.swing.JInternalFrame {
             .addComponent(showDepartedVehiclePaneButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(dailyReportButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(salesReportButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(stockReportButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+            .addComponent(stockReportButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -333,11 +334,6 @@ public class Reports extends javax.swing.JInternalFrame {
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 searchDepVehicleFocusLost(evt);
-            }
-        });
-        searchDepVehicle.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                searchDepVehicleActionPerformed(evt);
             }
         });
         searchDepVehicle.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -468,6 +464,48 @@ public class Reports extends javax.swing.JInternalFrame {
                 .addGap(25, 25, 25))
         );
 
+        searchDailySalesReport.setForeground(new java.awt.Color(153, 153, 153));
+        searchDailySalesReport.setText("Search by invoice no or vehicle no");
+        searchDailySalesReport.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        searchDailySalesReport.setRadius(20);
+        searchDailySalesReport.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                searchDailySalesReportFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                searchDailySalesReportFocusLost(evt);
+            }
+        });
+        searchDailySalesReport.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                searchDailySalesReportKeyReleased(evt);
+            }
+        });
+
+        dailySalesReportTable.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        dailySalesReportTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        dailySalesReportTable.setGridColor(new java.awt.Color(204, 204, 204));
+        dailySalesReportTable.setRowHeight(25);
+        dailySalesReportTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                dailySalesReportTableMouseClicked(evt);
+            }
+        });
+        jScrollPane8.setViewportView(dailySalesReportTable);
+
+        jLabel19.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel19.setText("Daily Sales List");
+
         javax.swing.GroupLayout dailyReportLayout = new javax.swing.GroupLayout(dailyReport);
         dailyReport.setLayout(dailyReportLayout);
         dailyReportLayout.setHorizontalGroup(
@@ -478,6 +516,11 @@ public class Reports extends javax.swing.JInternalFrame {
                 .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(14, 14, 14)
                 .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 953, Short.MAX_VALUE)
+            .addGroup(dailyReportLayout.createSequentialGroup()
+                .addComponent(jLabel19)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(searchDailySalesReport, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         dailyReportLayout.setVerticalGroup(
             dailyReportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -486,7 +529,12 @@ public class Reports extends javax.swing.JInternalFrame {
                     .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(445, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(dailyReportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel19)
+                    .addComponent(searchDailySalesReport, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(5, 5, 5)
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE))
         );
 
         panelCards.add(dailyReport, "dailyReport");
@@ -787,6 +835,8 @@ public class Reports extends javax.swing.JInternalFrame {
         } catch (SQLException ex) {
             Logger.getLogger(Manage.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        LoadDailySalesReportTable("All");
     }//GEN-LAST:event_dailyReportButtonActionPerformed
 
     private void salesReportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salesReportButtonActionPerformed
@@ -823,10 +873,6 @@ public class Reports extends javax.swing.JInternalFrame {
         ShowServiceDetails(invoiceID);
     }//GEN-LAST:event_salesReportTableMouseClicked
 
-    private void searchDepVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchDepVehicleActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_searchDepVehicleActionPerformed
-
     private void stockReportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stockReportButtonActionPerformed
         resetButtonStyle();
         stockReportButton.setColor(new Color(184,248,250));
@@ -857,6 +903,31 @@ public class Reports extends javax.swing.JInternalFrame {
     private void stockTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_stockTableMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_stockTableMouseClicked
+
+    private void searchDailySalesReportFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_searchDailySalesReportFocusGained
+        if (searchDailySalesReport.getText().equals("Search by invoice no or vehicle no")) {
+            searchDailySalesReport.setText("");
+            searchDailySalesReport.setForeground(Color.BLACK);
+        }
+    }//GEN-LAST:event_searchDailySalesReportFocusGained
+
+    private void searchDailySalesReportFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_searchDailySalesReportFocusLost
+        if (searchDailySalesReport.getText().equals("")) {
+            searchDailySalesReport.setText("Search by invoice no or vehicle no");
+            searchDailySalesReport.setForeground(new Color(153, 153, 153));
+        }
+    }//GEN-LAST:event_searchDailySalesReportFocusLost
+
+    private void searchDailySalesReportKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchDailySalesReportKeyReleased
+        // TODO add your handling code here:d
+        LoadDailySalesReportTable(searchDailySalesReport.getText());
+    }//GEN-LAST:event_searchDailySalesReportKeyReleased
+
+    private void dailySalesReportTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dailySalesReportTableMouseClicked
+        int invoiceID = (int) dailySalesReportTable.getModel().getValueAt(dailySalesReportTable.getSelectedRow(), 0);
+        
+        ShowServiceDetails(invoiceID);
+    }//GEN-LAST:event_dailySalesReportTableMouseClicked
 
     public void LoadEnterdVehiclesTable(String search) {
         //serviceUnitTable data load
@@ -908,11 +979,33 @@ public class Reports extends javax.swing.JInternalFrame {
             if (search.equals("All")) {
                 statement.execute("SELECT InvoiceID, VehicleDetails.VehicleNo, PaymentDetails.Date, PayableAmount, TotalPayAmount, Balance, Note FROM PaymentDetails INNER JOIN VehicleDetails ON PaymentDetails.InvoiceID = VehicleDetails.InvoiceNo");
             } else {
-                statement.execute("SELECT InvoiceID, VehicleDetails.VehicleNo, PaymentDetails.Date, PayableAmount, TotalPayAmount, Balance, Note FROM PaymentDetails INNER JOIN VehicleDetails ON PaymentDetails.InvoiceID = VehicleDetails.InvoiceNo Where (PaymentDetails.InvoiceID like '%" + search + "%' OR VehicleDetails.VehicleNo like '%" + search + "%')");
+                statement.execute("SELECT InvoiceID, VehicleDetails.VehicleNo, PaymentDetails.Date, PayableAmount, TotalPayAmount, Balance, Note FROM PaymentDetails INNER JOIN VehicleDetails ON PaymentDetails.InvoiceID = VehicleDetails.InvoiceNo WHERE (PaymentDetails.InvoiceID like '%" + search + "%' OR VehicleDetails.VehicleNo like '%" + search + "%')");
             }
             ResultSet resultSet = statement.getResultSet();
 
             salesReportTable.setModel(DbUtils.resultSetToTableModel(resultSet));
+        } catch (SQLException ex) {
+            Logger.getLogger(Manage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void LoadDailySalesReportTable(String search) {
+        Date currentDate = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedDate = dateFormat.format(currentDate);
+        
+        JTableHeader header = dailySalesReportTable.getTableHeader();
+        header.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        try {
+            Statement statement = DBconnect.connectToDB().createStatement();
+            if (search.equals("All")) {
+                statement.execute("SELECT InvoiceID, VehicleDetails.VehicleNo, PaymentDetails.Date, PayableAmount, TotalPayAmount, Balance, Note FROM PaymentDetails INNER JOIN VehicleDetails ON PaymentDetails.InvoiceID = VehicleDetails.InvoiceNo WHERE PaymentDetails.Date <= '"+formattedDate+" 23:59:59.000' AND PaymentDetails.Date > '"+formattedDate+" 00:00:00.000'");
+            } else {
+                statement.execute("SELECT InvoiceID, VehicleDetails.VehicleNo, PaymentDetails.Date, PayableAmount, TotalPayAmount, Balance, Note FROM PaymentDetails INNER JOIN VehicleDetails ON PaymentDetails.InvoiceID = VehicleDetails.InvoiceNo WHERE (PaymentDetails.InvoiceID like '%" + search + "%' OR VehicleDetails.VehicleNo like '%" + search + "%') AND (PaymentDetails.Date <= '"+formattedDate+" 23:59:59.000' AND PaymentDetails.Date > '"+formattedDate+" 00:00:00.000')");
+            }
+            ResultSet resultSet = statement.getResultSet();
+
+            dailySalesReportTable.setModel(DbUtils.resultSetToTableModel(resultSet));
         } catch (SQLException ex) {
             Logger.getLogger(Manage.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -960,6 +1053,7 @@ public class Reports extends javax.swing.JInternalFrame {
     private javax.swing.JLabel cashPayments;
     private javax.swing.JPanel dailyReport;
     private button.MyButton dailyReportButton;
+    private javax.swing.JTable dailySalesReportTable;
     private javax.swing.JPanel departedVehiclesCard;
     private javax.swing.JTable departedVehiclesTable;
     private javax.swing.JPanel enterdVehiclesCard;
@@ -967,6 +1061,7 @@ public class Reports extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -980,12 +1075,14 @@ public class Reports extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JLabel openDrawerAmount;
     private javax.swing.JLabel otherPayments;
     private javax.swing.JPanel panelCards;
     private javax.swing.JPanel salesReport;
     private button.MyButton salesReportButton;
     private javax.swing.JTable salesReportTable;
+    private fosalgo.FTextField searchDailySalesReport;
     private fosalgo.FTextField searchDepVehicle;
     private fosalgo.FTextField searchEntVehicle;
     private fosalgo.FTextField searchSalesReport;
