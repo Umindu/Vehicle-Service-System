@@ -29,6 +29,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -60,7 +61,7 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
     private Executor executor = Executors.newSingleThreadExecutor(this);
 
     ArrayList<ArrayList<String>> cartProductList = new ArrayList<>();
-    ArrayList<String> alreadyAddProducts = new ArrayList<>();
+    ArrayList<ArrayList<String>> alreadyAddProducts = new ArrayList<>();
 
     public Vehicles(String jobroleLable) {
         initComponents();
@@ -95,7 +96,7 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
         showTime();
 
         initWebcam();
-        
+
         //tip text set 
 //        searchPanelList.addMouseMotionListener(new MouseMotionListener() {
 //            @Override
@@ -640,7 +641,7 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
     }
 
     private void selectServiceUnitComboboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectServiceUnitComboboxActionPerformed
-        if(!invoiceSearch.getText().isEmpty()){
+        if (!invoiceSearch.getText().isEmpty()) {
             cartProductList.clear();
             alreadyAddProducts.clear();
             productListPanel.removeAll();
@@ -687,9 +688,9 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
                 Statement statement = DBconnect.connectToDB().createStatement();
                 statement.execute("SELECT ID, Name FROM Products WHERE (ID LIKE '%" + search + "%' OR Name LIKE '%" + search + "%') AND (ServiceUnit = '" + selectServiceUnitCombobox.getSelectedItem() + "' OR ServiceUnit = 'Both')");
                 ResultSet resultSet = statement.getResultSet();
-                while(resultSet.next()){
+                while (resultSet.next()) {
                     searchMenu.show(searchProduct, 0, searchProduct.getHeight());
-                    ListModel.addElement(resultSet.getString("ID")+". "+resultSet.getString("Name"));
+                    ListModel.addElement(resultSet.getString("ID") + ". " + resultSet.getString("Name"));
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
@@ -707,14 +708,18 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
             ResultSet resultSet = statement.getResultSet();
             while (resultSet.next()) {
                 ArrayList<String> product = new ArrayList<>();
+                ArrayList<String> alreadyProduct = new ArrayList<>();
                 product.add(resultSet.getString("ProductID"));
                 product.add(resultSet.getString("Name"));
                 product.add(resultSet.getString("Price"));
                 product.add(resultSet.getString("Qnt"));
                 product.add(resultSet.getString("Total"));
 
+                alreadyProduct.add(resultSet.getString("ProductID"));
+                alreadyProduct.add(resultSet.getString("Price"));
+
                 cartProductList.add(product);
-                alreadyAddProducts.add(resultSet.getString("ProductID"));
+                alreadyAddProducts.add(alreadyProduct);
             }
             RefrashProductListPanel();
             statement.execute("SELECT ServiceCharge FROM ServiceCharges WHERE InvoiceID = '" + invoiceID + "' AND ServiceUnit = '" + selectServiceUnitCombobox.getSelectedItem() + "'");
@@ -755,7 +760,7 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
             if (!VehicleRegNo.getText().isEmpty()) {
                 DefaultListModel ListModels = new DefaultListModel();
                 priceList.setModel(ListModels);
-                
+
                 String[] productDetails = searchPanelList.getSelectedValue().split(". ");
                 try {
                     Statement statement = DBconnect.connectToDB().createStatement();
@@ -765,19 +770,19 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
                     int rowCount = 0;
                     while (resultSet.next()) {
                         rowCount++;
-                        ListModels.addElement("Rs. "+resultSet.getString("Price"));
-                        priceDialogBox.setTitle(resultSet.getString("ID")+"  "+resultSet.getString("Name"));
+                        ListModels.addElement("Rs. " + resultSet.getString("Price"));
+                        priceDialogBox.setTitle(resultSet.getString("ID") + "  " + resultSet.getString("Name"));
                     }
                     //
-                    if(rowCount > 1){
+                    if (rowCount > 1) {
                         priceDialogBox.setVisible(true);
                         priceDialogBox.setLocationRelativeTo(productListPanel);
-                        priceDialogBox.setSize(300, rowCount*55);
-                    }else{
+                        priceDialogBox.setSize(300, rowCount * 55);
+                    } else {
                         Statement statement2 = DBconnect.connectToDB().createStatement();
                         statement2.execute("SELECT * FROM Stock WHERE ID = '" + productDetails[0] + "'");
                         ResultSet resultSet2 = statement2.getResultSet();
-                        
+
                         if (resultSet2.next()) {
                             ArrayList<String> product = new ArrayList<>();
                             product.add(resultSet2.getString("ID"));
@@ -803,7 +808,7 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
                             RefrashProductListPanel();
                         }
                     }
-                    
+
                 } catch (SQLException ex) {
                     Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -814,7 +819,7 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
         searchMenu.setVisible(false);
         searchProduct.setText("");
     }//GEN-LAST:event_searchPanelListMouseClicked
-    
+
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         // TODO add your handling code here:                
         invoiceSearch.setText("");
@@ -838,25 +843,48 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
     private void progressButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_progressButton1ActionPerformed
         try {
             Statement statement = DBconnect.connectToDB().createStatement();
-            if (alreadyAddProducts.isEmpty()) {
+            statement.execute("SELECT ServiceCharge FROM ServiceCharges WHERE InvoiceID = '" + invoiceSearch.getText() + "' AND ServiceUnit = '" + selectServiceUnitCombobox.getSelectedItem() + "'");
+            ResultSet resultSet = statement.getResultSet();
+            if (resultSet.next()) {
+                statement.execute("UPDATE ServiceCharges SET ServiceCharge = '" + serviceChargeTextField.getText() + "' WHERE InvoiceID = '" + invoiceSearch.getText() + "' AND ServiceUnit = '" + selectServiceUnitCombobox.getSelectedItem() + "'");
+            } else {
                 statement.execute("INSERT INTO ServiceCharges (InvoiceID, ServiceUnit , ServiceCharge) "
                         + "VALUES('" + invoiceSearch.getText() + "', '" + selectServiceUnitCombobox.getSelectedItem() + "', '" + serviceChargeTextField.getText() + "')");
-            } else {
-                statement.execute("UPDATE ServiceCharges SET ServiceCharge = '" + serviceChargeTextField.getText() + "' WHERE InvoiceID = '" + invoiceSearch.getText() + "' AND ServiceUnit = '" + selectServiceUnitCombobox.getSelectedItem() + "'");
             }
         } catch (SQLException ex) {
             Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         for (int i = 0; i < cartProductList.size(); i++) {
             try {
                 Statement statement = DBconnect.connectToDB().createStatement();
-                if (!alreadyAddProducts.contains(cartProductList.get(i).get(0))) {
+                if (!alreadyAddProducts.contains(new ArrayList<>(Arrays.asList(cartProductList.get(i).get(0), cartProductList.get(i).get(2))))) {
+                    //add SoldProducts
                     statement.execute("INSERT INTO SoldProducts (InvoiceID, ProductID, Name, Price, Qnt, Total, ServiceUnit) "
                             + "VALUES('" + invoiceSearch.getText() + "', '" + cartProductList.get(i).get(0) + "','" + cartProductList.get(i).get(1) + "','" + cartProductList.get(i).get(2) + "','" + cartProductList.get(i).get(3) + "','" + cartProductList.get(i).get(4) + "','" + selectServiceUnitCombobox.getSelectedItem() + "')");
+                    //update stock
+                    statement.execute("UPDATE Stock SET Qnt = Qnt - " + cartProductList.get(i).get(3) + " WHERE ID = '" + cartProductList.get(i).get(0) + "' AND Price = '" + cartProductList.get(i).get(2) + "'");
+
                 } else {
-                    statement.execute("UPDATE SoldProducts SET Qnt = '" + cartProductList.get(i).get(3) + "', Total = '" + cartProductList.get(i).get(4) + "' WHERE InvoiceID = '" + invoiceSearch.getText() + "' AND ProductID = '" + cartProductList.get(i).get(0) + "' AND ServiceUnit = '" + selectServiceUnitCombobox.getSelectedItem() + "'");
-                    alreadyAddProducts.remove(cartProductList.get(i).get(0));
+                    //update stock
+                    statement.execute("SELECT Qnt FROM SoldProducts WHERE InvoiceID = '" + invoiceSearch.getText() + "' AND ProductID = '" + cartProductList.get(i).get(0) + "' AND Price = '" + cartProductList.get(i).get(2) + "'");
+                    ResultSet resultSet = statement.getResultSet();
+                    if (resultSet.next()) {
+                        if (resultSet.getFloat("Qnt") > Float.parseFloat(cartProductList.get(i).get(3))) {
+                            float qnt = resultSet.getFloat("Qnt") - Float.parseFloat(cartProductList.get(i).get(3));
+                            statement.execute("UPDATE Stock SET Qnt = Qnt + " + qnt + " WHERE ID = '" + cartProductList.get(i).get(0) + "' AND Price = '" + cartProductList.get(i).get(2) + "'");
+
+                        } else if (resultSet.getFloat("Qnt") < Float.parseFloat(cartProductList.get(i).get(3))) {
+                            float qnt = Float.parseFloat(cartProductList.get(i).get(3)) - resultSet.getFloat("Qnt");
+                            statement.execute("UPDATE Stock SET Qnt = Qnt - " + qnt + " WHERE ID = '" + cartProductList.get(i).get(0) + "' AND Price = '" + cartProductList.get(i).get(2) + "'");
+
+                        } else {
+                            System.out.println("Not update stock");
+                        }
+                    }
+                    //update SoldProducts
+                    statement.execute("UPDATE SoldProducts SET Qnt = '" + cartProductList.get(i).get(3) + "', Total = '" + cartProductList.get(i).get(4) + "' WHERE InvoiceID = '" + invoiceSearch.getText() + "' AND ProductID = '" + cartProductList.get(i).get(0) + "' AND Price = '" + cartProductList.get(i).get(2) + "' AND ServiceUnit = '" + selectServiceUnitCombobox.getSelectedItem() + "'");
+                    alreadyAddProducts.remove(new ArrayList<>(Arrays.asList(cartProductList.get(i).get(0), cartProductList.get(i).get(2))));
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
@@ -867,7 +895,10 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
             try {
                 Statement statement = DBconnect.connectToDB().createStatement();
                 for (int i = 0; i < alreadyAddProducts.size(); i++) {
-                    statement.execute("DELETE FROM SoldProducts WHERE ProductID = '" + alreadyAddProducts.get(i) + "' AND InvoiceID = '" + invoiceSearch.getText() + "' AND ServiceUnit = '" + selectServiceUnitCombobox.getSelectedItem() + "'");
+                    //update stock
+                    statement.execute("UPDATE Stock SET Qnt = Qnt + (SELECT Qnt FROM SoldProducts WHERE InvoiceID = '" + invoiceSearch.getText() + "' AND ProductID = '" + alreadyAddProducts.get(i).get(0) + "' AND Price = '" + alreadyAddProducts.get(i).get(1) + "') WHERE ID = '" + alreadyAddProducts.get(i).get(0) + "' AND Price = '" + alreadyAddProducts.get(i).get(1) + "'");
+                    //delete SoldProducts
+                    statement.execute("DELETE FROM SoldProducts WHERE ProductID = '" + alreadyAddProducts.get(i).get(0) + "' AND InvoiceID = '" + invoiceSearch.getText() + "' AND ServiceUnit = '" + selectServiceUnitCombobox.getSelectedItem() + "'");
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(Vehicles.class.getName()).log(Level.SEVERE, null, ex);
@@ -879,12 +910,12 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
 
     private void priceListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_priceListMouseClicked
         String[] productDetails = searchPanelList.getSelectedValue().split(". ");
-        
+
         try {
             Statement statement = DBconnect.connectToDB().createStatement();
-            statement.execute("SELECT * FROM Stock WHERE ID = '" + productDetails[0] + "' AND Price = '"+priceList.getSelectedValue().substring(4)+"'");
+            statement.execute("SELECT * FROM Stock WHERE ID = '" + productDetails[0] + "' AND Price = '" + priceList.getSelectedValue().substring(4) + "'");
             ResultSet resultSet = statement.getResultSet();
-            
+
             if (resultSet.next()) {
                 ArrayList<String> product = new ArrayList<>();
                 product.add(resultSet.getString("ID"));
@@ -892,7 +923,7 @@ public class Vehicles extends javax.swing.JInternalFrame implements Runnable, Th
                 product.add(resultSet.getString("Price"));
                 product.add("1");
                 product.add(resultSet.getString("Price"));
-                
+
                 if (cartProductList.isEmpty()) {
                     cartProductList.add(product);
                 } else {

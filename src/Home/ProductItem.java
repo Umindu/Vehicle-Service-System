@@ -37,7 +37,7 @@ public class ProductItem extends javax.swing.JPanel {
         removeButton.addMouseListener(new MouseAdapter() { 
             
             public void mousePressed(MouseEvent e) { 
-                home.RemoveProduct(id);
+                home.RemoveProduct(id, String.valueOf(price));
             } 
         }); 
         
@@ -50,14 +50,14 @@ public class ProductItem extends javax.swing.JPanel {
                     }
                     float total = Float.parseFloat(proQnt.getText()) * price;
                     proTotal.setText(String.valueOf(total));
-                    editProduct.add(3, proQnt.getText());
-                    editProduct.add(4, proTotal.getText());
+                    editProduct.set(3, proQnt.getText());
+                    editProduct.set(4, proTotal.getText());
                     home.UpdateProduct(editProduct);
                 }else{
                     float total = 1 * price;
                     proTotal.setText(String.valueOf(total));
-                    editProduct.add(3, "1");
-                    editProduct.add(4, proTotal.getText());
+                    editProduct.set(3, "1");
+                    editProduct.set(4, proTotal.getText());
                     home.UpdateProduct(editProduct);
                 }
            }
@@ -68,8 +68,8 @@ public class ProductItem extends javax.swing.JPanel {
              proQnt.setText(String.valueOf(Float.parseFloat(proQnt.getText())+1));
              float total = Float.parseFloat(proQnt.getText()) * price;
              proTotal.setText(String.valueOf(total));
-             editProduct.add(3, proQnt.getText());
-             editProduct.add(4, proTotal.getText());
+             editProduct.set(3, proQnt.getText());
+             editProduct.set(4, proTotal.getText());
              home.UpdateProduct(editProduct);
             } 
         });
@@ -80,8 +80,8 @@ public class ProductItem extends javax.swing.JPanel {
                 proQnt.setText(String.valueOf(Float.parseFloat(proQnt.getText())-1));
                 float total = Float.parseFloat(proQnt.getText()) * price;
                 proTotal.setText(String.valueOf(total));
-                editProduct.add(3, proQnt.getText());
-                editProduct.add(4, proTotal.getText());
+                editProduct.set(3, proQnt.getText());
+                editProduct.set(4, proTotal.getText());
                 home.UpdateProduct(editProduct);
              }
             } 

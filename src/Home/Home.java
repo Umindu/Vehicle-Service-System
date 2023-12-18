@@ -41,6 +41,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -89,7 +90,7 @@ public class Home extends javax.swing.JInternalFrame implements Runnable, Thread
 
     ArrayList<ArrayList<String>> allServicesList = new ArrayList<>();
     ArrayList<ArrayList<String>> allProductList = new ArrayList<>();
-    ArrayList<String> removeProductList = new ArrayList<>();
+    ArrayList<ArrayList<String>> removeProductList = new ArrayList<>();
     ArrayList<String> removeServiceList = new ArrayList<>();
     
     private WebcamPanel campanel = null;
@@ -966,14 +967,34 @@ public class Home extends javax.swing.JInternalFrame implements Runnable, Thread
                     }
                     //remove products
                     if (!removeProductList.isEmpty()) {
-                        for (String index : removeProductList) {
-                            statement.execute("DELETE SoldProducts WHERE InvoiceID = '" + invoiceID + "' AND ProductID = '" + index + "'");
+                        for (ArrayList removeProduct : removeProductList) {
+                            //update stock
+                            statement.execute("UPDATE Stock SET Qnt = Qnt + (SELECT Qnt FROM SoldProducts WHERE InvoiceID = '" + invoiceID + "' AND ProductID = '" + removeProduct.get(0) + "' AND Price = '" + removeProduct.get(1) + "') WHERE ID = '" + removeProduct.get(0) + "' AND Price = '" + removeProduct.get(1) + "'");  
+                            //delete SoldProducts
+                            statement.execute("DELETE SoldProducts WHERE InvoiceID = '" + invoiceID + "' AND ProductID = '" + removeProduct.get(0) + "' AND Price = '"+removeProduct.get(1)+"'");
                         }
                     }
                     //update products
                     if (!allProductList.isEmpty()) {
                         for (ArrayList Product : allProductList) {
-                            statement.execute("UPDATE SoldProducts SET Qnt = '" + Product.get(3) + "', Total = '" + Product.get(4) + "' WHERE InvoiceID = '" + invoiceID + "' AND ProductID = '" + Product.get(0) + "'");
+                             //update stock
+                            statement.execute("SELECT Qnt FROM SoldProducts WHERE InvoiceID = '" + invoiceID + "' AND ProductID = '" + Product.get(0) + "' AND Price = '" + Product.get(2) + "'");
+                            ResultSet resultSet = statement.getResultSet();
+                            if (resultSet.next()) {
+                                if (resultSet.getFloat("Qnt") > Float.parseFloat((String) Product.get(3))) {
+                                    float qnt = resultSet.getFloat("Qnt") - Float.parseFloat((String) Product.get(3));
+                                    statement.execute("UPDATE Stock SET Qnt = Qnt + " + qnt + " WHERE ID = '" + Product.get(0) + "' AND Price = '" + Product.get(2) + "'");
+
+                                } else if (resultSet.getFloat("Qnt") <  Float.parseFloat((String) Product.get(3))) {
+                                    float qnt = Float.parseFloat((String) Product.get(3)) -  resultSet.getFloat("Qnt");
+                                    statement.execute("UPDATE Stock SET Qnt = Qnt - " + qnt + " WHERE ID = '" + Product.get(0) + "' AND Price = '" + Product.get(2) + "'");
+
+                                } else {
+                                    System.out.println("Not update stock");
+                                }
+                            }
+                            //update SoldProducts
+                            statement.execute("UPDATE SoldProducts SET Qnt = '" + Product.get(3) + "', Total = '" + Product.get(4) + "' WHERE InvoiceID = '" + invoiceID + "' AND ProductID = '" + Product.get(0) + "' AND Price = '" + Product.get(2) + "'");
                         }
                     }
                 } catch (SQLException ex) {
@@ -1108,10 +1129,10 @@ public class Home extends javax.swing.JInternalFrame implements Runnable, Thread
         invoiceSearch.setText("");
     }
 
-    public void RemoveProduct(String id) {
-        removeProductList.add(id);
+    public void RemoveProduct(String id, String price) {
+        removeProductList.add(new ArrayList(Arrays.asList(id, price)));
         for (int i = 0; i < allProductList.size(); i++) {
-            if (allProductList.get(i).get(0).equals(id)) {
+            if (allProductList.get(i).get(0).equals(id) && allProductList.get(i).get(2).equals(price)) {
                 allProductList.remove(i);
             }
         }
@@ -1122,7 +1143,7 @@ public class Home extends javax.swing.JInternalFrame implements Runnable, Thread
 
     public void UpdateProduct(ArrayList editProduct) {
         for (int i = 0; i < allProductList.size(); i++) {
-            if (allProductList.get(i).get(0).equals(editProduct.get(0))) {
+            if (allProductList.get(i).get(0).equals(editProduct.get(0)) && allProductList.get(i).get(2).equals(editProduct.get(2))) {
                 allProductList.get(i).set(3, String.valueOf(editProduct.get(3)));
                 allProductList.get(i).set(4, String.valueOf(editProduct.get(4)));
             }
