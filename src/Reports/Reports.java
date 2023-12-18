@@ -767,14 +767,22 @@ public class Reports extends javax.swing.JInternalFrame {
             statement.execute("SELECT OpeningDrawerAmount FROM DailySummary WHERE Date = '"+formattedDate+"'");
             ResultSet resultSet = statement.getResultSet();
             if(resultSet.next()){
-                openDrawerAmount.setText(resultSet.getString("OpeningDrawerAmount"));
+                openDrawerAmount.setText("Rs. "+resultSet.getString("OpeningDrawerAmount"));
             }
             
             statement.execute("SELECT SUM(CashPayAmount) AS CashPaymentsAmount, SUM(CardPayAmount)+ SUM(QRPayAmount) AS OtherPaymentsAmount FROM PaymentDetails WHERE Date <= '"+formattedDate+" 23:59:59.000' AND Date > '"+formattedDate+" 00:00:00.000'");
             ResultSet resultSet2 = statement.getResultSet();
             if(resultSet2.next()){
-                cashPayments.setText(resultSet2.getString("CashPaymentsAmount"));
-                otherPayments.setText(resultSet2.getString("OtherPaymentsAmount"));
+                if(resultSet2.getString("CashPaymentsAmount") != null){
+                    cashPayments.setText("Rs. "+resultSet2.getString("CashPaymentsAmount"));
+                }else{
+                    cashPayments.setText("Rs. 0.00");
+                }
+                if(resultSet2.getString("OtherPaymentsAmount") != null){
+                    otherPayments.setText("Rs. "+resultSet2.getString("OtherPaymentsAmount"));
+                }else{
+                    otherPayments.setText("Rs. 0.00");
+                }
             }
         } catch (SQLException ex) {
             Logger.getLogger(Manage.class.getName()).log(Level.SEVERE, null, ex);
