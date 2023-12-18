@@ -11,6 +11,7 @@ import javax.swing.plaf.basic.BasicInternalFrameUI;
 import java.sql.Statement;
 import java.sql.SQLException;
 import DBConnect.DBconnect;
+import Reports.EnteredVehicleDetails;
 import Vehicles.Vehicles;
 import java.awt.Color;
 import java.awt.Font;
@@ -24,6 +25,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -47,6 +49,7 @@ public class Manage extends javax.swing.JInternalFrame {
         bi.setNorthPane(null);
         
         employeeButtonPane.setVisible(false);
+        grnButtonPane.setVisible(false);
         
         cardLayout = (CardLayout) panelCards.getLayout();
         
@@ -170,6 +173,26 @@ public class Manage extends javax.swing.JInternalFrame {
             Logger.getLogger(Manage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    private void LoadAllGRNTable(String search){
+        //serviceTable data load
+        JTableHeader header = allGRNTable.getTableHeader();
+        header.setFont(new Font("Segoe UI", Font.BOLD , 14));
+        try {
+            Statement statement = DBconnect.connectToDB().createStatement();
+            if(search.equals("All")){
+                statement.execute("select ID AS 'GRN ID', Date, SubTotal AS 'Sub Total', Discount, VAT, GrandTotal AS 'Grand Total' from GRNDetails");
+            }else{
+                statement.execute("Select ID AS 'GRN ID', Date, SubTotal AS 'Sub Total', Discount, VAT, GrandTotal AS 'Grand Total' from GRNDetails Where ID like '%"+ search +"%'");
+            }
+            ResultSet resultSet = statement.getResultSet(); 
+            
+            allGRNTable.setModel(DbUtils.resultSetToTableModel(resultSet));
+ 
+        } catch (SQLException ex) {
+            Logger.getLogger(Manage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     @SuppressWarnings("unchecked")
     
@@ -182,7 +205,9 @@ public class Manage extends javax.swing.JInternalFrame {
         addEmployeeButton.setColor(Color.WHITE);
         VehicleTypesButton.setColor(Color.WHITE);
         productButton.setColor(Color.WHITE);
-        GRNButton.setColor(Color.WHITE);
+        showGRNPaneButton.setColor(Color.WHITE);
+        GRNUpdateButton.setColor(Color.WHITE);
+        allGRNButton.setColor(Color.WHITE);
     }
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -203,7 +228,10 @@ public class Manage extends javax.swing.JInternalFrame {
         showEmpPaneButton = new button.MyButton();
         VehicleTypesButton = new button.MyButton();
         productButton = new button.MyButton();
-        GRNButton = new button.MyButton();
+        grnButtonPane = new javax.swing.JPanel();
+        allGRNButton = new button.MyButton();
+        GRNUpdateButton = new button.MyButton();
+        showGRNPaneButton = new button.MyButton();
         panelCards = new javax.swing.JPanel();
         serviesUnitCard = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -305,7 +333,7 @@ public class Manage extends javax.swing.JInternalFrame {
         jLabel34 = new javax.swing.JLabel();
         selectServiceUnitCombobox = new CustomComponents.Combobox();
         searchProducts = new fosalgo.FTextField();
-        grnCard = new javax.swing.JPanel();
+        grnUpdateCard = new javax.swing.JPanel();
         grnID = new fosalgo.FTextField();
         jLabel35 = new javax.swing.JLabel();
         jLabel36 = new javax.swing.JLabel();
@@ -324,6 +352,11 @@ public class Manage extends javax.swing.JInternalFrame {
         vat = new fosalgo.FTextField();
         grandTotal = new fosalgo.FTextField();
         deleteButton = new button.MyButton();
+        allGRNCard = new javax.swing.JPanel();
+        jLabel13 = new javax.swing.JLabel();
+        searchGRN = new fosalgo.FTextField();
+        jScrollPane10 = new javax.swing.JScrollPane();
+        allGRNTable = new javax.swing.JTable();
 
         searchPanelList.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         searchPanelList.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -527,22 +560,79 @@ public class Manage extends javax.swing.JInternalFrame {
             }
         });
 
-        GRNButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 20, 1, 1));
-        GRNButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/angle-small-down.png"))); // NOI18N
-        GRNButton.setText("GRN Update");
-        GRNButton.setBorderColor(new java.awt.Color(255, 255, 255));
-        GRNButton.setBorderPainted(false);
-        GRNButton.setColorClick(new java.awt.Color(126, 240, 244));
-        GRNButton.setColorOver(new java.awt.Color(126, 240, 244));
-        GRNButton.setFocusPainted(false);
-        GRNButton.setFocusable(false);
-        GRNButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        GRNButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        GRNButton.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
-        GRNButton.setIconTextGap(10);
-        GRNButton.addActionListener(new java.awt.event.ActionListener() {
+        allGRNButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 20, 1, 1));
+        allGRNButton.setText("All GRN");
+        allGRNButton.setBorderColor(new java.awt.Color(255, 255, 255));
+        allGRNButton.setBorderPainted(false);
+        allGRNButton.setColorClick(new java.awt.Color(126, 240, 244));
+        allGRNButton.setColorOver(new java.awt.Color(126, 240, 244));
+        allGRNButton.setFocusPainted(false);
+        allGRNButton.setFocusable(false);
+        allGRNButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        allGRNButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        allGRNButton.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
+        allGRNButton.setIconTextGap(10);
+        allGRNButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                GRNButtonActionPerformed(evt);
+                allGRNButtonActionPerformed(evt);
+            }
+        });
+
+        GRNUpdateButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 20, 1, 1));
+        GRNUpdateButton.setText("GRN Update");
+        GRNUpdateButton.setBorderColor(new java.awt.Color(255, 255, 255));
+        GRNUpdateButton.setBorderPainted(false);
+        GRNUpdateButton.setColorClick(new java.awt.Color(126, 240, 244));
+        GRNUpdateButton.setColorOver(new java.awt.Color(126, 240, 244));
+        GRNUpdateButton.setFocusPainted(false);
+        GRNUpdateButton.setFocusable(false);
+        GRNUpdateButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        GRNUpdateButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        GRNUpdateButton.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
+        GRNUpdateButton.setIconTextGap(10);
+        GRNUpdateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                GRNUpdateButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout grnButtonPaneLayout = new javax.swing.GroupLayout(grnButtonPane);
+        grnButtonPane.setLayout(grnButtonPaneLayout);
+        grnButtonPaneLayout.setHorizontalGroup(
+            grnButtonPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(grnButtonPaneLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addGroup(grnButtonPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(allGRNButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(GRNUpdateButton, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE))
+                .addGap(0, 0, 0))
+        );
+        grnButtonPaneLayout.setVerticalGroup(
+            grnButtonPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, grnButtonPaneLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(GRNUpdateButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(allGRNButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0))
+        );
+
+        showGRNPaneButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 20, 1, 1));
+        showGRNPaneButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/angle-small-down.png"))); // NOI18N
+        showGRNPaneButton.setText("GRN");
+        showGRNPaneButton.setBorderColor(new java.awt.Color(255, 255, 255));
+        showGRNPaneButton.setBorderPainted(false);
+        showGRNPaneButton.setColorClick(new java.awt.Color(126, 240, 244));
+        showGRNPaneButton.setColorOver(new java.awt.Color(126, 240, 244));
+        showGRNPaneButton.setFocusPainted(false);
+        showGRNPaneButton.setFocusable(false);
+        showGRNPaneButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        showGRNPaneButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        showGRNPaneButton.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
+        showGRNPaneButton.setIconTextGap(10);
+        showGRNPaneButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showGRNPaneButtonActionPerformed(evt);
             }
         });
 
@@ -556,7 +646,8 @@ public class Manage extends javax.swing.JInternalFrame {
             .addComponent(employeeButtonPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(VehicleTypesButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(productButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(GRNButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(grnButtonPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(showGRNPaneButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -573,7 +664,9 @@ public class Manage extends javax.swing.JInternalFrame {
                 .addGap(0, 0, 0)
                 .addComponent(productButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(GRNButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(showGRNPaneButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(grnButtonPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -742,7 +835,7 @@ public class Manage extends javax.swing.JInternalFrame {
                         .addComponent(serUnitName, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(servicesUnitClearButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 563, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 705, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(serviesUnitCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addServiceUnitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -967,7 +1060,7 @@ public class Manage extends javax.swing.JInternalFrame {
                         .addComponent(jLabel11)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 174, Short.MAX_VALUE)
                         .addComponent(servicesClearButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1028,16 +1121,14 @@ public class Manage extends javax.swing.JInternalFrame {
         allEmployeeCard.setLayout(allEmployeeCardLayout);
         allEmployeeCardLayout.setHorizontalGroup(
             allEmployeeCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(allEmployeeCardLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, allEmployeeCardLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(allEmployeeCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(allEmployeeCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane4)
                     .addGroup(allEmployeeCardLayout.createSequentialGroup()
                         .addComponent(jLabel12)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(searchEmployees, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(allEmployeeCardLayout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 1014, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 649, Short.MAX_VALUE)
+                        .addComponent(searchEmployees, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         allEmployeeCardLayout.setVerticalGroup(
@@ -1048,7 +1139,7 @@ public class Manage extends javax.swing.JInternalFrame {
                     .addComponent(jLabel12)
                     .addComponent(searchEmployees, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 761, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1486,7 +1577,7 @@ public class Manage extends javax.swing.JInternalFrame {
                         .addComponent(VehicleTypeName, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(vehicalTypeClearButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 563, Short.MAX_VALUE))
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 705, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(vehicleTypesCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addVehicleTypeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1697,7 +1788,7 @@ public class Manage extends javax.swing.JInternalFrame {
                         .addComponent(selectServiceUnitCombobox, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(productClearButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 563, Short.MAX_VALUE))
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 705, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(productCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addProductButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1707,7 +1798,7 @@ public class Manage extends javax.swing.JInternalFrame {
 
         panelCards.add(productCard, "productCard");
 
-        grnCard.setBackground(new java.awt.Color(255, 255, 255));
+        grnUpdateCard.setBackground(new java.awt.Color(255, 255, 255));
 
         grnID.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         grnID.setRadius(20);
@@ -1830,15 +1921,15 @@ public class Manage extends javax.swing.JInternalFrame {
             }
         });
 
-        javax.swing.GroupLayout grnCardLayout = new javax.swing.GroupLayout(grnCard);
-        grnCard.setLayout(grnCardLayout);
-        grnCardLayout.setHorizontalGroup(
-            grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(grnCardLayout.createSequentialGroup()
+        javax.swing.GroupLayout grnUpdateCardLayout = new javax.swing.GroupLayout(grnUpdateCard);
+        grnUpdateCard.setLayout(grnUpdateCardLayout);
+        grnUpdateCardLayout.setHorizontalGroup(
+            grnUpdateCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, grnUpdateCardLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(grnUpdateCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane8)
-                    .addGroup(grnCardLayout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, grnUpdateCardLayout.createSequentialGroup()
                         .addComponent(jLabel35)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(grnID, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1846,28 +1937,28 @@ public class Manage extends javax.swing.JInternalFrame {
                         .addComponent(jLabel36)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(dateField, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, grnCardLayout.createSequentialGroup()
+                    .addGroup(grnUpdateCardLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(updateGRNButton, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(grnCardLayout.createSequentialGroup()
-                        .addGroup(grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(grnCardLayout.createSequentialGroup()
-                                .addGroup(grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, grnUpdateCardLayout.createSequentialGroup()
+                        .addGroup(grnUpdateCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(grnUpdateCardLayout.createSequentialGroup()
+                                .addGroup(grnUpdateCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel38)
                                     .addComponent(jLabel39))
                                 .addGap(6, 6, 6)
-                                .addGroup(grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(grnUpdateCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(subTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(discount, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(18, 18, 18)
-                                .addGroup(grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(grnUpdateCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel40)
                                     .addComponent(jLabel41))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(grnUpdateCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(grandTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(vat, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(grnCardLayout.createSequentialGroup()
+                            .addGroup(grnUpdateCardLayout.createSequentialGroup()
                                 .addComponent(jLabel37)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(searchProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 583, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -1875,42 +1966,39 @@ public class Manage extends javax.swing.JInternalFrame {
                         .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
-        grnCardLayout.setVerticalGroup(
-            grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(grnCardLayout.createSequentialGroup()
+        grnUpdateCardLayout.setVerticalGroup(
+            grnUpdateCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(grnUpdateCardLayout.createSequentialGroup()
                 .addGap(9, 9, 9)
-                .addGroup(grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(grnUpdateCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel35)
                     .addComponent(grnID, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel36)
                     .addComponent(dateField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(grnCardLayout.createSequentialGroup()
-                        .addGroup(grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel37)
-                            .addComponent(searchProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(12, 12, 12))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, grnCardLayout.createSequentialGroup()
-                        .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 334, Short.MAX_VALUE)
+                .addGroup(grnUpdateCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(grnUpdateCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel37)
+                        .addComponent(searchProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(12, 12, 12)
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 535, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
-                .addGroup(grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(grnCardLayout.createSequentialGroup()
-                        .addGroup(grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(grnUpdateCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(grnUpdateCardLayout.createSequentialGroup()
+                        .addGroup(grnUpdateCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel38)
                             .addComponent(subTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(grnUpdateCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(discount, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel39)))
-                    .addGroup(grnCardLayout.createSequentialGroup()
-                        .addGroup(grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addGroup(grnUpdateCardLayout.createSequentialGroup()
+                        .addGroup(grnUpdateCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(vat, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel40))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(grnCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(grnUpdateCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(grandTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel41))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1918,7 +2006,79 @@ public class Manage extends javax.swing.JInternalFrame {
                 .addContainerGap())
         );
 
-        panelCards.add(grnCard, "grnCard");
+        panelCards.add(grnUpdateCard, "grnUpdateCard");
+
+        allGRNCard.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel13.setText("GRN List");
+
+        searchGRN.setForeground(new java.awt.Color(153, 153, 153));
+        searchGRN.setText("Search by GRN ID");
+        searchGRN.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        searchGRN.setRadius(20);
+        searchGRN.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                searchGRNFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                searchGRNFocusLost(evt);
+            }
+        });
+        searchGRN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                searchGRNKeyReleased(evt);
+            }
+        });
+
+        allGRNTable.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        allGRNTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        allGRNTable.setGridColor(new java.awt.Color(204, 204, 204));
+        allGRNTable.setRowHeight(25);
+        allGRNTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                allGRNTableMouseClicked(evt);
+            }
+        });
+        jScrollPane10.setViewportView(allGRNTable);
+
+        javax.swing.GroupLayout allGRNCardLayout = new javax.swing.GroupLayout(allGRNCard);
+        allGRNCard.setLayout(allGRNCardLayout);
+        allGRNCardLayout.setHorizontalGroup(
+            allGRNCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, allGRNCardLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(allGRNCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane10, javax.swing.GroupLayout.DEFAULT_SIZE, 1001, Short.MAX_VALUE)
+                    .addGroup(allGRNCardLayout.createSequentialGroup()
+                        .addComponent(jLabel13)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(searchGRN, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        allGRNCardLayout.setVerticalGroup(
+            allGRNCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(allGRNCardLayout.createSequentialGroup()
+                .addGap(7, 7, 7)
+                .addGroup(allGRNCardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel13)
+                    .addComponent(searchGRN, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(6, 6, 6)
+                .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, 742, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        panelCards.add(allGRNCard, "allGRNCard");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -1931,7 +2091,9 @@ public class Manage extends javax.swing.JInternalFrame {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(163, 163, 163))
             .addComponent(panelCards, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -2673,11 +2835,11 @@ public class Manage extends javax.swing.JInternalFrame {
         LoadProductTable(searchProducts.getText());
     }//GEN-LAST:event_searchProductsKeyReleased
 
-    private void GRNButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GRNButtonActionPerformed
-        cardLayout.show(panelCards, "grnCard");
+    private void GRNUpdateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GRNUpdateButtonActionPerformed
+        cardLayout.show(panelCards, "grnUpdateCard");
         
         resetButtonStyle();
-        GRNButton.setColor(new Color(184,248,250));
+        GRNUpdateButton.setColor(new Color(184,248,250));
         
         JTableHeader header = grnTable.getTableHeader();
         header.setFont(new Font("Segoe UI", Font.BOLD , 14));
@@ -2685,7 +2847,7 @@ public class Manage extends javax.swing.JInternalFrame {
         SimpleDateFormat fdate = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
         dateField.setText(fdate.format(date));
-    }//GEN-LAST:event_GRNButtonActionPerformed
+    }//GEN-LAST:event_GRNUpdateButtonActionPerformed
 
     private void discountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discountActionPerformed
         // TODO add your handling code here:
@@ -2743,6 +2905,9 @@ public class Manage extends javax.swing.JInternalFrame {
             Statement statement = DBconnect.connectToDB().createStatement();
             for(int i=0; i < grnTable.getRowCount(); i++){
                 statement.execute("INSERT INTO Stock (GRNID, ID, Name, UnitCost, Price, Qnt, ServiceUnit, LotNo) "
+                + "VALUES('" + grnID.getText() + "', '" + grnTable.getValueAt(i, 0) + "', '" + grnTable.getValueAt(i, 1) + "', '" + grnTable.getValueAt(i, 2) + "', '" + grnTable.getValueAt(i, 3) + "' , '" + grnTable.getValueAt(i, 4) + "', '" + grnTable.getValueAt(i, 6) + "' , '" + grnTable.getValueAt(i, 5) + "')");
+                
+                statement.execute("INSERT INTO GRNProducts (GRNID, ID, Name, UnitCost, Price, Qnt, ServiceUnit, LotNo) "
                 + "VALUES('" + grnID.getText() + "', '" + grnTable.getValueAt(i, 0) + "', '" + grnTable.getValueAt(i, 1) + "', '" + grnTable.getValueAt(i, 2) + "', '" + grnTable.getValueAt(i, 3) + "' , '" + grnTable.getValueAt(i, 4) + "', '" + grnTable.getValueAt(i, 6) + "' , '" + grnTable.getValueAt(i, 5) + "')"); 
             }
             statement.execute("INSERT INTO GRNDetails (ID, Date, SubTotal, Discount, VAT, GrandTotal) "
@@ -2763,9 +2928,57 @@ public class Manage extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_updateGRNButtonActionPerformed
 
+    private void allGRNButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_allGRNButtonActionPerformed
+        cardLayout.show(panelCards, "allGRNCard");
+        
+        resetButtonStyle();
+        allGRNButton.setColor(new Color(184,248,250));
+
+        LoadAllGRNTable("All");
+    }//GEN-LAST:event_allGRNButtonActionPerformed
+
+    private void showGRNPaneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showGRNPaneButtonActionPerformed
+        resetButtonStyle();
+        if(grnButtonPane.isVisible()){
+            resetButtonStyle();
+            grnButtonPane.setVisible(false);
+        }else{
+            showGRNPaneButton.setColor(new Color(184,248,250));
+            grnButtonPane.setVisible(true);
+        }
+    }//GEN-LAST:event_showGRNPaneButtonActionPerformed
+
+    private void searchGRNFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_searchGRNFocusGained
+        if(searchGRN.getText().equals("Search by GRN ID")){
+            searchGRN.setText("");
+            searchGRN.setForeground(Color.BLACK);
+        }
+    }//GEN-LAST:event_searchGRNFocusGained
+
+    private void searchGRNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_searchGRNFocusLost
+        if(searchGRN.getText().equals("")){
+            searchGRN.setText("Search by GRN ID");
+            searchGRN.setForeground(new Color(153,153,153));
+        }
+    }//GEN-LAST:event_searchGRNFocusLost
+
+    private void searchGRNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchGRNKeyReleased
+        LoadAllGRNTable(searchGRN.getText());
+    }//GEN-LAST:event_searchGRNKeyReleased
+
+    private void allGRNTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_allGRNTableMouseClicked
+        int grnID = (int) allGRNTable.getModel().getValueAt(allGRNTable.getSelectedRow(), 0);
+        
+        ShowGRNDetails showGRNDetails = new ShowGRNDetails(grnID);
+        showGRNDetails.setLocationRelativeTo(null);
+        showGRNDetails.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        showGRNDetails.setBackground(new Color(0, 0, 0, 150));
+        showGRNDetails.setVisible(true);
+    }//GEN-LAST:event_allGRNTableMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private button.MyButton GRNButton;
+    private button.MyButton GRNUpdateButton;
     private fosalgo.FTextField VehicleTypeID;
     private fosalgo.FTextField VehicleTypeName;
     private javax.swing.JTable VehicleTypeTable;
@@ -2781,6 +2994,9 @@ public class Manage extends javax.swing.JInternalFrame {
     private button.MyButton addVehicleTypeButton;
     private button.MyButton allEmployeeButton;
     private javax.swing.JPanel allEmployeeCard;
+    private button.MyButton allGRNButton;
+    private javax.swing.JPanel allGRNCard;
+    private javax.swing.JTable allGRNTable;
     private button.MyButton cancelButton;
     private button.MyButton choosFileButton;
     private fosalgo.FTextField dateField;
@@ -2800,12 +3016,14 @@ public class Manage extends javax.swing.JInternalFrame {
     private button.MyButton employeeDeleteButton;
     private javax.swing.JTable employeeTable;
     private fosalgo.FTextField grandTotal;
-    private javax.swing.JPanel grnCard;
+    private javax.swing.JPanel grnButtonPane;
     private fosalgo.FTextField grnID;
     private javax.swing.JTable grnTable;
+    private javax.swing.JPanel grnUpdateCard;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
@@ -2843,6 +3061,7 @@ public class Manage extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
@@ -2865,6 +3084,7 @@ public class Manage extends javax.swing.JInternalFrame {
     private javax.swing.JLabel productTitle;
     private button.MyButton saveButton;
     private fosalgo.FTextField searchEmployees;
+    private fosalgo.FTextField searchGRN;
     private javax.swing.JPopupMenu searchMenu;
     private javax.swing.JPanel searchPanel;
     private javax.swing.JList<String> searchPanelList;
@@ -2895,6 +3115,7 @@ public class Manage extends javax.swing.JInternalFrame {
     private javax.swing.JPanel serviesCard;
     private javax.swing.JPanel serviesUnitCard;
     private button.MyButton showEmpPaneButton;
+    private button.MyButton showGRNPaneButton;
     private button.MyButton showSerPaneButton;
     private fosalgo.FTextField subTotal;
     private button.MyButton updateGRNButton;
